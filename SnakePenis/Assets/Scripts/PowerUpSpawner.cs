@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PowerUpSpawner : MonoBehaviour
 {
+    public static PowerUpSpawner Instance;
     public Vector2 RangeX;
     public Vector2 RangeZ;
     public GameObject powerUpTemplate;
@@ -12,6 +13,25 @@ public class PowerUpSpawner : MonoBehaviour
     void Start()
     {
         StartCoroutine(SpawnPowerUpCoroutine());   
+    }
+
+    private void Awake()
+    {
+        // If there is an instance, and it's not me, delete myself.
+
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+
+    public static void IncreaseSpawnFrequency(float delta)
+    {
+        Instance.spawnFrequency += delta;
     }
 
     IEnumerator SpawnPowerUpCoroutine()

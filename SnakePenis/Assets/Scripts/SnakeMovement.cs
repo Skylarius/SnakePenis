@@ -12,10 +12,12 @@ public class SnakeMovement : MonoBehaviour
     public Vector3 targetPositionOnGrid;
     public float speedPercentage = 1f;
     public float segmentSpeedPercent = 0.75f;
+    public float segmentRotationSpeedPercent = 0.5f;
     public float rotationSpeed;
     public int gridScale = 1;
     public GameObject RightBall, LeftBall;
     public GameObject GameOverUI;
+    private ParticleSystem JoyParticleSystem;
     public List<GameObject> SnakeBody;
     private List<Vector3> SnakeBodyTargetPositions;
     public List<string> PenisQuotes;
@@ -33,6 +35,7 @@ public class SnakeMovement : MonoBehaviour
             SnakeBodyTargetPositions.Add(SnakeBody[i - 1].transform.position);
         }
         audioSystem = GetComponent<AudioSystem>();
+        JoyParticleSystem = GetComponentInChildren<ParticleSystem>();
     }
 
     // Update is called once per frame
@@ -44,10 +47,13 @@ public class SnakeMovement : MonoBehaviour
         }
 
         targetRealPosition = Vector2.right * (targetRealPosition.x + direction.x * realSpeed * Time.deltaTime) + Vector2.up * (targetRealPosition.y + direction.y * realSpeed * Time.deltaTime);
-        // float x = Input.GetAxis("Horizontal");
-        // float z = Input.GetAxis("Vertical");
+#if UNITY_EDITOR_WIN
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
+#else
         float x = 0f;
         float z = 0f;
+#endif
         if (Input.touchCount > 0) 
         {
             Touch touch = Input.GetTouch(0);
@@ -100,11 +106,11 @@ public class SnakeMovement : MonoBehaviour
             SnakeBody[i].transform.position = Vector3.Lerp(
                 SnakeBody[i].transform.position,
                 SnakeBodyTargetPositions[i],
-                Time.fixedDeltaTime * realSpeed * speedPercentage * segmentSpeedPercent);
+                Time.deltaTime * realSpeed * speedPercentage * segmentSpeedPercent);
             SnakeBody[i].transform.rotation = Quaternion.Lerp(
                 SnakeBody[i].transform.rotation,
                 SnakeBody[i - 1].transform.rotation,
-                Time.fixedDeltaTime * rotationSpeed);
+                Time.deltaTime * rotationSpeed * segmentRotationSpeedPercent);
         }
 
         targetPositionOnGrid = ConvertToPositionOnGrid(targetRealPosition);
@@ -119,7 +125,12 @@ public class SnakeMovement : MonoBehaviour
         newBodySegment.name = "newBody_" + (SnakeBody.Count - 1).ToString();
         SnakeBody.Insert(SnakeBody.Count - 1, newBodySegment);
         SnakeBodyTargetPositions.Insert(SnakeBodyTargetPositions.Count - 1, newBodySegment.transform.position);
+        if (SnakeBody.Count%10==0)
+        {
+            JoyParticleSystem.Play();
+        }
         realSpeed += 0.6f;
+        PowerUpSpawner.IncreaseSpawnFrequency(0.01f);
         RightBall.transform.localScale += Vector3.one * 0.02f;
         LeftBall.transform.localScale += Vector3.one * 0.02f;
         audioSystem.PlayGrowSounds();
@@ -152,8 +163,8 @@ public class SnakeMovement : MonoBehaviour
         //Time.timeScale = 0;
         audioSystem.PlayDeathSounds();
         GameOverUI.SetActive(true);
-        PenisQuoteUI.text = "Dice il saggio: \"" + PenisQuotes[Random.Range(0, PenisQuotes.Count)] + "\"";
-        PenisQuoteUI.text += "\nMassima Erezione : " + SnakeBody.Count + " cm";
+        PenisQuoteUI.text = "Dice il saggio: \"<b>" + PenisQuotes[Random.Range(0, PenisQuotes.Count)] + "</b>\"";
+        PenisQuoteUI.text += "\nMassima Erezione : <b>" + SnakeBody.Count + " cm</b>";
         yield return new WaitForSeconds(5f);
         print("Scene reloaded");
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
