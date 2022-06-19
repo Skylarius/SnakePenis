@@ -23,6 +23,7 @@ public class SnakeMovement : MonoBehaviour
     public List<string> PenisQuotes;
     public Text PenisQuoteUI;
     private AudioSystem audioSystem;
+    private RealSnakeBinder realSnakeBinder;
     public bool isGameOver = false;
     // Start is called before the first frame update
     void Start()
@@ -36,6 +37,7 @@ public class SnakeMovement : MonoBehaviour
         }
         audioSystem = GetComponent<AudioSystem>();
         JoyParticleSystem = GetComponentInChildren<ParticleSystem>();
+        realSnakeBinder = GetComponent<RealSnakeBinder>();
     }
 
     // Update is called once per frame
@@ -121,6 +123,7 @@ public class SnakeMovement : MonoBehaviour
 
     private void Grow()
     {
+        realSnakeBinder.ResetOldStructure();
         GameObject newBodySegment = Instantiate(SnakeBody[SnakeBody.Count - 2]);
         newBodySegment.name = "newBody_" + (SnakeBody.Count - 1).ToString();
         SnakeBody.Insert(SnakeBody.Count - 1, newBodySegment);
@@ -134,6 +137,7 @@ public class SnakeMovement : MonoBehaviour
         RightBall.transform.localScale += Vector3.one * 0.02f;
         LeftBall.transform.localScale += Vector3.one * 0.02f;
         audioSystem.PlayGrowSounds();
+        realSnakeBinder.UpdateBinder();
     }
 
     void OnTriggerEnter(Collider other)
