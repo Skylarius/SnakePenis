@@ -3,7 +3,7 @@
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
 #
 lfs/
-SnakePenis/[Ll]ibrary
+SnakePenis/[Ll]ibrary/
 SnakePenis/[Tt]emp/
 SnakePenis/[Oo]bj/
 SnakePenis/[Bb]uild/
