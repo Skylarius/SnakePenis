@@ -36,7 +36,7 @@ public class RealSnakeBinder : MonoBehaviour
                 break;
             }
             breakInfiniteLoop++;
-            if (breakInfiniteLoop > 100) break;
+            if (breakInfiniteLoop > 1000) break;
         }
     }
 
@@ -50,7 +50,7 @@ public class RealSnakeBinder : MonoBehaviour
             Transform[] children = snakeChildrenBody.GetComponentsInChildren<Transform>();
             snakeChildrenBody = (children.Length > 1) ? children[1] : null;
             breakInfiniteLoop++;
-            if (breakInfiniteLoop > 100) break;
+            if (breakInfiniteLoop > 1000) break;
         }
     }
 
@@ -64,7 +64,7 @@ public class RealSnakeBinder : MonoBehaviour
             snakeChildrenBody.parent = OldSnakeStructureList[i].transform;
             snakeChildrenBody = OldSnakeStructureList[i].transform;
             breakInfiniteLoop++;
-            if (breakInfiniteLoop > 100) break;
+            if (breakInfiniteLoop > 1000) break;
         }
     }
 }
