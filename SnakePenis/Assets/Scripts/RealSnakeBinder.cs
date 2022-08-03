@@ -24,8 +24,9 @@ public class RealSnakeBinder : MonoBehaviour
         while (snakeChildrenBody != null)
         {
             snakeChildrenBody.parent = snakeMovementScript.SnakeBody[snakeBodyIndex].transform;
+            // snakeChildrenBody.Rotate(Vector3.right * 90);
             snakeChildrenBody.localPosition = Vector3.zero;
-            snakeChildrenBody.localRotation = Quaternion.Euler(Vector3.zero);
+            snakeChildrenBody.localRotation = Quaternion.Euler(Vector3.right * 90);
             snakeBodyIndex = (snakeBodyIndex > 0) ? snakeBodyIndex - 1 : 0;
             Transform[] children = snakeChildrenBody.GetComponentsInChildren<Transform>();
             if (children.Length > 1)
@@ -61,6 +62,7 @@ public class RealSnakeBinder : MonoBehaviour
         for (int i= OldSnakeStructureList.Count - 2; i>-1; i--)
         {
             //snakeChildrenBody.DetachChildren();
+            // snakeChildrenBody.Rotate(Vector3.right * -90);
             snakeChildrenBody.parent = OldSnakeStructureList[i].transform;
             snakeChildrenBody = OldSnakeStructureList[i].transform;
             breakInfiniteLoop++;
