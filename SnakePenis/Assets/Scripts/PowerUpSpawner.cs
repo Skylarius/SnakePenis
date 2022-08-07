@@ -9,9 +9,12 @@ public class PowerUpSpawner : MonoBehaviour
     public Vector2 RangeZ;
     public GameObject powerUpTemplate;
     public float spawnFrequency = 0.5f;
+    public int MaxPowerUpAmout;
+    private static int PowerUpAmount;
     // Start is called before the first frame update
     void Start()
     {
+        PowerUpAmount = 0;
         StartCoroutine(SpawnPowerUpCoroutine());   
     }
 
@@ -34,13 +37,21 @@ public class PowerUpSpawner : MonoBehaviour
         Instance.spawnFrequency += delta;
     }
 
+    public static void DecreasePowerUpAmount()
+    {
+        PowerUpAmount--;
+    }
     IEnumerator SpawnPowerUpCoroutine()
     {
         while (true)
         {
-            GameObject newPowerUp = Instantiate(powerUpTemplate);
-            newPowerUp.SetActive(true);
-            newPowerUp.transform.position = Vector3.right * Mathf.Round(Random.Range(RangeX.x, RangeX.y)) + Vector3.forward * Mathf.Round(Random.Range(RangeZ.x, RangeZ.y));
+            if (PowerUpAmount < MaxPowerUpAmout)
+            {
+                GameObject newPowerUp = Instantiate(powerUpTemplate);
+                newPowerUp.SetActive(true);
+                newPowerUp.transform.position = Vector3.right * Mathf.Round(Random.Range(RangeX.x, RangeX.y)) + Vector3.forward * Mathf.Round(Random.Range(RangeZ.x, RangeZ.y));
+                PowerUpAmount++;
+            }
             yield return new WaitForSeconds(1 / spawnFrequency);
         }
     }
