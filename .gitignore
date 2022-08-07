@@ -11,6 +11,8 @@ SnakePenis/[Bb]uilds/
 SnakePenis/[Ll]ogs/
 SnakePenis/[Uu]ser[Ss]ettings/
 
+# Exceptions
+!SnakePenis/OfficialBuilds/
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
 SnakePenis/[Mm]emoryCaptures/
