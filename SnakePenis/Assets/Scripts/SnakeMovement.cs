@@ -19,6 +19,9 @@ public class SnakeMovement : MonoBehaviour
     public List<GameObject> SnakeBody;
     private List<Vector3> SnakeBodyTargetPositions;
 
+    [Header("GameGod")]
+    public GameObject GameGod;
+
     [Header("Game Over")]
     public List<string> PenisQuotes;
     public GameObject GameOverUI;
@@ -189,7 +192,7 @@ public class SnakeMovement : MonoBehaviour
             while (t * SnakeBody.Count < TimeForPickUpToReachTheTail)
             {
                 pickup.transform.position = Vector3.Lerp(pickup.transform.position, SnakeBody[i].transform.position, t * SnakeBody.Count / TimeForPickUpToReachTheTail);
-                pickup.transform.localScale = Vector3.Lerp(pickup.transform.localScale, pickup.transform.localScale * 0.99f, t * SnakeBody.Count / TimeForPickUpToReachTheTail);
+                pickup.transform.localScale = Vector3.Lerp(pickup.transform.localScale, pickup.transform.localScale * 0.7f, t * SnakeBody.Count / TimeForPickUpToReachTheTail);
                 if (SnakeBoneTransform)
                 {
                     if (t * SnakeBody.Count < TimeForPickUpToReachTheTail / 2)
@@ -250,10 +253,11 @@ public class SnakeMovement : MonoBehaviour
         print("GAMEOVER");
         //Time.timeScale = 0;
         audioSystem.PlayDeathSounds();
-        GameOverUI.SetActive(true);
-        PenisQuoteUI.text = "Dice il saggio: \"<b>" + PenisQuotes[Random.Range(0, PenisQuotes.Count)] + "</b>\"";
-        PenisQuoteUI.text += "\nMassima Erezione : <b>" + SnakeBody.Count + " cm</b>";
-        PenisQuoteUI.text += "\nPunteggio : <b>" + (SnakeBody.Count - 5) * (int)levelTime / 10 * (int)realSpeed+ "</b>";
+
+        ScoreManager.SetLengthAndScore(SnakeBody.Count, (SnakeBody.Count - 5) * (int)levelTime / 10 * (int)realSpeed);
+        StartCoroutine(
+            GameGod.GetComponent<GameOverProcedures>().StartGameOverProcedure()
+            );
         yield return new WaitForSeconds(5f);
     }
 
