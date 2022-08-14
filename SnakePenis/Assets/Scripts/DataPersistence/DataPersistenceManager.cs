@@ -21,6 +21,7 @@ public class DataPersistenceManager : MonoBehaviour
 
     [Header("File Storage Config")]
     [SerializeField] private string fileName;
+    [SerializeField] private bool useEncryption;
 
     private GameData GameData;
     private List<IDataPersistence> dataPersistenceObjects;
@@ -32,11 +33,9 @@ public class DataPersistenceManager : MonoBehaviour
 
     public void OpenDataFileLocation()
     {
-#if UNITY_EDITOR_WIN
         string itemPath = Application.persistentDataPath;
         itemPath = itemPath.Replace(@"/", @"\");   // explorer doesn't like front slashes
         System.Diagnostics.Process.Start("explorer.exe", "/select," + itemPath);
-#endif
     }
 
     public void LoadGame()
@@ -73,7 +72,7 @@ public class DataPersistenceManager : MonoBehaviour
 
     private void Start()
     {
-        this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
+        this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName, useEncryption);
         this.dataPersistenceObjects = FindAllDataPersistenceObjects();
         LoadGame();
     }

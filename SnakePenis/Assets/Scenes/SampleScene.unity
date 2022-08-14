@@ -3819,6 +3819,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fileName: miallu.ngo
+  useEncryption: 1
 --- !u!1 &1825863977
 GameObject:
   m_ObjectHideFlags: 0
