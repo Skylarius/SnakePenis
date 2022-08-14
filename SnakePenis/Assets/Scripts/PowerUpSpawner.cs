@@ -43,7 +43,7 @@ public class PowerUpSpawner : MonoBehaviour
     }
     IEnumerator SpawnPowerUpCoroutine()
     {
-        while (true)
+        while (SnakeMovement.isGameOver == false)
         {
             if (PowerUpAmount < MaxPowerUpAmout)
             {

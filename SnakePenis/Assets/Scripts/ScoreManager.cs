@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScoreManager : MonoBehaviour
+public class ScoreManager : MonoBehaviour, IDataPersistence
 {
     public static List<ScoreWebInterface.ScoreElem> LocalScores;
     public static string CurrentID = "";
@@ -78,5 +78,18 @@ public class ScoreManager : MonoBehaviour
     {
         CurrentLength = length.ToString();
         CurrentScore = score.ToString();
+    }
+
+    void IDataPersistence.LoadData(GameData data)
+    {
+        CurrentScoreName = data.Name;
+        CurrentID = data.PlayerID;
+    }
+
+    void IDataPersistence.SaveData(ref GameData data)
+    {
+        data.Name = CurrentScoreName;
+        data.PlayerID = CurrentID;
+        Debug.Log($"Saved Score Data: ID={data.PlayerID}, Name={data.Name}");
     }
 }

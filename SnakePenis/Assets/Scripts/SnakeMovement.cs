@@ -23,9 +23,6 @@ public class SnakeMovement : MonoBehaviour
     public GameObject GameGod;
 
     [Header("Game Over")]
-    public List<string> PenisQuotes;
-    public GameObject GameOverUI;
-    public Text PenisQuoteUI;
     private AudioSystem audioSystem;
     private RealSnakeBinder realSnakeBinder;
     private float levelTime = 0f;
@@ -253,8 +250,8 @@ public class SnakeMovement : MonoBehaviour
         print("GAMEOVER");
         //Time.timeScale = 0;
         audioSystem.PlayDeathSounds();
-
         ScoreManager.SetLengthAndScore(SnakeBody.Count, (SnakeBody.Count - 5) * (int)levelTime / 10 * (int)realSpeed);
+        LevelProgressionManager.MakeLevelProgression(int.Parse(ScoreManager.CurrentScore));
         StartCoroutine(
             GameGod.GetComponent<GameOverProcedures>().StartGameOverProcedure()
             );

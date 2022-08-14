@@ -12,21 +12,17 @@ public class GameOverProcedures : MonoBehaviour
     public Text ScoreText;
     public List<string> PenisQuotes;
     private ScoreManager scoreManager;
+    private LevelProgressionManager levelProgressionManager;
     public InputField inputNameField;
 
-    public string AndroidInputText = "text";
+    public string AndroidInputText = "";
     private TouchScreenKeyboard keyboard;
 
     // Start is called before the first frame update
     void Start()
     {
         scoreManager = GetComponent<ScoreManager>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        levelProgressionManager = GetComponent<LevelProgressionManager>();
     }
 
     public IEnumerator StartGameOverProcedure()
@@ -36,6 +32,8 @@ public class GameOverProcedures : MonoBehaviour
         PenisQuoteUI.text = "Dice il saggio: \"<b>" + PenisQuotes[UnityEngine.Random.Range(0, PenisQuotes.Count)] + "</b>\"";
         PenisQuoteUI.text += "\nMassima Erezione : <b>" + ScoreManager.CurrentLength + " cm</b>";
         PenisQuoteUI.text += "\nPunteggio : <b>" + ScoreManager.CurrentScore + "</b>";
+        //PenisQuoteUI.text += "\nLivello : <b>" + LevelProgressionManager.CurrentLevel + "</b>";
+        //PenisQuoteUI.text += "\nEXP : <b>" + LevelProgressionManager.CurrentRelativeXP + " / " + LevelProgressionManager.NextLevelRelativeXP + "</b>";
         if (ScoreManager.CurrentScoreName == "")
         {
 #if UNITY_EDITOR_WIN
@@ -48,6 +46,7 @@ public class GameOverProcedures : MonoBehaviour
         if (ScoreManager.CurrentScoreName != "")
         {
             yield return StartCoroutine(scoreManager.CommitScores(ScoreText));
+            DataPersistenceManager.Instance.SaveGame();
         }
         yield return StartCoroutine(scoreManager.LoadScores(ScoreText));
         if (ScoreManager.LocalScores.Count > 0)
@@ -63,6 +62,7 @@ public class GameOverProcedures : MonoBehaviour
 
     public IEnumerator InputPlayerNameMobile()
     {
+        yield return new WaitForSeconds(2f);
         inputNameField.gameObject.SetActive(true);
         keyboard = TouchScreenKeyboard.Open(AndroidInputText, TouchScreenKeyboardType.Default);
         while (keyboard.status == TouchScreenKeyboard.Status.Visible)
