@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -67,6 +68,36 @@ public class ScoreManager : MonoBehaviour, IDataPersistence
             }
             yield return 2f;
         }
+    }
+
+    public IEnumerator ChangeName(Text infoText = null)
+    {
+        // Fetch the global high score list from database
+        if (infoText)
+        {
+            infoText.text = "Aggiornamento nome...";
+        }
+        int returnCode = -1;
+        yield return StartCoroutine(ScoreWebInterface.UpdateName(CurrentID, CurrentScoreName, status => returnCode = status));
+        if (returnCode == 0)
+        {
+            print("Success: name updated");
+            if (infoText)
+            {
+                infoText.text = "Nome Aggiornato!";
+            }
+            yield return 2f;
+        }
+        if (returnCode == 1)
+        {
+            print("Errore aggiornamento nome");
+            if (infoText)
+            {
+                infoText.text = "Errore Aggiornamento nome";
+            }
+            yield return 2f;
+        }
+        infoText.text = "";
     }
 
     public ScoreWebInterface.ScoreElem CreateNewPlayerScore()

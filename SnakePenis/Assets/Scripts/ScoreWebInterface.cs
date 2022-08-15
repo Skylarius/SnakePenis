@@ -11,6 +11,7 @@ public static class ScoreWebInterface
     private const string secretKey = "Laola"; // Edit this value and make sure it's the same as the one stored on the server
     public const string addScoreURL = /* "http://snakepenis.com/addscore.php?" <- not working*/ "https://snakepenishighscore.000webhostapp.com/addscore.php?"; //be sure to add a ? to your url
     public const string highscoreURL =/* "http://snakepenis.com/display.php" <- not working*/ "https://snakepenishighscore.000webhostapp.com/display.php";
+    public const string changeNameURL = /* "http://snakepenis.com/changename.php?" <- not working*/ "https://snakepenishighscore.000webhostapp.com/changename.php?"; //be sure to add a ? to your url
 
     private static List<ScoreElem> scores;
     public static List<ScoreElem> Scores
@@ -96,6 +97,35 @@ public static class ScoreWebInterface
                 scores.Add(new ScoreElem(rawScores[rawScoreIndex], rawScores[rawScoreIndex + 1], rawScores[rawScoreIndex + 2], rawScores[rawScoreIndex +3 ]));
                 rawScoreIndex += 4;
             }
+            returnCode(0);
+        }
+    }
+
+    // Update name in the database
+    public static IEnumerator UpdateName(string id, string name, Action<int> returnCode)
+    {
+        //This connects to a server side php script that will add the name and score to a MySQL DB.
+        // Supply it with a string representing the players name and the players score.
+        //string hash = BitConverter.ToString((new MD5CryptoServiceProvider()).ComputeHash(Encoding.ASCII.GetBytes(name + score + secretKey)));
+        byte[] asciiBytes = Encoding.ASCII.GetBytes(name + id + secretKey);
+        byte[] hashedBytes = MD5.Create().ComputeHash(asciiBytes);
+        string hash = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+
+        string post_url = changeNameURL + "id=" + id + "&name=" + WWW.EscapeURL(name) + "&hash=" + hash;
+
+        // Post the URL to the site and create a download object to get the result.
+        Debug.Log("Submitting Name");
+        WWW hs_post = new WWW(post_url);
+        yield return hs_post; // Wait until the download is done
+        Debug.Log("Name Submitted");
+
+        if (hs_post.error != null)
+        {
+            Debug.Log("There was an error updating the given name at id" + id + ": " + hs_post.error);
+            returnCode(1);
+        }
+        else
+        {
             returnCode(0);
         }
     }

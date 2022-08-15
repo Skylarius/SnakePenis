@@ -16,7 +16,7 @@ public class GameOverProcedures : MonoBehaviour
     public InputField inputNameField;
     public int MaxScoreCount = 10;
 
-    public string AndroidInputText = "";
+    public string[] AndroidInputTexts = { "" };
     private TouchScreenKeyboard keyboard;
 
     // Start is called before the first frame update
@@ -37,12 +37,7 @@ public class GameOverProcedures : MonoBehaviour
         //PenisQuoteUI.text += "\nEXP : <b>" + LevelProgressionManager.CurrentRelativeXP + " / " + LevelProgressionManager.NextLevelRelativeXP + "</b>";
         if (ScoreManager.CurrentScoreName == "")
         {
-#if UNITY_EDITOR_WIN
-            yield return StartCoroutine(InputPlayerNameWindows());
-#else
-            yield return StartCoroutine(InputPlayerNameMobile());
-#endif
-            ScoreManager.CurrentID = Random.Range(17, 997).ToString();
+            yield return StartCoroutine(CreateNewUser());
         }
         if (ScoreManager.CurrentScoreName != "")
         {
@@ -72,13 +67,13 @@ public class GameOverProcedures : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
         inputNameField.gameObject.SetActive(true);
-        keyboard = TouchScreenKeyboard.Open(AndroidInputText, TouchScreenKeyboardType.Default);
+        keyboard = TouchScreenKeyboard.Open(AndroidInputTexts[Random.Range(0, AndroidInputTexts.Length)], TouchScreenKeyboardType.Default);
         while (keyboard.status == TouchScreenKeyboard.Status.Visible)
         {
             yield return null;
             inputNameField.text = keyboard.text;
         }
-        ScoreManager.CurrentScoreName = FormatKeyboardName(inputNameField.text);
+        ScoreManager.CurrentScoreName = StringFormatter.FormatKeyboardName(inputNameField.text);
         print(ScoreManager.CurrentScoreName);
         inputNameField.gameObject.SetActive(false);
     }
@@ -90,13 +85,37 @@ public class GameOverProcedures : MonoBehaviour
         {
             yield return null;
         }
-        ScoreManager.CurrentScoreName = FormatKeyboardName(inputNameField.text);
+        ScoreManager.CurrentScoreName = StringFormatter.FormatKeyboardName(inputNameField.text);
         print(ScoreManager.CurrentScoreName);
         inputNameField.gameObject.SetActive(false);
     }
 
-    string FormatKeyboardName(string name)
+    public IEnumerator CreateNewUser()
     {
-        return name.Replace("-", "");
+#if UNITY_EDITOR_WIN
+        yield return StartCoroutine(InputPlayerNameWindows());
+#else
+        yield return StartCoroutine(InputPlayerNameMobile());
+#endif
+        int id = Random.Range(17, 997);
+        yield return StartCoroutine(scoreManager.LoadScores(ScoreText));
+        int attempt;
+        for (attempt=0; attempt<1000; attempt++)
+        {
+            if (ScoreManager.LocalScores.Exists(e => e.ID == id.ToString())) {
+                id = (id+1)%(997-17) + 17;
+            } else
+            {
+                break;
+            }
+        }
+        if (attempt < 1000)
+        {
+            ScoreManager.CurrentID = id.ToString();
+        }
+        else
+        {
+            Debug.LogError("User not created. Tried 1000 times (bad luck, try later!)");
+        }
     }
 }

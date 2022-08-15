@@ -12,12 +12,20 @@ public class GameData
     public string TotalXP;
     public string Level;
 
+    // Unlockables
+    public bool RoundedBalls;
+    public bool AfroStyle;
+
     public GameData()
     {
         PlayerID = "NaN";
         Name = "";
         TotalXP = "0";
         Level = "1";
+
+        //Unlockables settings
+        RoundedBalls = false;
+        AfroStyle = false;
     }
 
 }

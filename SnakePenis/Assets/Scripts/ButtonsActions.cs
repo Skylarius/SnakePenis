@@ -8,7 +8,7 @@ public class ButtonsActions : MonoBehaviour
 {
     public Sprite playImage;
     public Sprite pauseImage;
-    public GameObject PauseBackgroundObj;
+    public GameObject SettingsMenuObj;
     public void ExitButtonFunction()
     {
         Application.Quit();
@@ -25,9 +25,9 @@ public class ButtonsActions : MonoBehaviour
         {
             image.sprite = (Time.timeScale == 0) ? playImage : pauseImage;
         }
-        if (PauseBackgroundObj != null)
+        if (SettingsMenuObj != null)
         {
-            PauseBackgroundObj.SetActive((Time.timeScale == 0) ? true : false);
+            SettingsMenuObj.SetActive(Time.timeScale == 0 ? true : false);
         }
     }
 
