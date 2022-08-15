@@ -14,6 +14,7 @@ public class GameOverProcedures : MonoBehaviour
     private ScoreManager scoreManager;
     private LevelProgressionManager levelProgressionManager;
     public InputField inputNameField;
+    public int MaxScoreCount = 10;
 
     public string AndroidInputText = "";
     private TouchScreenKeyboard keyboard;
@@ -51,6 +52,13 @@ public class GameOverProcedures : MonoBehaviour
         yield return StartCoroutine(scoreManager.LoadScores(ScoreText));
         if (ScoreManager.LocalScores.Count > 0)
         {
+            // Truncate after MaxScoreCount
+            if (ScoreManager.LocalScores.Count > MaxScoreCount)
+            {
+                ScoreManager.LocalScores.RemoveRange(MaxScoreCount, ScoreManager.LocalScores.Count - MaxScoreCount);
+            }
+
+            // Write score text
             ScoreText.text = "";
             foreach (ScoreWebInterface.ScoreElem scoreElem in ScoreManager.LocalScores)
             {
