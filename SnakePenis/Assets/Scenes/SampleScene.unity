@@ -714,10 +714,10 @@ RectTransform:
   m_Father: {fileID: 510598735}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 200}
-  m_SizeDelta: {x: 1138.1, y: 121.869995}
+  m_SizeDelta: {x: -1020, y: 121.869995}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &326517382
 MonoBehaviour:
@@ -1376,7 +1376,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &510598735
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2597,10 +2597,10 @@ RectTransform:
   m_Father: {fileID: 510598735}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -340}
-  m_SizeDelta: {x: 1704.6, y: 227}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -343.5}
+  m_SizeDelta: {x: -1040, y: 206.70001}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1030028572
 MonoBehaviour:
@@ -2624,7 +2624,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 25
+    m_FontSize: 23
     m_FontStyle: 2
     m_BestFit: 0
     m_MinSize: 2
@@ -2635,7 +2635,14 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Dice il saggio: "Lorem ipsum suca lorum."
+  m_Text: 'Dice il saggio: "<b>Il 15% degli uomini credeva che un pene di grandi
+    dimensioni fosse importante per una donna, ma solo il 2% del campione femminile
+    aveva risposto affermativamente a quella domanda</b>"
+
+    Massima Erezione :
+    <b>5 cm</b>
+
+    Punteggio : <b>0</b>
 
 '
 --- !u!222 &1030028573
@@ -3101,10 +3108,10 @@ RectTransform:
   m_Father: {fileID: 1640731132}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -75.6}
-  m_SizeDelta: {x: 208, y: 55}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 30}
+  m_SizeDelta: {x: 145, y: 55}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1567275384
 MonoBehaviour:
