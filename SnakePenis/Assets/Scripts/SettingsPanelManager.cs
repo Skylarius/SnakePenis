@@ -25,6 +25,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     private GameObject newRoundedBalls = null;
     public GameObject SnakeHead;
     public GameObject OriginalBalls;
+    public string roundedBallInfo;
 
     [Header("Afro Style unlockable")]
     public bool isAfroStyleEnabled = false;
@@ -32,10 +33,20 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     public Material Brown, DarkBrown;
     public Material OriginalPink, OriginalDarkPink;
     public Text AfroStyleButtonText;
+    public string afroStyleInfo;
 
     [Header("Jump unlockable")]
-    public bool isJumpEnabled;
+    public bool isJumpEnabled = false;
     public Text DickingJumpButtonText;
+    public string jumpInfo;
+
+    [Header("Rainbow unlockable")]
+    public bool isRainbowEnabled = false;
+    public Material RainbowMaterial;
+    public ParticleSystem particleSystem;
+    public Material particleSystemOriginalMaterial;
+    public Text RainbowStyleButtonText;
+    public string rainbowInfo;
 
     private TouchScreenKeyboard keyboard;
     // Start is called before the first frame update
@@ -49,6 +60,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         {
             unlockable.Menu.SetActive(LevelProgressionManager.CurrentLevel >= unlockable.Level);
         }
+        infoText.text = "";
     }
 
 
@@ -69,6 +81,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     public void SwitchBallsWithRoundedBalls()
     {
         SwitchBallsWithRoundedBalls(!isRoundedBallsEnabled);
+        infoText.text = roundedBallInfo;
     }
 
     void SwitchBallsWithRoundedBalls(bool condition)
@@ -113,7 +126,12 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
 
     public void SwitchAfroStyle()
     {
+        if (isRainbowEnabled)
+        {
+            SwitchRainbowStyle(false);
+        }
         SwitchAfroStyle(!isAfroStyleEnabled);
+        infoText.text = afroStyleInfo;
     }
 
     void SwitchAfroStyle(bool condition)
@@ -121,7 +139,6 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         SnakeMovement snakeMovement = SnakeHead.GetComponent<SnakeMovement>();
         Renderer snakeRenderer = OriginalPenisMesh.GetComponent<Renderer>();
         Renderer[] ballsRenderers = snakeMovement.SnakeBody[snakeMovement.SnakeBody.Count - 1].GetComponentsInChildren<Renderer>();
-        RealSnakeBinder realSnakeBinder = SnakeHead.GetComponent<RealSnakeBinder>();
         if (condition == true && isAfroStyleEnabled == false)
         {
             foreach (Renderer r in ballsRenderers)
@@ -146,6 +163,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     public void SwitchDickingJump()
     {
         SwitchDickingJump(!isJumpEnabled);
+        infoText.text = jumpInfo;
     }
 
     void SwitchDickingJump(bool condition)
@@ -164,6 +182,44 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         DickingJumpButtonText.text = (isJumpEnabled) ? "Disattiva" : "Attiva";
     }
 
+    public void SwitchRainbowStyle()
+    {
+        if (isAfroStyleEnabled)
+        {
+            SwitchAfroStyle(false);
+        }
+        SwitchRainbowStyle(!isRainbowEnabled);
+        infoText.text = rainbowInfo;
+    }
+
+    void SwitchRainbowStyle(bool condition)
+    {
+        SnakeMovement snakeMovement = SnakeHead.GetComponent<SnakeMovement>();
+        Renderer snakeRenderer = OriginalPenisMesh.GetComponent<Renderer>();
+        Renderer[] ballsRenderers = snakeMovement.SnakeBody[snakeMovement.SnakeBody.Count - 1].GetComponentsInChildren<Renderer>();
+        if (condition == true && isRainbowEnabled == false)
+        {
+            foreach (Renderer r in ballsRenderers)
+            {
+                r.material = RainbowMaterial;
+            }
+            snakeRenderer.material = RainbowMaterial;
+            particleSystem.GetComponent<Renderer>().material = RainbowMaterial;
+            isRainbowEnabled = true;
+        }
+        else if (condition == false && isRainbowEnabled == true)
+        {
+            foreach (Renderer r in ballsRenderers)
+            {
+                r.material = OriginalDarkPink;
+            }
+            snakeRenderer.material = OriginalPink;
+            particleSystem.GetComponent<Renderer>().material = particleSystemOriginalMaterial;
+            isRainbowEnabled = false;
+        }
+        RainbowStyleButtonText.text = (isRainbowEnabled) ? "Disattiva" : "Attiva";
+    }
+
     public void LoadData(GameData data)
     {
         if (data.RoundedBalls == true)
@@ -180,6 +236,11 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         if (data.AfroStyle == true)
         {
             SwitchAfroStyle(true);
+            if (isRainbowEnabled)
+            {
+                SwitchRainbowStyle(false);
+                RainbowStyleButtonText.text = "Attiva";
+            }
             AfroStyleButtonText.text = "Disattiva";
         } else
         {
@@ -187,6 +248,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             isAfroStyleEnabled = false;
             AfroStyleButtonText.text = "Attiva";
         }
+
         if (data.DickingJump == true)
         {
             SwitchDickingJump(true);
@@ -198,6 +260,23 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             isJumpEnabled = false;
             DickingJumpButtonText.text = "Attiva";
         }
+
+        if (data.RainbowStyle == true)
+        {
+            SwitchRainbowStyle(true);
+            if (isAfroStyleEnabled)
+            {
+                SwitchAfroStyle(false);
+                AfroStyleButtonText.text = "Attiva";
+            }
+            RainbowStyleButtonText.text = "Disattiva";
+        }
+        else
+        {
+            print("NO RAINBOW");
+            isRainbowEnabled = false;
+            RainbowStyleButtonText.text = "Attiva";
+        }
     }
 
     public void SaveData(ref GameData data)
@@ -205,5 +284,6 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         data.RoundedBalls = isRoundedBallsEnabled;
         data.AfroStyle = isAfroStyleEnabled;
         data.DickingJump = isJumpEnabled;
+        data.RainbowStyle = isRainbowEnabled;
     }
 }

@@ -16,6 +16,7 @@ public class GameData
     public bool RoundedBalls;
     public bool AfroStyle;
     public bool DickingJump;
+    public bool RainbowStyle;
 
     public GameData()
     {
@@ -28,5 +29,6 @@ public class GameData
         RoundedBalls = false;
         AfroStyle = false;
         DickingJump = false;
+        RainbowStyle = false;
     }
 }

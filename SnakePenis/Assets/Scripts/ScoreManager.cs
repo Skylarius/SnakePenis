@@ -97,7 +97,6 @@ public class ScoreManager : MonoBehaviour, IDataPersistence
             }
             yield return 2f;
         }
-        infoText.text = "";
     }
 
     public ScoreWebInterface.ScoreElem CreateNewPlayerScore()
