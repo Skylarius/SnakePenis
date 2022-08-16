@@ -15,6 +15,7 @@ public class GameData
     // Unlockables
     public bool RoundedBalls;
     public bool AfroStyle;
+    public bool DickingJump;
 
     public GameData()
     {
@@ -26,6 +27,6 @@ public class GameData
         //Unlockables settings
         RoundedBalls = false;
         AfroStyle = false;
+        DickingJump = false;
     }
-
 }

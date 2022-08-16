@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class SnakeMovement : MonoBehaviour
 {
     public Vector2 direction;
+    public Vector3 jumpDirection;
     public Vector2 targetRealPosition;
     public float realSpeed = 0.1f;
     public Vector3 targetPositionOnGrid;
@@ -25,11 +26,28 @@ public class SnakeMovement : MonoBehaviour
     [Header("Game Over")]
     private AudioSystem audioSystem;
     private RealSnakeBinder realSnakeBinder;
-    private float levelTime = 0f;
+    public float levelTime = 0f;
     public static bool isGameOver = false;
 
     [Header("Animation")]
-    public float TimeForPickUpToReachTheTail = 3f;
+    public float TimeForPickUpToReachTheTail = 10f;
+
+    [Header("Jump settings")]
+    public bool isJumpEnabled = false;
+    public float jumpTime = 20f;
+    public float jumpForce = 3f;
+    private float jumpTryTime = -1f;
+    public float jumpTapRange = 10f;
+    private float SqrJumpTapRange { get { return jumpTapRange * jumpTapRange; } }
+    public float jumpDoubleTapDeltaTime = 0.3f;
+    private bool canJump {
+        get
+        {
+            return isJumpEnabled && !isJumping;
+        }
+    }
+    private bool doJump = false;
+    private bool isJumping = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -60,18 +78,33 @@ public class SnakeMovement : MonoBehaviour
 #if UNITY_EDITOR_WIN
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
+
+        doJump = canJump && Input.GetButtonDown("Jump");
 #else
         float x = 0f;
         float z = 0f;
 #endif
+        if (doJump)
+        {
+            StartCoroutine(JumpCoroutine());
+            return;
+        }
         if (Input.touchCount > 0) 
         {
             Touch touch = Input.GetTouch(0);
-            switch(touch.phase)
+            switch (touch.phase)
             {
                 case TouchPhase.Began:
-                    //TODO: Check if it's in the AVOIDING ZONE (pause, exit)...
+                    //TODO: Check if it's in the AVOID ZONE (pause, exit)...
                     Vector3 tapPoint = ConvertTouchToPositionInWorld(touch);
+                    if (canJump)
+                    {
+                        if (Vector2.SqrMagnitude(Vector2.right * (tapPoint.x - transform.position.x) + Vector2.up * (tapPoint.z - transform.position.z)) < SqrJumpTapRange)
+                        {
+                            StartCoroutine(JumpCoroutine());
+                            return;
+                        }
+                    }
                     x = tapPoint.x - transform.position.x;
                     z = tapPoint.z - transform.position.z;
                     if (direction.y != 0)
@@ -87,6 +120,7 @@ public class SnakeMovement : MonoBehaviour
         }
         //float x = Input.GetAxis("Horizontal");
         //float z = Input.GetAxis("Vertical");
+        // Jump action
         if (x == 0f && z == 0f || direction.x * x < 0 || direction.y * z < 0)
         {
             return;
@@ -104,6 +138,10 @@ public class SnakeMovement : MonoBehaviour
             z = z > 0 ? 1 : -1;
         }
         direction = Vector2.right * x + Vector2.up * z;
+        if (doJump)
+        {
+            StartCoroutine(JumpCoroutine());
+        }
     }
 
     private void FixedUpdate()
@@ -112,6 +150,7 @@ public class SnakeMovement : MonoBehaviour
         {
             return;
         }
+
         for (int i = SnakeBody.Count - 1; i > 0f; i--)
         {
             SnakeBody[i].transform.position = Vector3.Lerp(
@@ -126,7 +165,7 @@ public class SnakeMovement : MonoBehaviour
 
         targetPositionOnGrid = ConvertToPositionOnGrid(targetRealPosition);
         Quaternion targetRotation = Quaternion.LookRotation(Vector3.right * direction.x + Vector3.forward * direction.y, Vector3.up);
-        transform.position = Vector3.Lerp(transform.position, targetPositionOnGrid, Time.deltaTime * realSpeed * speedPercentage);
+        transform.position = Vector3.Lerp(transform.position + jumpDirection, targetPositionOnGrid, Time.deltaTime * realSpeed * speedPercentage);
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
     }
 
@@ -158,7 +197,7 @@ public class SnakeMovement : MonoBehaviour
         if (isGameOver) return;
         if (other.gameObject.CompareTag("PowerUp"))
         {
-            //Destroy(other.gameObject);
+
             Grow();
             StartCoroutine(PickupAnimationCoroutine(other.gameObject));
         }
@@ -277,5 +316,24 @@ public class SnakeMovement : MonoBehaviour
             returnVector = ray.GetPoint(distance); // get the point
         }
         return returnVector;
+    }
+
+    public void SetEnableJumpCondition(bool condition)
+    {
+        isJumpEnabled = condition;
+    }
+
+    IEnumerator JumpCoroutine()
+    {
+        float t = 0f;
+        isJumping = true;
+        while (t < jumpTime / realSpeed)
+        {
+            jumpDirection = Vector3.up * jumpForce;
+            t += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+        jumpDirection = Vector3.zero;
+        isJumping = false;
     }
 }

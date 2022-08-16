@@ -33,6 +33,10 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     public Material OriginalPink, OriginalDarkPink;
     public Text AfroStyleButtonText;
 
+    [Header("Jump unlockable")]
+    public bool isJumpEnabled;
+    public Text DickingJumpButtonText;
+
     private TouchScreenKeyboard keyboard;
     // Start is called before the first frame update
     void Start()
@@ -71,8 +75,14 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     {
         SnakeMovement snakeMovement = SnakeHead.GetComponent<SnakeMovement>();
         RealSnakeBinder realSnakeBinder = SnakeHead.GetComponent<RealSnakeBinder>();
+        Renderer[] initialBallsRenderers = snakeMovement.SnakeBody[snakeMovement.SnakeBody.Count - 1].GetComponentsInChildren<Renderer>();
         if (condition == true && isRoundedBallsEnabled==false) {
             newRoundedBalls = Instantiate(RoundedBalls);
+            Renderer[] newBallsRenderers = newRoundedBalls.GetComponentsInChildren<Renderer>();
+            for (int i=0; i<newBallsRenderers.Length; i++)
+            {
+                newBallsRenderers[i].material = initialBallsRenderers[i].material;
+            }
             newRoundedBalls.transform.position = OriginalBalls.transform.position;
             snakeMovement.SnakeBody[snakeMovement.SnakeBody.Count - 1] = newRoundedBalls;
             realSnakeBinder.UpdateBinder();
@@ -90,6 +100,11 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
                 Destroy(newRoundedBalls);
             }
             snakeMovement.SnakeBody[snakeMovement.SnakeBody.Count - 1] = OriginalBalls;
+            Renderer[] OriginalBallsRenderers = OriginalBalls.GetComponentsInChildren<Renderer>();
+            for (int i = 0; i < OriginalBallsRenderers.Length; i++)
+            {
+                OriginalBallsRenderers[i].material = initialBallsRenderers[i].material;
+            }
             realSnakeBinder.UpdateBinder();
             isRoundedBallsEnabled = false;
         }
@@ -105,7 +120,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     {
         SnakeMovement snakeMovement = SnakeHead.GetComponent<SnakeMovement>();
         Renderer snakeRenderer = OriginalPenisMesh.GetComponent<Renderer>();
-        Renderer[] ballsRenderers = OriginalBalls.GetComponentsInChildren<Renderer>();
+        Renderer[] ballsRenderers = snakeMovement.SnakeBody[snakeMovement.SnakeBody.Count - 1].GetComponentsInChildren<Renderer>();
         RealSnakeBinder realSnakeBinder = SnakeHead.GetComponent<RealSnakeBinder>();
         if (condition == true && isAfroStyleEnabled == false)
         {
@@ -126,6 +141,27 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             isAfroStyleEnabled = false;
         }
         AfroStyleButtonText.text = (isAfroStyleEnabled) ? "Disattiva" : "Attiva";
+    }
+
+    public void SwitchDickingJump()
+    {
+        SwitchDickingJump(!isJumpEnabled);
+    }
+
+    void SwitchDickingJump(bool condition)
+    {
+        SnakeMovement snakeMovement = SnakeHead.GetComponent<SnakeMovement>();
+        if (condition == true && isJumpEnabled == false)
+        {
+            snakeMovement.isJumpEnabled = true;
+            isJumpEnabled = true;
+        }
+        else if (condition == false && isJumpEnabled == true)
+        {
+            snakeMovement.isJumpEnabled = false;
+            isJumpEnabled = false;
+        }
+        DickingJumpButtonText.text = (isJumpEnabled) ? "Disattiva" : "Attiva";
     }
 
     public void LoadData(GameData data)
@@ -151,11 +187,23 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             isAfroStyleEnabled = false;
             AfroStyleButtonText.text = "Attiva";
         }
+        if (data.DickingJump == true)
+        {
+            SwitchDickingJump(true);
+            DickingJumpButtonText.text = "Disattiva";
+        }
+        else
+        {
+            print("NO JUMP");
+            isJumpEnabled = false;
+            DickingJumpButtonText.text = "Attiva";
+        }
     }
 
     public void SaveData(ref GameData data)
     {
         data.RoundedBalls = isRoundedBallsEnabled;
         data.AfroStyle = isAfroStyleEnabled;
+        data.DickingJump = isJumpEnabled;
     }
 }
