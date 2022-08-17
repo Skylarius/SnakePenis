@@ -10,10 +10,12 @@ public class GameOverProcedures : MonoBehaviour
     public GameObject GameOverUI;
     public Text PenisQuoteUI;
     public Text ScoreText;
+    public Text BonusText;
     public List<string> PenisQuotes;
     private ScoreManager scoreManager;
     private LevelProgressionManager levelProgressionManager;
     public InputField inputNameField;
+    public SettingsPanelManager settingsPanelManager;
     public int MaxScoreCount = 10;
 
     public string[] AndroidInputTexts = { "" };
@@ -32,19 +34,39 @@ public class GameOverProcedures : MonoBehaviour
         GameOverUI.SetActive(true);
         PenisQuoteUI.text = "Dice il saggio: \"<b>" + PenisQuotes[UnityEngine.Random.Range(0, PenisQuotes.Count)] + "</b>\"";
         PenisQuoteUI.text += "\nMassima Erezione : <b>" + ScoreManager.CurrentLength + " cm</b>";
+        
+        // Add bonuses
+        List<int> BonusesToAdd = new List<int>();
+        BonusText.text = "";
+        foreach (SettingsPanelManager.Bonus bonus in settingsPanelManager.BonusGenerator())
+        {
+            int bonusScore = (int)(bonus.Percent * 0.01f * int.Parse(ScoreManager.CurrentScore));
+            BonusesToAdd.Add(bonusScore);
+            BonusText.text += $"{bonus.Name}: {bonusScore}\n";
+        }
+        foreach (int bonusScore in BonusesToAdd)
+        {
+            ScoreManager.AddBonusScore(bonusScore);
+        }
+
+        // Show score
         PenisQuoteUI.text += "\nPunteggio : <b>" + ScoreManager.CurrentScore + "</b>";
-        //PenisQuoteUI.text += "\nLivello : <b>" + LevelProgressionManager.CurrentLevel + "</b>";
-        //PenisQuoteUI.text += "\nEXP : <b>" + LevelProgressionManager.CurrentRelativeXP + " / " + LevelProgressionManager.NextLevelRelativeXP + "</b>";
+
+        // Get Name
         if (ScoreManager.CurrentScoreName == "")
         {
             yield return StartCoroutine(CreateNewUser());
         }
+
+        // Commit Score and Name and then Save
         if (ScoreManager.CurrentScoreName != "")
         {
             yield return StartCoroutine(scoreManager.CommitScores(ScoreText));
             DataPersistenceManager.Instance.SaveGame();
         }
         yield return StartCoroutine(scoreManager.LoadScores(ScoreText));
+
+        // Show Leaderboard
         if (ScoreManager.LocalScores.Count > 0)
         {
             // Truncate after MaxScoreCount
@@ -57,7 +79,13 @@ public class GameOverProcedures : MonoBehaviour
             ScoreText.text = "";
             foreach (ScoreWebInterface.ScoreElem scoreElem in ScoreManager.LocalScores)
             {
-                ScoreText.text += ("<b>" + scoreElem.name + "</b>\t" + scoreElem.length + "cm\t<b>" + scoreElem.score + "</b>\n");
+                // Highlight personal scores (if present in Leaderboard)
+                string scoreLine = "<b>" + scoreElem.name + "</b>\t" + scoreElem.length + "cm\t<b>" + scoreElem.score + "</b>\n";
+                if (scoreElem.ID == ScoreManager.CurrentID)
+                {
+                    scoreLine = "<color=red>" + scoreLine + "</color>";
+                }
+                ScoreText.text += scoreLine;
                 yield return new WaitForSeconds(0.5f);
             }
         }

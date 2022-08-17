@@ -110,6 +110,13 @@ public class ScoreManager : MonoBehaviour, IDataPersistence
         CurrentScore = score.ToString();
     }
 
+    public static void AddBonusScore(int bonusScore)
+    {
+        int currentScore = int.Parse(CurrentScore);
+        currentScore += bonusScore;
+        CurrentScore = currentScore.ToString();
+    }
+
     void IDataPersistence.LoadData(GameData data)
     {
         CurrentScoreName = data.Name;

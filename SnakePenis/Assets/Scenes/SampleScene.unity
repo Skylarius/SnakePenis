@@ -123,6 +123,121 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &81510048
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 81510049}
+  - component: {fileID: 81510052}
+  - component: {fileID: 81510051}
+  - component: {fileID: 81510053}
+  m_Layer: 5
+  m_Name: BonusText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &81510049
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 81510048}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 510598735}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: -363, y: 0}
+  m_SizeDelta: {x: 492.5, y: 360}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &81510051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 81510048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 0.5533309, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 29
+    m_FontStyle: 1
+    m_BestFit: 0
+    m_MinSize: 2
+    m_MaxSize: 49
+    m_Alignment: 5
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 'BONUS 1
+
+    BONUS 2
+
+    BONUS 3
+
+    BONUS 4
+
+    BONUS 5
+
+    BONUS
+    6
+
+
+'
+--- !u!222 &81510052
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 81510048}
+  m_CullTransparentMesh: 1
+--- !u!95 &81510053
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 81510048}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 96e5e082c50c93842bb7f96e380f55bc, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &98870901
 GameObject:
   m_ObjectHideFlags: 0
@@ -1925,8 +2040,8 @@ RectTransform:
   - {fileID: 326517381}
   - {fileID: 1825863978}
   - {fileID: 124404871}
+  - {fileID: 81510049}
   - {fileID: 1030028571}
-  - {fileID: 1640731132}
   - {fileID: 957623503}
   - {fileID: 520829677}
   m_Father: {fileID: 163704969}
@@ -2908,7 +3023,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1909088677}
         m_TargetAssemblyTypeName: SettingsPanelManager, Scripts
-        m_MethodName: SwitchRainbowStyle
+        m_MethodName: SwitchMovingWalls
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3956,7 +4071,7 @@ RectTransform:
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 510598735}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
@@ -4420,7 +4535,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Boh
+  m_Text: Muri muoventi
 --- !u!222 &1107687735
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5596,17 +5711,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1567275382}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.40000007, y: 0.40000007, z: 0.40000007}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1640731132}
-  m_RootOrder: 0
+  m_Father: {fileID: 1857752796}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 30}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -14.45668, y: -15.057297}
   m_SizeDelta: {x: 145, y: 55}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1567275384
@@ -5642,7 +5757,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Premi per replayare
+  m_Text: "Tap To \nRestart"
 --- !u!222 &1567275385
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5808,6 +5923,7 @@ GameObject:
   - component: {fileID: 1640731135}
   - component: {fileID: 1640731134}
   - component: {fileID: 1640731133}
+  - component: {fileID: 1640731136}
   m_Layer: 5
   m_Name: ReplayButton (Legacy)
   m_TagString: Untagged
@@ -5824,16 +5940,15 @@ RectTransform:
   m_GameObject: {fileID: 1640731131}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 0.40000007, y: 0.40000007, z: 0.40000007}
   m_ConstrainProportionsScale: 1
-  m_Children:
-  - {fileID: 1567275383}
-  m_Father: {fileID: 510598735}
-  m_RootOrder: 5
+  m_Children: []
+  m_Father: {fileID: 1857752796}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -340, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -14.456667, y: -18.23333}
   m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1640731133
@@ -5930,6 +6045,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1640731131}
   m_CullTransparentMesh: 1
+--- !u!95 &1640731136
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640731131}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8d78037a05edb2d40bb809268c4d1ae7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1686478945
 GameObject:
   m_ObjectHideFlags: 0
@@ -6653,6 +6788,7 @@ MonoBehaviour:
   GameOverUI: {fileID: 510598734}
   PenisQuoteUI: {fileID: 1030028572}
   ScoreText: {fileID: 716465315}
+  BonusText: {fileID: 81510051}
   PenisQuotes:
   - Agitare prima dell'uso
   - "C\u2019\xE8 una sola cosa che cresce in mano ad altri"
@@ -6667,6 +6803,7 @@ MonoBehaviour:
   - "Il mio cervello \xE8 il mio secondo organo preferito"
   - Fallo. Agricoltore della natura
   inputNameField: {fileID: 520829678}
+  settingsPanelManager: {fileID: 1909088677}
   MaxScoreCount: 10
   AndroidInputTexts:
   - Flautenzio
@@ -6853,7 +6990,9 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 1
-  m_Children: []
+  m_Children:
+  - {fileID: 1640731132}
+  - {fileID: 1567275383}
   m_Father: {fileID: 124404871}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -11938,15 +12077,28 @@ MonoBehaviour:
   OriginalDarkPink: {fileID: 2100000, guid: 03087e7babecc2a49a45b6eaa2b9330b, type: 2}
   AfroStyleButtonText: {fileID: 544492388}
   afroStyleInfo: "Pi\xF9 lungo, pi\xF9 grosso, meno razzista."
+  AfroStyleBonusPercent: 4
+  AfroStyleBonusTitle: BONUS Multiculturale
   isJumpEnabled: 0
   DickingJumpButtonText: {fileID: 1927771305}
   jumpInfo: Premi sul glande per fare un salto della quaglia.
+  JumpBonusPercent: 2
+  JumpBonusTitle: BONUS Uccello in aria
   isRainbowEnabled: 0
   RainbowMaterial: {fileID: 2100000, guid: f756bea2726ee664db5614846ee8455f, type: 2}
   particleSystem: {fileID: 1875910564}
   particleSystemOriginalMaterial: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
   RainbowStyleButtonText: {fileID: 141331191}
   rainbowInfo: Tolleranza, amore e psichedelia.
+  RainbowBonusPercent: 6
+  RainbowBonusTitle: BONUS Multisessuale
+  isMovingWallsEnabled: 0
+  MovingWall1: {fileID: 9017356347894402995, guid: 08c496bea469b5f48bf33d992a33a8aa, type: 3}
+  MovingWall2: {fileID: 6479081782933927446, guid: 5a8bea9b78b7c6c4c8118866850c50eb, type: 3}
+  MovingWallsBonusPercent: 12
+  MovingWallsBonusTitle: BONUS Muro Duro Mobile
+  MovingWallsButtonText: {fileID: 500220252}
+  movingWallsInfo: "Attento al muro (per vedere chi ce l'ha pi\xF9 duro)"
 --- !u!1 &1927771303
 GameObject:
   m_ObjectHideFlags: 0

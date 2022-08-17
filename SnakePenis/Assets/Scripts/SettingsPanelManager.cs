@@ -16,6 +16,12 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         public int Level;
     }
 
+    public struct Bonus
+    {
+        public string Name;
+        public int Percent;
+    }
+
     public List<Unlockable> Unlockables;
 
     [Header("Rounded Ball unlockable")]
@@ -34,11 +40,15 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     public Material OriginalPink, OriginalDarkPink;
     public Text AfroStyleButtonText;
     public string afroStyleInfo;
+    public int AfroStyleBonusPercent = 0;
+    public string AfroStyleBonusTitle;
 
     [Header("Jump unlockable")]
     public bool isJumpEnabled = false;
     public Text DickingJumpButtonText;
     public string jumpInfo;
+    public int JumpBonusPercent = 0;
+    public string JumpBonusTitle;
 
     [Header("Rainbow unlockable")]
     public bool isRainbowEnabled = false;
@@ -47,6 +57,19 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     public Material particleSystemOriginalMaterial;
     public Text RainbowStyleButtonText;
     public string rainbowInfo;
+    public int RainbowBonusPercent = 0;
+    public string RainbowBonusTitle;
+
+    [Header("Moving Walls")]
+    public bool isMovingWallsEnabled = false;
+    public GameObject MovingWall1;
+    public GameObject MovingWall2;
+    public int MovingWallsBonusPercent = 12;
+    public string MovingWallsBonusTitle;
+    private GameObject newMovingWall1 = null, newMovingWall2 = null;
+    public Text MovingWallsButtonText;
+    public string movingWallsInfo;
+
 
     private TouchScreenKeyboard keyboard;
     // Start is called before the first frame update
@@ -61,6 +84,38 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             unlockable.Menu.SetActive(LevelProgressionManager.CurrentLevel >= unlockable.Level);
         }
         infoText.text = "";
+    }
+
+    public IEnumerable<Bonus> BonusGenerator()
+    {
+        if (isJumpEnabled)
+        {
+            Bonus bonus;
+            bonus.Name = JumpBonusTitle;
+            bonus.Percent = JumpBonusPercent;
+            yield return bonus;
+        }
+        if (isAfroStyleEnabled)
+        {
+            Bonus bonus;
+            bonus.Name = AfroStyleBonusTitle;
+            bonus.Percent = AfroStyleBonusPercent;
+            yield return bonus;
+        }
+        if (isRainbowEnabled)
+        {
+            Bonus bonus;
+            bonus.Name = RainbowBonusTitle;
+            bonus.Percent = RainbowBonusPercent;
+            yield return bonus;
+        }
+        if (isMovingWallsEnabled)
+        {
+            Bonus bonus;
+            bonus.Name = MovingWallsBonusTitle;
+            bonus.Percent = MovingWallsBonusPercent;
+            yield return bonus;
+        }
     }
 
 
@@ -220,6 +275,35 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         RainbowStyleButtonText.text = (isRainbowEnabled) ? "Disattiva" : "Attiva";
     }
 
+    public void SwitchMovingWalls()
+    {
+        SwitchMovingWalls(!isMovingWallsEnabled);
+        infoText.text = movingWallsInfo;
+    }
+
+    void SwitchMovingWalls(bool condition)
+    {
+        if (condition == true && isMovingWallsEnabled == false)
+        {
+            newMovingWall1 = Instantiate(MovingWall1);
+            newMovingWall2 = Instantiate(MovingWall2);
+            isMovingWallsEnabled = true;
+        }
+        else if (condition == false && isMovingWallsEnabled == true)
+        {
+            if (newMovingWall1)
+            {
+                Destroy(newMovingWall1);
+            }
+            if (newMovingWall2)
+            {
+                Destroy(newMovingWall2);
+            }
+            isMovingWallsEnabled = false;
+        }
+        MovingWallsButtonText.text = (isMovingWallsEnabled) ? "Disattiva" : "Attiva";
+    }
+
     public void LoadData(GameData data)
     {
         if (data.RoundedBalls == true)
@@ -277,6 +361,18 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             isRainbowEnabled = false;
             RainbowStyleButtonText.text = "Attiva";
         }
+
+        if (data.MovingWalls == true)
+        {
+            SwitchMovingWalls(true);
+            MovingWallsButtonText.text = "Disattiva";
+        }
+        else
+        {
+            print("NO MOVING WALLS");
+            isMovingWallsEnabled = false;
+            MovingWallsButtonText.text = "Attiva";
+        }
     }
 
     public void SaveData(ref GameData data)
@@ -285,5 +381,6 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         data.AfroStyle = isAfroStyleEnabled;
         data.DickingJump = isJumpEnabled;
         data.RainbowStyle = isRainbowEnabled;
+        data.MovingWalls = isMovingWallsEnabled;
     }
 }

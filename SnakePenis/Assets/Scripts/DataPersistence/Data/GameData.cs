@@ -17,6 +17,7 @@ public class GameData
     public bool AfroStyle;
     public bool DickingJump;
     public bool RainbowStyle;
+    public bool MovingWalls;
 
     public GameData()
     {
@@ -30,5 +31,7 @@ public class GameData
         AfroStyle = false;
         DickingJump = false;
         RainbowStyle = false;
+        MovingWalls = false;
     }
+
 }
