@@ -70,8 +70,6 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     public Text MovingWallsButtonText;
     public string movingWallsInfo;
 
-
-    private TouchScreenKeyboard keyboard;
     // Start is called before the first frame update
     void Start()
     {
