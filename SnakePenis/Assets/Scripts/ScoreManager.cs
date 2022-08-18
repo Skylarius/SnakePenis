@@ -28,6 +28,7 @@ public class ScoreManager : MonoBehaviour, IDataPersistence
 
         if (returnCode == 0)
         {
+            scoreText.text = "";
             LocalScores.Clear();
             LocalScores = ScoreWebInterface.Scores;
         }
