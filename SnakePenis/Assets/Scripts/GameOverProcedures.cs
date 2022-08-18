@@ -15,7 +15,7 @@ public class GameOverProcedures : MonoBehaviour
     private ScoreManager scoreManager;
     private LevelProgressionManager levelProgressionManager;
     public InputField inputNameField;
-    public SettingsPanelManager settingsPanelManager;
+    private SettingsPanelManager settingsPanelManager;
     public int MaxScoreCount = 10;
 
     public string[] AndroidInputTexts = { "" };
@@ -26,27 +26,28 @@ public class GameOverProcedures : MonoBehaviour
     {
         scoreManager = GetComponent<ScoreManager>();
         levelProgressionManager = GetComponent<LevelProgressionManager>();
+        settingsPanelManager = GetComponent<SettingsPanelManager>();
     }
 
     public IEnumerator StartGameOverProcedure()
     {
+        // Reset All Textes
         ScoreText.text = "";
-        GameOverUI.SetActive(true);
-        PenisQuoteUI.text = "Dice il saggio: \"<b>" + PenisQuotes[UnityEngine.Random.Range(0, PenisQuotes.Count)] + "</b>\"";
-        PenisQuoteUI.text += "\nMassima Erezione : <b>" + ScoreManager.CurrentLength + " cm</b>";
-        
-        // Add bonuses
-        List<int> BonusesToAdd = new List<int>();
         BonusText.text = "";
-        foreach (SettingsPanelManager.Bonus bonus in settingsPanelManager.BonusGenerator())
+        PenisQuoteUI.text = "";
+        GameOverUI.SetActive(true);
+
+        // Write Wisdom and Length
+        PenisQuoteUI.text = "Dice il saggio: \"<b>" + PenisQuotes[UnityEngine.Random.Range(0, PenisQuotes.Count)] + "</b>\"";
+        yield return new WaitForSeconds(0.8f);
+        PenisQuoteUI.text += "\nMassima Erezione : <b>" + ScoreManager.CurrentLength + " cm</b>";
+        yield return new WaitForSeconds(0.8f);
+
+        // Add bonuses
+        foreach (SettingsPanelManager.Bonus bonus in settingsPanelManager.Bonuses)
         {
-            int bonusScore = (int)(bonus.XPAmount + bonus.Percent * 0.01f * int.Parse(ScoreManager.CurrentScore));
-            BonusesToAdd.Add(bonusScore);
-            BonusText.text += $"{bonus.Name}: {bonusScore}\n";
-        }
-        foreach (int bonusScore in BonusesToAdd)
-        {
-            ScoreManager.AddBonusScore(bonusScore);
+            BonusText.text += $"{bonus.Name}: {bonus.TotalBonus}\n";
+            yield return new WaitForSeconds(0.8f);
         }
 
         // Show score
@@ -76,7 +77,6 @@ public class GameOverProcedures : MonoBehaviour
             }
 
             // Write score text
-            ScoreText.text = "";
             foreach (ScoreWebInterface.ScoreElem scoreElem in ScoreManager.LocalScores)
             {
                 // Highlight personal scores (if present in Leaderboard)

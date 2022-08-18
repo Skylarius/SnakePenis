@@ -289,8 +289,19 @@ public class SnakeMovement : MonoBehaviour
         print("GAMEOVER");
         //Time.timeScale = 0;
         audioSystem.PlayDeathSounds();
+        // Add Score
         ScoreManager.SetLengthAndScore(SnakeBody.Count, (SnakeBody.Count - 5) * (int)levelTime / 10 * (int)realSpeed);
+
+        // Add Bonuses Score
+        foreach (SettingsPanelManager.Bonus bonus in GameGod.GetComponent<SettingsPanelManager>().Bonuses)
+        {
+            ScoreManager.AddBonusScore(bonus.TotalBonus);
+        }
+
+        // Add XP
         LevelProgressionManager.MakeLevelProgression(int.Parse(ScoreManager.CurrentScore));
+
+        //Start GameOver Animations
         StartCoroutine(
             GameGod.GetComponent<GameOverProcedures>().StartGameOverProcedure()
             );

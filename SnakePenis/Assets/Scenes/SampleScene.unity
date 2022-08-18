@@ -1394,6 +1394,7 @@ RectTransform:
   - {fileID: 424638878}
   - {fileID: 557254923}
   - {fileID: 1572738079}
+  - {fileID: 479999497}
   - {fileID: 1817953572}
   - {fileID: 1846077453}
   - {fileID: 1902218235}
@@ -1507,17 +1508,17 @@ RectTransform:
   m_GameObject: {fileID: 479999496}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8000001, y: 0.8000001, z: 0.8000001}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 777821246}
   - {fileID: 2047190263}
-  m_Father: {fileID: 1572738079}
-  m_RootOrder: 2
+  m_Father: {fileID: 417854577}
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -400, y: -174.99997}
+  m_AnchoredPosition: {x: 380.0002, y: 30.000061}
   m_SizeDelta: {x: 800, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!4 &480128001 stripped
@@ -3021,7 +3022,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1909088677}
+      - m_Target: {fileID: 1808667366}
         m_TargetAssemblyTypeName: SettingsPanelManager, Scripts
         m_MethodName: SwitchMovingWalls
         m_Mode: 1
@@ -3344,7 +3345,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1909088677}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SettingsPanelManager, Scripts
         m_MethodName: SwitchRainbowStyle
         m_Mode: 1
@@ -4400,7 +4401,7 @@ MonoBehaviour:
   m_OnSubmit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1909088677}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SettingsPanelManager, Scripts
         m_MethodName: ChangeName
         m_Mode: 1
@@ -4805,7 +4806,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1909088677}
+      - m_Target: {fileID: 1808667366}
         m_TargetAssemblyTypeName: SettingsPanelManager, Scripts
         m_MethodName: SwitchRainbowStyle
         m_Mode: 1
@@ -5056,7 +5057,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1909088677}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SettingsPanelManager, Scripts
         m_MethodName: SwitchDickingJump
         m_Mode: 1
@@ -5190,7 +5191,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1909088677}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SettingsPanelManager, Scripts
         m_MethodName: SwitchRainbowStyle
         m_Mode: 1
@@ -5324,7 +5325,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1909088677}
+      - m_Target: {fileID: 1808667366}
         m_TargetAssemblyTypeName: SettingsPanelManager, Scripts
         m_MethodName: SwitchDickingJump
         m_Mode: 1
@@ -5597,7 +5598,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 417854577}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -5796,7 +5797,6 @@ RectTransform:
   m_Children:
   - {fileID: 552553086}
   - {fileID: 1788386920}
-  - {fileID: 479999497}
   m_Father: {fileID: 417854577}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6543,7 +6543,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1909088677}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SettingsPanelManager, Scripts
         m_MethodName: SwitchBallsWithRoundedBalls
         m_Mode: 1
@@ -6602,13 +6602,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1808667359}
+  - component: {fileID: 1808667365}
   - component: {fileID: 1808667358}
   - component: {fileID: 1808667361}
   - component: {fileID: 1808667362}
   - component: {fileID: 1808667360}
   - component: {fileID: 1808667363}
   - component: {fileID: 1808667364}
-  - component: {fileID: 1808667365}
+  - component: {fileID: 1808667366}
   m_Layer: 0
   m_Name: GameGod
   m_TagString: Untagged
@@ -6803,7 +6804,6 @@ MonoBehaviour:
   - "Il mio cervello \xE8 il mio secondo organo preferito"
   - Fallo. Agricoltore della natura
   inputNameField: {fileID: 520829678}
-  settingsPanelManager: {fileID: 1909088677}
   MaxScoreCount: 10
   AndroidInputTexts:
   - Flautenzio
@@ -6846,6 +6846,83 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fileName: miallu.ngo
   useEncryption: 1
+--- !u!114 &1808667366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1808667357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54d313c38dad82343a311bc137cff967, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreManager: {fileID: 1808667362}
+  inputNameField: {fileID: 1069727314}
+  infoText: {fileID: 1525174507}
+  DailyBonusTimeStamp: 
+  DailyBonusXPAmount: 100
+  DailyBonusTitle: BONUS Alzata Mattutina
+  Unlockables:
+  - Menu: {fileID: 432209864}
+    Level: 2
+  - Menu: {fileID: 1546815392}
+    Level: 4
+  - Menu: {fileID: 1782819403}
+    Level: 5
+  - Menu: {fileID: 424638877}
+    Level: 7
+  - Menu: {fileID: 557254922}
+    Level: 9
+  - Menu: {fileID: 1572738078}
+    Level: 10
+  - Menu: {fileID: 479999496}
+    Level: 12
+  - Menu: {fileID: 1817953571}
+    Level: 14
+  - Menu: {fileID: 1846077452}
+    Level: 16
+  - Menu: {fileID: 1902218234}
+    Level: 18
+  isRoundedBallsEnabled: 0
+  RoundedBallsButtonText: {fileID: 605925815}
+  RoundedBalls: {fileID: 1070659513439915691, guid: de7e1543c51da0242a4e2175d9e85ae0, type: 3}
+  SnakeHead: {fileID: 506164130}
+  OriginalBalls: {fileID: 1777297881}
+  roundedBallInfo: Restate abbagliati dai coglioni quadrati. Rotanti.
+  RoundedBallsPercent: 1
+  RoundedBallsBonusTitle: BONUS Tetragonadi
+  isAfroStyleEnabled: 0
+  OriginalPenisMesh: {fileID: 706215586}
+  Brown: {fileID: 2100000, guid: e28486f7edab90b4282b0e7b57a83ffe, type: 2}
+  DarkBrown: {fileID: 2100000, guid: 46793bdcccf2a684e80c4bc87c438c86, type: 2}
+  OriginalPink: {fileID: 2100000, guid: 09418e34b51370247a549bd4827cb98f, type: 2}
+  OriginalDarkPink: {fileID: 2100000, guid: 03087e7babecc2a49a45b6eaa2b9330b, type: 2}
+  AfroStyleButtonText: {fileID: 544492388}
+  afroStyleInfo: "Pi\xF9 lungo, pi\xF9 grosso, meno razzista."
+  AfroStyleBonusPercent: 4
+  AfroStyleBonusTitle: BONUS Multiculturale
+  isJumpEnabled: 0
+  DickingJumpButtonText: {fileID: 1927771305}
+  jumpInfo: Premi sul glande per fare un salto della quaglia.
+  JumpBonusPercent: 2
+  JumpBonusTitle: BONUS Uccello in aria
+  isRainbowEnabled: 0
+  RainbowMaterial: {fileID: 2100000, guid: f756bea2726ee664db5614846ee8455f, type: 2}
+  snakeParticleSystem: {fileID: 1875910564}
+  particleSystemOriginalMaterial: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
+  RainbowStyleButtonText: {fileID: 141331191}
+  rainbowInfo: Tolleranza, amore e psichedelia.
+  RainbowBonusPercent: 6
+  RainbowBonusTitle: BONUS Multisessuale
+  isMovingWallsEnabled: 0
+  MovingWall1: {fileID: 9017356347894402995, guid: 08c496bea469b5f48bf33d992a33a8aa, type: 3}
+  MovingWall2: {fileID: 6479081782933927446, guid: 5a8bea9b78b7c6c4c8118866850c50eb, type: 3}
+  MovingWallsBonusPercent: 12
+  MovingWallsBonusTitle: BONUS Muro Duro Mobile
+  MovingWallsButtonText: {fileID: 500220252}
+  movingWallsInfo: "Attento al muro (per vedere chi ce l'ha pi\xF9 duro)"
 --- !u!1 &1817953571
 GameObject:
   m_ObjectHideFlags: 0
@@ -6877,7 +6954,7 @@ RectTransform:
   - {fileID: 295219890}
   - {fileID: 1270978584}
   m_Father: {fileID: 417854577}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -6953,7 +7030,7 @@ RectTransform:
   - {fileID: 922471978}
   - {fileID: 1378917754}
   m_Father: {fileID: 417854577}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -11982,7 +12059,7 @@ RectTransform:
   - {fileID: 1476415615}
   - {fileID: 820136654}
   m_Father: {fileID: 417854577}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -11998,7 +12075,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1909088676}
-  - component: {fileID: 1909088677}
   m_Layer: 5
   m_Name: SettingsPanel
   m_TagString: Untagged
@@ -12027,83 +12103,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1909088677
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1909088675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54d313c38dad82343a311bc137cff967, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scoreManager: {fileID: 1808667362}
-  inputNameField: {fileID: 1069727314}
-  infoText: {fileID: 1525174507}
-  DailyBonusTimeStamp: 
-  DailyBonusXPAmount: 100
-  DailyBonusTitle: BONUS Alzata Mattutina
-  Unlockables:
-  - Menu: {fileID: 432209864}
-    Level: 2
-  - Menu: {fileID: 1546815392}
-    Level: 4
-  - Menu: {fileID: 1782819403}
-    Level: 5
-  - Menu: {fileID: 424638877}
-    Level: 7
-  - Menu: {fileID: 557254922}
-    Level: 9
-  - Menu: {fileID: 1572738078}
-    Level: 10
-  - Menu: {fileID: 479999496}
-    Level: 12
-  - Menu: {fileID: 1817953571}
-    Level: 14
-  - Menu: {fileID: 1846077452}
-    Level: 16
-  - Menu: {fileID: 1902218234}
-    Level: 18
-  isRoundedBallsEnabled: 0
-  RoundedBallsButtonText: {fileID: 605925815}
-  RoundedBalls: {fileID: 1070659513439915691, guid: de7e1543c51da0242a4e2175d9e85ae0, type: 3}
-  SnakeHead: {fileID: 506164130}
-  OriginalBalls: {fileID: 1777297881}
-  roundedBallInfo: Restate abbagliati dai coglioni quadrati. Rotanti.
-  RoundedBallsPercent: 1
-  RoundedBallsBonusTitle: BONUS Tetragonadi
-  isAfroStyleEnabled: 0
-  OriginalPenisMesh: {fileID: 706215586}
-  Brown: {fileID: 2100000, guid: e28486f7edab90b4282b0e7b57a83ffe, type: 2}
-  DarkBrown: {fileID: 2100000, guid: 46793bdcccf2a684e80c4bc87c438c86, type: 2}
-  OriginalPink: {fileID: 2100000, guid: 09418e34b51370247a549bd4827cb98f, type: 2}
-  OriginalDarkPink: {fileID: 2100000, guid: 03087e7babecc2a49a45b6eaa2b9330b, type: 2}
-  AfroStyleButtonText: {fileID: 544492388}
-  afroStyleInfo: "Pi\xF9 lungo, pi\xF9 grosso, meno razzista."
-  AfroStyleBonusPercent: 4
-  AfroStyleBonusTitle: BONUS Multiculturale
-  isJumpEnabled: 0
-  DickingJumpButtonText: {fileID: 1927771305}
-  jumpInfo: Premi sul glande per fare un salto della quaglia.
-  JumpBonusPercent: 2
-  JumpBonusTitle: BONUS Uccello in aria
-  isRainbowEnabled: 0
-  RainbowMaterial: {fileID: 2100000, guid: f756bea2726ee664db5614846ee8455f, type: 2}
-  snakeParticleSystem: {fileID: 0}
-  particleSystemOriginalMaterial: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
-  RainbowStyleButtonText: {fileID: 141331191}
-  rainbowInfo: Tolleranza, amore e psichedelia.
-  RainbowBonusPercent: 6
-  RainbowBonusTitle: BONUS Multisessuale
-  isMovingWallsEnabled: 0
-  MovingWall1: {fileID: 9017356347894402995, guid: 08c496bea469b5f48bf33d992a33a8aa, type: 3}
-  MovingWall2: {fileID: 6479081782933927446, guid: 5a8bea9b78b7c6c4c8118866850c50eb, type: 3}
-  MovingWallsBonusPercent: 12
-  MovingWallsBonusTitle: BONUS Muro Duro Mobile
-  MovingWallsButtonText: {fileID: 500220252}
-  movingWallsInfo: "Attento al muro (per vedere chi ce l'ha pi\xF9 duro)"
 --- !u!1 &1927771303
 GameObject:
   m_ObjectHideFlags: 0
@@ -12770,7 +12769,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1909088677}
+      - m_Target: {fileID: 1808667366}
         m_TargetAssemblyTypeName: SettingsPanelManager, Scripts
         m_MethodName: SwitchBallsWithRoundedBalls
         m_Mode: 1
@@ -12985,7 +12984,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1909088677}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SettingsPanelManager, Scripts
         m_MethodName: SwitchAfroStyle
         m_Mode: 1
@@ -13337,7 +13336,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1909088677}
+      - m_Target: {fileID: 1808667366}
         m_TargetAssemblyTypeName: SettingsPanelManager, Scripts
         m_MethodName: SwitchAfroStyle
         m_Mode: 1

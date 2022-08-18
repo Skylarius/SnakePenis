@@ -55,7 +55,7 @@ public class DataPersistenceManager : MonoBehaviour
             dataPersistenceObj.LoadData(GameData);
         }
         Debug.Log($"Game Loaded for player {ScoreManager.CurrentID}){ScoreManager.CurrentScoreName}, level {LevelProgressionManager.CurrentLevel} - XP {LevelProgressionManager.TotalXP}");
-
+        SendMessage("OnLoadComplete");
     }
 
     public void SaveGame()

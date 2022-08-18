@@ -21,6 +21,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         public string Name;
         public int Percent;
         public int XPAmount;
+        public int TotalBonus;
     }
     [Header("Daily Bonus")]
     public string DailyBonusTimeStamp;
@@ -77,8 +78,21 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     public Text MovingWallsButtonText;
     public string movingWallsInfo;
 
-    // Start is called before the first frame update
-    void Start()
+    private List<Bonus> _bonuses = null;
+    public List<Bonus> Bonuses
+    {
+        get
+        {
+            if (_bonuses == null)
+            {
+                _bonuses = new List<Bonus>();
+                CalculateBonuses();
+            }
+            return _bonuses;
+        }
+    }
+    
+    void StartUpSettingsPanelManager()
     {
         if (ScoreManager.CurrentScoreName!="" && ScoreManager.CurrentID != "")
         {
@@ -107,8 +121,8 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         if (isRoundedBallsEnabled)
         {
             bonus = new Bonus();
-            bonus.Name = JumpBonusTitle;
-            bonus.Percent = JumpBonusPercent;
+            bonus.Name = RoundedBallsBonusTitle;
+            bonus.Percent = RoundedBallsPercent;
             yield return bonus;
         }
         if (isJumpEnabled)
@@ -138,6 +152,30 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             bonus.Name = MovingWallsBonusTitle;
             bonus.Percent = MovingWallsBonusPercent;
             yield return bonus;
+        }
+
+        //if(true)
+        //{
+        //    bonus = new Bonus();
+        //    bonus.Name = "BONUS Test";
+        //    bonus.XPAmount = 125000 * 2;
+        //    yield return bonus;
+        //}
+    }
+
+    private void CalculateBonuses()
+    {
+        Bonuses.Clear();
+        if (ScoreManager.CurrentScore == "")
+        {
+            return;
+        }
+        foreach (SettingsPanelManager.Bonus bonus in BonusGenerator())
+        {
+            int bonusScore = (int)(bonus.XPAmount + bonus.Percent * 0.01f * int.Parse(ScoreManager.CurrentScore));
+            Bonus newBonus = bonus;
+            newBonus.TotalBonus = bonusScore;
+            _bonuses.Add(newBonus);
         }
     }
 
@@ -403,6 +441,11 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             isMovingWallsEnabled = false;
             MovingWallsButtonText.text = "Attiva";
         }
+    }
+
+    void OnLoadComplete()
+    {
+        StartUpSettingsPanelManager();
     }
 
     public void SaveData(ref GameData data)
