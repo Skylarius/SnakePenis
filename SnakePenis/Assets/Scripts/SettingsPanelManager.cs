@@ -20,7 +20,12 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     {
         public string Name;
         public int Percent;
+        public int XPAmount;
     }
+    [Header("Daily Bonus")]
+    public string DailyBonusTimeStamp;
+    public int DailyBonusXPAmount;
+    public string DailyBonusTitle;
 
     public List<Unlockable> Unlockables;
 
@@ -32,6 +37,8 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     public GameObject SnakeHead;
     public GameObject OriginalBalls;
     public string roundedBallInfo;
+    public int RoundedBallsPercent = 0;
+    public string RoundedBallsBonusTitle;
 
     [Header("Afro Style unlockable")]
     public bool isAfroStyleEnabled = false;
@@ -53,7 +60,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     [Header("Rainbow unlockable")]
     public bool isRainbowEnabled = false;
     public Material RainbowMaterial;
-    public ParticleSystem particleSystem;
+    public ParticleSystem snakeParticleSystem;
     public Material particleSystemOriginalMaterial;
     public Text RainbowStyleButtonText;
     public string rainbowInfo;
@@ -86,30 +93,48 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
 
     public IEnumerable<Bonus> BonusGenerator()
     {
+        Bonus bonus;
+        System.DateTime dt1 = System.DateTime.Today;
+        System.DateTime dt2 = System.DateTime.ParseExact(DailyBonusTimeStamp, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+        if (dt1 > dt2)
+        {
+            bonus = new Bonus();
+            bonus.Name = DailyBonusTitle;
+            bonus.XPAmount = DailyBonusXPAmount;
+            yield return bonus;
+            DailyBonusTimeStamp = System.DateTime.Today.ToString("dd-MM-yyyy");
+        }
+        if (isRoundedBallsEnabled)
+        {
+            bonus = new Bonus();
+            bonus.Name = JumpBonusTitle;
+            bonus.Percent = JumpBonusPercent;
+            yield return bonus;
+        }
         if (isJumpEnabled)
         {
-            Bonus bonus;
+            bonus = new Bonus();
             bonus.Name = JumpBonusTitle;
             bonus.Percent = JumpBonusPercent;
             yield return bonus;
         }
         if (isAfroStyleEnabled)
         {
-            Bonus bonus;
+            bonus = new Bonus();
             bonus.Name = AfroStyleBonusTitle;
             bonus.Percent = AfroStyleBonusPercent;
             yield return bonus;
         }
         if (isRainbowEnabled)
         {
-            Bonus bonus;
+            bonus = new Bonus();
             bonus.Name = RainbowBonusTitle;
             bonus.Percent = RainbowBonusPercent;
             yield return bonus;
         }
         if (isMovingWallsEnabled)
         {
-            Bonus bonus;
+            bonus = new Bonus();
             bonus.Name = MovingWallsBonusTitle;
             bonus.Percent = MovingWallsBonusPercent;
             yield return bonus;
@@ -257,7 +282,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
                 r.material = RainbowMaterial;
             }
             snakeRenderer.material = RainbowMaterial;
-            particleSystem.GetComponent<Renderer>().material = RainbowMaterial;
+            snakeParticleSystem.GetComponent<Renderer>().material = RainbowMaterial;
             isRainbowEnabled = true;
         }
         else if (condition == false && isRainbowEnabled == true)
@@ -267,7 +292,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
                 r.material = OriginalDarkPink;
             }
             snakeRenderer.material = OriginalPink;
-            particleSystem.GetComponent<Renderer>().material = particleSystemOriginalMaterial;
+            snakeParticleSystem.GetComponent<Renderer>().material = particleSystemOriginalMaterial;
             isRainbowEnabled = false;
         }
         RainbowStyleButtonText.text = (isRainbowEnabled) ? "Disattiva" : "Attiva";
@@ -304,6 +329,13 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
 
     public void LoadData(GameData data)
     {
+        if (data.DailyBonusTimeStamp != "")
+        {
+            DailyBonusTimeStamp = data.DailyBonusTimeStamp;
+        } else
+        {
+            DailyBonusTimeStamp = System.DateTime.Today.AddDays(-1).ToString("dd-MM-yyyy");
+        }
         if (data.RoundedBalls == true)
         {
             SwitchBallsWithRoundedBalls(true);
@@ -375,6 +407,9 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
 
     public void SaveData(ref GameData data)
     {
+        data.DailyBonusTimeStamp = System.DateTime.ParseExact(
+            DailyBonusTimeStamp, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture
+            ).ToString("dd-MM-yyyy");
         data.RoundedBalls = isRoundedBallsEnabled;
         data.AfroStyle = isAfroStyleEnabled;
         data.DickingJump = isJumpEnabled;

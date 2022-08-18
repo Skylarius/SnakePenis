@@ -1857,7 +1857,7 @@ MonoBehaviour:
   GameGod: {fileID: 1808667357}
   levelTime: 0
   TimeForPickUpToReachTheTail: 5
-  isJumpEnabled: 1
+  isJumpEnabled: 0
   jumpTime: 10
   jumpForce: 10
   jumpTapRange: 10
@@ -12042,6 +12042,9 @@ MonoBehaviour:
   scoreManager: {fileID: 1808667362}
   inputNameField: {fileID: 1069727314}
   infoText: {fileID: 1525174507}
+  DailyBonusTimeStamp: 
+  DailyBonusXPAmount: 100
+  DailyBonusTitle: BONUS Alzata Mattutina
   Unlockables:
   - Menu: {fileID: 432209864}
     Level: 2
@@ -12069,6 +12072,8 @@ MonoBehaviour:
   SnakeHead: {fileID: 506164130}
   OriginalBalls: {fileID: 1777297881}
   roundedBallInfo: Restate abbagliati dai coglioni quadrati. Rotanti.
+  RoundedBallsPercent: 1
+  RoundedBallsBonusTitle: BONUS Tetragonadi
   isAfroStyleEnabled: 0
   OriginalPenisMesh: {fileID: 706215586}
   Brown: {fileID: 2100000, guid: e28486f7edab90b4282b0e7b57a83ffe, type: 2}
@@ -12086,7 +12091,7 @@ MonoBehaviour:
   JumpBonusTitle: BONUS Uccello in aria
   isRainbowEnabled: 0
   RainbowMaterial: {fileID: 2100000, guid: f756bea2726ee664db5614846ee8455f, type: 2}
-  particleSystem: {fileID: 1875910564}
+  snakeParticleSystem: {fileID: 0}
   particleSystemOriginalMaterial: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
   RainbowStyleButtonText: {fileID: 141331191}
   rainbowInfo: Tolleranza, amore e psichedelia.

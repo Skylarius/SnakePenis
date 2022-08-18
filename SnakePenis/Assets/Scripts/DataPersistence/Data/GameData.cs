@@ -13,6 +13,7 @@ public class GameData
     public string Level;
 
     // Unlockables
+    public string DailyBonusTimeStamp;
     public bool RoundedBalls;
     public bool AfroStyle;
     public bool DickingJump;
@@ -25,6 +26,9 @@ public class GameData
         Name = "";
         TotalXP = "0";
         Level = "1";
+
+        //Daily Bonus TimeStamp
+        DailyBonusTimeStamp = "";
 
         //Unlockables settings
         RoundedBalls = false;

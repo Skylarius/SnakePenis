@@ -40,7 +40,7 @@ public class GameOverProcedures : MonoBehaviour
         BonusText.text = "";
         foreach (SettingsPanelManager.Bonus bonus in settingsPanelManager.BonusGenerator())
         {
-            int bonusScore = (int)(bonus.Percent * 0.01f * int.Parse(ScoreManager.CurrentScore));
+            int bonusScore = (int)(bonus.XPAmount + bonus.Percent * 0.01f * int.Parse(ScoreManager.CurrentScore));
             BonusesToAdd.Add(bonusScore);
             BonusText.text += $"{bonus.Name}: {bonusScore}\n";
         }
