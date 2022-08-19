@@ -154,7 +154,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             yield return bonus;
         }
 
-        //if(true)
+        //if (true)
         //{
         //    bonus = new Bonus();
         //    bonus.Name = "BONUS Test";

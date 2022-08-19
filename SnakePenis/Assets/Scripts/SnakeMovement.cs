@@ -225,36 +225,57 @@ public class SnakeMovement : MonoBehaviour
             {
                 SnakeBoneTransform = SnakeBody[i].transform;
             }
+            if (SnakeBoneTransform)
+            {
+                StartCoroutine(AnimateSnakeBodyPart(SnakeBoneTransform));
+            }
             while (t * SnakeBody.Count < TimeForPickUpToReachTheTail)
             {
                 pickup.transform.position = Vector3.Lerp(pickup.transform.position, SnakeBody[i].transform.position, t * SnakeBody.Count / TimeForPickUpToReachTheTail);
                 pickup.transform.localScale = Vector3.Lerp(pickup.transform.localScale, pickup.transform.localScale * 0.7f, t * SnakeBody.Count / TimeForPickUpToReachTheTail);
-                if (SnakeBoneTransform)
-                {
-                    if (t * SnakeBody.Count < TimeForPickUpToReachTheTail / 2)
-                    {
-                        SnakeBoneTransform.localScale = Vector3.Slerp(
-                            Vector3.one,
-                            Vector3.one * 2,
-                            t * SnakeBody.Count * 2 / TimeForPickUpToReachTheTail
-                            );
-                    }
-                    else
-                    {
-                        SnakeBoneTransform.localScale = Vector3.Slerp(
-                            Vector3.one * 2,
-                            Vector3.one,
-                            (2* t * SnakeBody.Count - TimeForPickUpToReachTheTail)/ TimeForPickUpToReachTheTail
-                            );
-                    }
-                    yield return new WaitForEndOfFrame();
-                }
+                //if (SnakeBoneTransform)
+                //{
+                //    if (t * SnakeBody.Count < TimeForPickUpToReachTheTail / 2)
+                //    {
+                //        SnakeBoneTransform.localScale = Vector3.Slerp(
+                //            Vector3.one,
+                //            Vector3.one * 2,
+                //            t * SnakeBody.Count * 2 / TimeForPickUpToReachTheTail
+                //            );
+                //    }
+                //    else
+                //    {
+                //        SnakeBoneTransform.localScale = Vector3.Slerp(
+                //            Vector3.one * 2,
+                //            Vector3.one,
+                //            (2 * t * SnakeBody.Count - TimeForPickUpToReachTheTail) / TimeForPickUpToReachTheTail
+                //            );
+                //    }
+                //    yield return new WaitForEndOfFrame();
+                //}
                 t += Time.deltaTime;
+                yield return new WaitForEndOfFrame();
             }
             SnakeBody[i].GetComponent<Collider>().enabled = true;
             SnakeBoneTransform.localScale = Vector3.one;
         }
         Destroy(pickup);
+    }
+
+    IEnumerator AnimateSnakeBodyPart(Transform boneTransform)
+    {
+        float t = 0;
+        float T = 1f;
+        while (t < T)
+        {
+            boneTransform.localScale = Vector3.Slerp(
+                Vector3.one,
+                Vector3.one * 2,
+                Mathf.Sin(2 * Mathf.PI * t / T)
+                );
+            t += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
     }
 
     Transform GetSnakeBoneTransform(GameObject SnakeBodyPart)

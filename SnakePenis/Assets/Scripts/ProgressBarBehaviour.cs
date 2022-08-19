@@ -13,6 +13,7 @@ public class ProgressBarBehaviour : MonoBehaviour
     public Text LevelXPText;
     public Text LevelXPTitleText;
     public float LevelBarTime = 4f;
+    public GameObject NewLevelBubble;
     void Start()
     {
         StartCoroutine(ProgressBarAnimation());
@@ -61,9 +62,21 @@ public class ProgressBarBehaviour : MonoBehaviour
                 LevelXPText.text += "\nEXP : <b>" + XP + " / " + nextLevelXP + "</b>";
                 yield return new WaitForEndOfFrame();
             }
-            yield return new WaitForSeconds(1f);
             level++;
+            if (level <= currentLevel)
+            {
+                yield return StartCoroutine(NewLevelAnimation(level));
+            }
         }
+    }
+
+    IEnumerator NewLevelAnimation(int level)
+    {
+        NewLevelBubble.GetComponentInChildren<Text>().text = "CAZZO, hai raggiunto il livello " + level + "!!!";
+        NewLevelBubble.SetActive(true);
+        yield return new WaitForSeconds(2.5f);
+        NewLevelBubble.SetActive(false);
+        NewLevelBubble.GetComponentInChildren<Text>().text = "";
     }
 
     float GetProgressBarTimeParabola(float x)
