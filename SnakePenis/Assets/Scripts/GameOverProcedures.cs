@@ -54,16 +54,23 @@ public class GameOverProcedures : MonoBehaviour
         PenisQuoteUI.text += "\nPunteggio : <b>" + ScoreManager.CurrentScore + "</b>";
 
         // Get Name
+        bool isNewUser = false;
         if (ScoreManager.CurrentScoreName == "")
         {
+            isNewUser = true;
             yield return StartCoroutine(CreateNewUser());
         }
 
-        // Commit Score and Name and then Save
+        // Save if new user
+        if (isNewUser)
+        {
+            DataPersistenceManager.Instance.SaveGame();
+        }
+
+        // Commit Score and Name
         if (ScoreManager.CurrentScoreName != "")
         {
             yield return StartCoroutine(scoreManager.CommitScores(ScoreText));
-            DataPersistenceManager.Instance.SaveGame();
         }
         yield return StartCoroutine(scoreManager.LoadScores(ScoreText));
 

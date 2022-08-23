@@ -271,7 +271,7 @@ public class SnakeMovement : MonoBehaviour
             boneTransform.localScale = Vector3.Slerp(
                 Vector3.one,
                 Vector3.one * 2,
-                Mathf.Sin(2 * Mathf.PI * t / T)
+                Mathf.Sin(Mathf.PI * t / T)
                 );
             t += Time.deltaTime;
             yield return new WaitForEndOfFrame();
@@ -322,6 +322,8 @@ public class SnakeMovement : MonoBehaviour
         // Add XP
         LevelProgressionManager.MakeLevelProgression(int.Parse(ScoreManager.CurrentScore));
 
+        //Save Game (if user has name)
+        DataPersistenceManager.Instance.SaveGame();
         //Start GameOver Animations
         StartCoroutine(
             GameGod.GetComponent<GameOverProcedures>().StartGameOverProcedure()

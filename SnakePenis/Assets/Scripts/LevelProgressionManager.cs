@@ -36,7 +36,7 @@ public class LevelProgressionManager : Singleton<MonoBehaviour>, IDataPersistenc
     public static BigInteger TotalXP = 0;
 
     /// <summary>
-    /// XP gained from the begininning of CurrentLevel
+    /// XP gained from the beginning of CurrentLevel
     /// </summary>
     public static BigInteger CurrentRelativeXP
     {
@@ -102,6 +102,16 @@ public class LevelProgressionManager : Singleton<MonoBehaviour>, IDataPersistenc
         return levelXP;
     }
 
+    public static int GetLevelFromTotalXP(BigInteger totalXP)
+    {
+        int level = 1;
+        while (GetLevelTotalXP(level + 1) < totalXP)
+        {
+            level++;
+        }
+        return level;
+    }
+
     // Update is called once per frame
     public static void MakeLevelProgression(int newScore)
     {
@@ -117,7 +127,8 @@ public class LevelProgressionManager : Singleton<MonoBehaviour>, IDataPersistenc
     void IDataPersistence.LoadData(GameData data)
     {
         TotalXP = BigInteger.Parse(data.TotalXP);
-        CurrentLevel = int.Parse(data.Level);
+        //CurrentLevel = int.Parse(data.Level);
+        CurrentLevel = GetLevelFromTotalXP(TotalXP);
         OldLevel = CurrentLevel;
     }
 
