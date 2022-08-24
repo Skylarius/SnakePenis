@@ -58,7 +58,7 @@ public class SwallowWaveGenerator : MonoBehaviour
                     SnakeBoneTransform = snakeMovement.GetSnakeBoneTransform(SnakeBodyPart);
                     if (SnakeBoneTransform)
                     {
-                        ApplyWaveValuesToTransform(bodySizeWave, SnakeBoneTransform);
+                        SumWavesToTransform(bodySizeWave, SnakeBoneTransform);
                     }
                 }
             }
@@ -71,13 +71,13 @@ public class SwallowWaveGenerator : MonoBehaviour
             SnakeBoneTransform = SnakeBodyPart.transform;
             if (SnakeBoneTransform)
             {
-                ApplyWaveValuesToTransform(TailSizeWave, SnakeBoneTransform);
+                SumWavesToTransform(TailSizeWave, SnakeBoneTransform);
             }
             yield return new WaitForEndOfFrame();
         }
     }
 
-    void ApplyWaveValuesToTransform(BodySizeWave bodySizeWave, Transform SnakeBoneTransform)
+    void SumWavesToTransform(BodySizeWave bodySizeWave, Transform SnakeBoneTransform)
     {
         float waveSum = 0f;
         for (int i = 0; i < bodySizeWave.ContributingWaves.Count; i++)
