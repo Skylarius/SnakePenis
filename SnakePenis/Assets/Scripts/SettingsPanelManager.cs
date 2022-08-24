@@ -284,15 +284,15 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
 
     void SwitchDickingJump(bool condition)
     {
-        SnakeMovement snakeMovement = SnakeHead.GetComponent<SnakeMovement>();
+        InputHandler inputHandler = SnakeHead.GetComponent<InputHandler>();
         if (condition == true && isJumpEnabled == false)
         {
-            snakeMovement.isJumpEnabled = true;
+            inputHandler.EnableStandardJump();
             isJumpEnabled = true;
         }
         else if (condition == false && isJumpEnabled == true)
         {
-            snakeMovement.isJumpEnabled = false;
+            inputHandler.DisableStandardJump();
             isJumpEnabled = false;
         }
         DickingJumpButtonText.text = (isJumpEnabled) ? "Disattiva" : "Attiva";

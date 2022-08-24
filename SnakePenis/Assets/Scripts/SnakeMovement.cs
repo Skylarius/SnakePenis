@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class SnakeMovement : MonoBehaviour
 {
+    private InputHandler inputHandler;
     public Vector2 direction;
-    public Vector3 jumpDirection;
     public Vector2 targetRealPosition;
     public float realSpeed = 0.1f;
     public Vector3 targetPositionOnGrid;
@@ -32,22 +32,6 @@ public class SnakeMovement : MonoBehaviour
     [Header("Animation")]
     public float TimeForPickUpToReachTheTail = 10f;
 
-    [Header("Jump settings")]
-    public bool isJumpEnabled = false;
-    public float jumpTime = 20f;
-    public float jumpForce = 3f;
-    private float jumpTryTime = -1f;
-    public float jumpTapRange = 10f;
-    private float SqrJumpTapRange { get { return jumpTapRange * jumpTapRange; } }
-    public float jumpDoubleTapDeltaTime = 0.3f;
-    private bool canJump {
-        get
-        {
-            return isJumpEnabled && !isJumping;
-        }
-    }
-    private bool doJump = false;
-    private bool isJumping = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -62,6 +46,7 @@ public class SnakeMovement : MonoBehaviour
         audioSystem = GetComponent<AudioSystem>();
         JoyParticleSystem = GetComponentInChildren<ParticleSystem>();
         realSnakeBinder = GetComponent<RealSnakeBinder>();
+        inputHandler = GetComponent<InputHandler>();
         levelTime = 0f;
     }
 
@@ -74,74 +59,24 @@ public class SnakeMovement : MonoBehaviour
             SnakeBodyTargetPositions[i] = SnakeBody[i - 1].transform.position;
         }
 
-        targetRealPosition = Vector2.right * (targetRealPosition.x + direction.x * realSpeed * Time.deltaTime) + Vector2.up * (targetRealPosition.y + direction.y * realSpeed * Time.deltaTime);
-#if UNITY_EDITOR_WIN
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
+        targetRealPosition = Vector2.right * (
+            targetRealPosition.x + direction.x * realSpeed * Time.deltaTime
+            ) + Vector2.up * (
+            targetRealPosition.y + direction.y * realSpeed * Time.deltaTime
+            );
 
-        doJump = canJump && Input.GetButtonDown("Jump");
-#else
-        float x = 0f;
-        float z = 0f;
-#endif
-        if (doJump)
+        // Handle inputs (movement and additional actions)
+        // If additional action is executed in this round DON'T execute movement
+        bool actionExecuted = false;
+        foreach (InputHandler.Action action in inputHandler.actions)
         {
-            StartCoroutine(JumpCoroutine());
-            return;
+            actionExecuted = action();
         }
-        if (Input.touchCount > 0) 
+        if (!actionExecuted)
         {
-            Touch touch = Input.GetTouch(0);
-            switch (touch.phase)
-            {
-                case TouchPhase.Began:
-                    //TODO: Check if it's in the AVOID ZONE (pause, exit)...
-                    Vector3 tapPoint = ConvertTouchToPositionInWorld(touch);
-                    if (canJump)
-                    {
-                        if (Vector2.SqrMagnitude(Vector2.right * (tapPoint.x - transform.position.x) + Vector2.up * (tapPoint.z - transform.position.z)) < SqrJumpTapRange)
-                        {
-                            StartCoroutine(JumpCoroutine());
-                            return;
-                        }
-                    }
-                    x = tapPoint.x - transform.position.x;
-                    z = tapPoint.z - transform.position.z;
-                    if (direction.y != 0)
-                    {
-                        z = 0f;
-                    }
-                    if (direction.x != 0)
-                    {
-                        x = 0f;
-                    }
-                    break;
-            }
+            inputHandler.move(ref direction);
         }
-        //float x = Input.GetAxis("Horizontal");
-        //float z = Input.GetAxis("Vertical");
-        // Jump action
-        if (x == 0f && z == 0f || direction.x * x < 0 || direction.y * z < 0)
-        {
-            return;
-        }
-        if (x !=0 && z != 0) //Avoid multiple input
-        {
-            z = 0f;
-        }
-        if (x != 0f)
-        {
-            x = x > 0 ? 1 : -1;
-        }
-        if (z != 0f)
-        {
-            z = z > 0 ? 1 : -1;
-        }
-        direction = Vector2.right * x + Vector2.up * z;
-        if (doJump)
-        {
-            StartCoroutine(JumpCoroutine());
-        }
+
     }
 
     private void FixedUpdate()
@@ -165,7 +100,7 @@ public class SnakeMovement : MonoBehaviour
 
         targetPositionOnGrid = ConvertToPositionOnGrid(targetRealPosition);
         Quaternion targetRotation = Quaternion.LookRotation(Vector3.right * direction.x + Vector3.forward * direction.y, Vector3.up);
-        transform.position = Vector3.Lerp(transform.position + jumpDirection, targetPositionOnGrid, Time.deltaTime * realSpeed * speedPercentage);
+        transform.position = Vector3.Lerp(transform.position, targetPositionOnGrid, Time.deltaTime * realSpeed * speedPercentage);
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
     }
 
@@ -268,7 +203,7 @@ public class SnakeMovement : MonoBehaviour
         float T = 1f;
         while (t < T)
         {
-            boneTransform.localScale = Vector3.Slerp(
+            boneTransform.localScale = Vector3.Lerp(
                 Vector3.one,
                 Vector3.one * 2,
                 Mathf.Sin(Mathf.PI * t / T)
@@ -333,41 +268,6 @@ public class SnakeMovement : MonoBehaviour
 
     public Vector3 ConvertToPositionOnGrid(Vector2 position)
     {
-        return Vector3.right* Mathf.Round(position.x / gridScale) * gridScale + Vector3.forward * Mathf.Round(position.y / gridScale) * gridScale;
-    }
-
-    Vector3 ConvertTouchToPositionInWorld(Touch touch)
-    {
-        Vector3 returnVector = Vector3.zero;
-        // create ray from the camera and passing through the touch position:
-        Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
-        // create a logical plane at this object's position
-        // and perpendicular to world Y:
-        Plane plane = new Plane(Vector3.up, transform.position);
-        float distance = 0; // this will return the distance from the camera
-        if (plane.Raycast(ray, out distance))
-        { // if plane hit...
-            returnVector = ray.GetPoint(distance); // get the point
-        }
-        return returnVector;
-    }
-
-    public void SetEnableJumpCondition(bool condition)
-    {
-        isJumpEnabled = condition;
-    }
-
-    IEnumerator JumpCoroutine()
-    {
-        float t = 0f;
-        isJumping = true;
-        while (t < jumpTime / realSpeed)
-        {
-            jumpDirection = Vector3.up * jumpForce;
-            t += Time.deltaTime;
-            yield return new WaitForEndOfFrame();
-        }
-        jumpDirection = Vector3.zero;
-        isJumping = false;
+        return Vector3.right * Mathf.Round(position.x / gridScale) * gridScale + Vector3.forward * Mathf.Round(position.y / gridScale) * gridScale + Vector3.up * targetPositionOnGrid.y;
     }
 }

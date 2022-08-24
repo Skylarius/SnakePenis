@@ -83,6 +83,18 @@ public class TestLevelProgressionManager
         Reset();
     }
 
+    [Test]
+    public void TestGetLevelFromTotalXP()
+    {
+        float lvlExpF = LevelProgressionManager.LvlExpFactor;
+        int multi = LevelProgressionManager.Multiplier;
+        Assert.AreEqual(1, LevelProgressionManager.GetLevelFromTotalXP(new BigInteger(0)));
+        Assert.AreEqual(1, LevelProgressionManager.GetLevelFromTotalXP(new BigInteger(10)));
+        Assert.AreEqual(2, LevelProgressionManager.GetLevelFromTotalXP(new BigInteger(multi * (Mathf.Pow(lvlExpF, 2)) + 10)));
+        Assert.AreEqual(2, LevelProgressionManager.GetLevelFromTotalXP(new BigInteger(multi * (Mathf.Pow(lvlExpF, 2) + Mathf.Pow(lvlExpF, 2)))));
+        Assert.AreEqual(3, LevelProgressionManager.GetLevelFromTotalXP(new BigInteger(multi * (Mathf.Pow(lvlExpF, 2) + Mathf.Pow(lvlExpF, 3)) + 10)));
+    }
+
     // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
     // `yield return null;` to skip a frame.
     [UnityTest]
