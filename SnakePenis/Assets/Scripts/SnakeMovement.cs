@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class SnakeMovement : MonoBehaviour
 {
     private InputHandler inputHandler;
+    private SwallowWaveGenerator swallowWaveGenerator;
     public Vector2 direction;
     public Vector2 targetRealPosition;
     public float realSpeed = 0.1f;
@@ -15,10 +16,14 @@ public class SnakeMovement : MonoBehaviour
     public float segmentRotationSpeedPercent = 0.5f;
     public float rotationSpeed;
     public int gridScale = 1;
-    public GameObject RightBall, LeftBall;
+
     private ParticleSystem JoyParticleSystem;
     public List<GameObject> SnakeBody;
     private List<Vector3> SnakeBodyTargetPositions;
+
+    [Header("Tail")]
+    public GameObject Tail;
+    public GameObject RightBall, LeftBall;
 
     [Header("GameGod")]
     public GameObject GameGod;
@@ -46,6 +51,7 @@ public class SnakeMovement : MonoBehaviour
         audioSystem = GetComponent<AudioSystem>();
         JoyParticleSystem = GetComponentInChildren<ParticleSystem>();
         realSnakeBinder = GetComponent<RealSnakeBinder>();
+        swallowWaveGenerator = GetComponent<SwallowWaveGenerator>();
         inputHandler = GetComponent<InputHandler>();
         levelTime = 0f;
     }
@@ -144,55 +150,20 @@ public class SnakeMovement : MonoBehaviour
 
     private IEnumerator PickupAnimationCoroutine(GameObject pickup)
     {
-        Vector3 originalTailScale = SnakeBody[SnakeBody.Count - 1].transform.localScale;
         pickup.GetComponent<Collider>().enabled = false;
         pickup.GetComponentInChildren<Animator>().enabled = false;
         float t;
         for (int i = 1; i < SnakeBody.Count; i++)
         {
             t = 0;
-            SnakeBody[i].GetComponent<Collider>().enabled = false;
-            Transform SnakeBoneTransform;
-            if (i != SnakeBody.Count - 1)
-            {
-                SnakeBoneTransform = GetSnakeBoneTransform(SnakeBody[i]);
-            } else
-            {
-                SnakeBoneTransform = SnakeBody[i].transform;
-            }
-            if (SnakeBoneTransform)
-            {
-                StartCoroutine(AnimateSnakeBodyPart(SnakeBoneTransform));
-            }
+            swallowWaveGenerator.SwallowAtBodyPart(i);
             while (t * SnakeBody.Count < TimeForPickUpToReachTheTail)
             {
                 pickup.transform.position = Vector3.Lerp(pickup.transform.position, SnakeBody[i].transform.position, t * SnakeBody.Count / TimeForPickUpToReachTheTail);
                 pickup.transform.localScale = Vector3.Lerp(pickup.transform.localScale, pickup.transform.localScale * 0.7f, t * SnakeBody.Count / TimeForPickUpToReachTheTail);
-                //if (SnakeBoneTransform)
-                //{
-                //    if (t * SnakeBody.Count < TimeForPickUpToReachTheTail / 2)
-                //    {
-                //        SnakeBoneTransform.localScale = Vector3.Slerp(
-                //            Vector3.one,
-                //            Vector3.one * 2,
-                //            t * SnakeBody.Count * 2 / TimeForPickUpToReachTheTail
-                //            );
-                //    }
-                //    else
-                //    {
-                //        SnakeBoneTransform.localScale = Vector3.Slerp(
-                //            Vector3.one * 2,
-                //            Vector3.one,
-                //            (2 * t * SnakeBody.Count - TimeForPickUpToReachTheTail) / TimeForPickUpToReachTheTail
-                //            );
-                //    }
-                //    yield return new WaitForEndOfFrame();
-                //}
                 t += Time.deltaTime;
                 yield return new WaitForEndOfFrame();
             }
-            SnakeBody[i].GetComponent<Collider>().enabled = true;
-            SnakeBoneTransform.localScale = Vector3.one;
         }
         Destroy(pickup);
     }
@@ -213,7 +184,7 @@ public class SnakeMovement : MonoBehaviour
         }
     }
 
-    Transform GetSnakeBoneTransform(GameObject SnakeBodyPart)
+    public Transform GetSnakeBoneTransform(GameObject SnakeBodyPart)
     {
         foreach (Transform tr in SnakeBodyPart.GetComponentsInChildren<Transform>())
         {

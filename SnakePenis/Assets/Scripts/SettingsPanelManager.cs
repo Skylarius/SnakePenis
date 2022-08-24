@@ -30,7 +30,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
 
     public List<Unlockable> Unlockables;
 
-    [Header("Rounded Ball unlockable")]
+    [Header("Square Ball unlockable")]
     public bool isRoundedBallsEnabled = false;
     public Text RoundedBallsButtonText;
     public GameObject RoundedBalls;
@@ -214,6 +214,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             }
             newRoundedBalls.transform.position = OriginalBalls.transform.position;
             snakeMovement.SnakeBody[snakeMovement.SnakeBody.Count - 1] = newRoundedBalls;
+            snakeMovement.Tail = newRoundedBalls;
             realSnakeBinder.UpdateBinder();
             OriginalBalls.SetActive(false);
             isRoundedBallsEnabled = true;
@@ -229,6 +230,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
                 Destroy(newRoundedBalls);
             }
             snakeMovement.SnakeBody[snakeMovement.SnakeBody.Count - 1] = OriginalBalls;
+            snakeMovement.Tail = OriginalBalls;
             Renderer[] OriginalBallsRenderers = OriginalBalls.GetComponentsInChildren<Renderer>();
             for (int i = 0; i < OriginalBallsRenderers.Length; i++)
             {
