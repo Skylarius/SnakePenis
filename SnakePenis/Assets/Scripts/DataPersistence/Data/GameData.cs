@@ -19,6 +19,7 @@ public class GameData
     public bool DickingJump;
     public bool RainbowStyle;
     public bool MovingWalls;
+    public bool Free360Movement;
 
     public GameData()
     {
@@ -36,6 +37,6 @@ public class GameData
         DickingJump = false;
         RainbowStyle = false;
         MovingWalls = false;
+        Free360Movement = false;
     }
-
 }

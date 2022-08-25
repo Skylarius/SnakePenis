@@ -26,7 +26,7 @@ public class InputHandler : MonoBehaviour
     {
         if (move == null)
         {
-            move = (Application.platform == RuntimePlatform.Android) ? 
+            move = (PlatformUtils.platform == RuntimePlatform.Android) ? 
                 StandardAndroidMovement : StandardWindowsMovement;
         }
         if (actions == null)
@@ -36,14 +36,7 @@ public class InputHandler : MonoBehaviour
         snakeMovement = GetComponent<SnakeMovement>();
     }
 
-    void StandardWindowsMovement(ref Vector2 direction)
-    {
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-        direction = GetDirection(ref x, ref z, direction);
-    }
-
-    Vector3 GetDirection(ref float x, ref float z, Vector2 direction)
+    Vector3 GetStandardDirection(ref float x, ref float z, Vector2 direction)
     {
         if (x == 0f && z == 0f || direction.x * x < 0 || direction.y * z < 0)
         {
@@ -62,6 +55,13 @@ public class InputHandler : MonoBehaviour
             z = z > 0 ? 1 : -1;
         }
         return Vector2.right * x + Vector2.up * z;
+    }
+
+    void StandardWindowsMovement(ref Vector2 direction)
+    {
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
+        direction = GetStandardDirection(ref x, ref z, direction);
     }
 
     void StandardAndroidMovement(ref Vector2 direction)
@@ -86,10 +86,39 @@ public class InputHandler : MonoBehaviour
                     {
                         x = 0f;
                     }
+                    direction = GetStandardDirection(ref x, ref z, direction);
                     break;
             }
         }
-        direction = GetDirection(ref x, ref z, direction);
+    }
+
+    void Windows360DegreeMovement(ref Vector2 direction)
+    {
+        float x = Input.GetAxis("Horizontal");
+        Vector3 rotatedVector3 = Quaternion.AngleAxis(x, Vector3.up) * (Vector3.right * direction.x + Vector3.forward * direction.y);
+        direction = Vector2.right * rotatedVector3.x + Vector2.up * rotatedVector3.z;
+    }
+
+    void Android360DegreeMovement(ref Vector2 direction)
+    {
+        float x = 0f;
+        float z = 0f;
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            switch (touch.phase)
+            {
+                case TouchPhase.Began:
+                    //TODO: Check if it's in the AVOID ZONE (pause, exit)...
+                    Vector3 tapPoint = ConvertTouchToPositionInWorld(touch);
+                    x = tapPoint.x - transform.position.x;
+                    z = tapPoint.z - transform.position.z;
+                    Vector2 dir = Vector2.right * x + Vector2.up * z;
+                    dir.Normalize();
+                    direction = dir;
+                    break;
+            }
+        }
     }
 
     bool StandardWindowsJump()
@@ -159,15 +188,27 @@ public class InputHandler : MonoBehaviour
     public void EnableStandardJump()
     {
         actions.Add(
-            (Application.platform == RuntimePlatform.Android) ?
+            (PlatformUtils.platform == RuntimePlatform.Android) ?
                 StandardAndroidJump : StandardWindowsJump
             );
     }
 
     public void DisableStandardJump() {
         actions.Remove(
-            (Application.platform == RuntimePlatform.Android) ?
+            (PlatformUtils.platform == RuntimePlatform.Android) ?
                 StandardAndroidJump : StandardWindowsJump
             );
+    }
+
+    public void SetFree360MovementType()
+    {
+        move = (PlatformUtils.platform == RuntimePlatform.Android) ?
+                Android360DegreeMovement : Windows360DegreeMovement;
+    }
+
+    public void SetStandardMovementType()
+    {
+        move = (PlatformUtils.platform == RuntimePlatform.Android) ?
+                StandardAndroidMovement : StandardWindowsMovement;
     }
 }

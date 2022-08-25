@@ -78,6 +78,13 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     public Text MovingWallsButtonText;
     public string movingWallsInfo;
 
+    [Header("Free 360 Movement")]
+    public bool isFree360Enabled = false;
+    public Text Free360ButtonText;
+    public string Free360Info;
+    public int Free360BonusPercent = 0;
+    public string Free360BonusTitle;
+
     private List<Bonus> _bonuses = null;
     public List<Bonus> Bonuses
     {
@@ -153,6 +160,13 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             bonus.Percent = MovingWallsBonusPercent;
             yield return bonus;
         }
+        if (isFree360Enabled)
+        {
+            bonus = new Bonus();
+            bonus.Name = Free360BonusTitle;
+            bonus.Percent = Free360BonusPercent;
+            yield return bonus;
+        }
 
         //if (true)
         //{
@@ -213,6 +227,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
                 newBallsRenderers[i].material = initialBallsRenderers[i].material;
             }
             newRoundedBalls.transform.position = OriginalBalls.transform.position;
+            newRoundedBalls.transform.rotation = OriginalBalls.transform.rotation;
             snakeMovement.SnakeBody[snakeMovement.SnakeBody.Count - 1] = newRoundedBalls;
             snakeMovement.Tail = newRoundedBalls;
             realSnakeBinder.UpdateBinder();
@@ -227,6 +242,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             if (newRoundedBalls)
             {
                 OriginalBalls.transform.position = newRoundedBalls.transform.position;
+                OriginalBalls.transform.rotation = newRoundedBalls.transform.rotation;
                 Destroy(newRoundedBalls);
             }
             snakeMovement.SnakeBody[snakeMovement.SnakeBody.Count - 1] = OriginalBalls;
@@ -367,6 +383,28 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         MovingWallsButtonText.text = (isMovingWallsEnabled) ? "Disattiva" : "Attiva";
     }
 
+    public void SwitchFree360()
+    {
+        SwitchFree360(!isFree360Enabled);
+        infoText.text = Free360Info;
+    }
+
+    void SwitchFree360(bool condition)
+    {
+        InputHandler inputHandler = SnakeHead.GetComponent<InputHandler>();
+        if (condition == true && isFree360Enabled == false)
+        {
+            inputHandler.SetFree360MovementType();
+            isFree360Enabled = true;
+        }
+        else if (condition == false && isJumpEnabled == true)
+        {
+            inputHandler.SetStandardMovementType();
+            isFree360Enabled = false;
+        }
+        Free360ButtonText.text = (isFree360Enabled) ? "Disattiva" : "Attiva";
+    }
+
     public void LoadData(GameData data)
     {
         if (data.DailyBonusTimeStamp != "")
@@ -443,6 +481,18 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             isMovingWallsEnabled = false;
             MovingWallsButtonText.text = "Attiva";
         }
+
+        if (data.Free360Movement == true)
+        {
+            SwitchFree360(true);
+            Free360ButtonText.text = "Disattiva";
+        }
+        else
+        {
+            print("NO FREE 360");
+            isFree360Enabled = false;
+            Free360ButtonText.text = "Attiva";
+        }
     }
 
     void OnLoadComplete()
@@ -460,5 +510,6 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         data.DickingJump = isJumpEnabled;
         data.RainbowStyle = isRainbowEnabled;
         data.MovingWalls = isMovingWallsEnabled;
+        data.Free360Movement = isFree360Enabled;
     }
 }
