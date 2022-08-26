@@ -20,6 +20,7 @@ public class GameData
     public bool RainbowStyle;
     public bool MovingWalls;
     public bool Free360Movement;
+    public bool PillsBlower;
 
     public GameData()
     {
@@ -38,5 +39,6 @@ public class GameData
         RainbowStyle = false;
         MovingWalls = false;
         Free360Movement = false;
+        PillsBlower = false;
     }
 }

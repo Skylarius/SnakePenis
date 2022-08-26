@@ -22,12 +22,15 @@ public class InputHandler : MonoBehaviour
     public float jumpDoubleTapDeltaTime = 0.3f;
     private bool isJumping = false;
 
+    [Header("Free 360 degrees movement")]
+    public float windowsRotation360Speed = 10f;
+
+
     private void Start()
     {
         if (move == null)
         {
-            move = (PlatformUtils.platform == RuntimePlatform.Android) ? 
-                StandardAndroidMovement : StandardWindowsMovement;
+            SetStandardMovementType();
         }
         if (actions == null)
         {
@@ -94,8 +97,8 @@ public class InputHandler : MonoBehaviour
 
     void Windows360DegreeMovement(ref Vector2 direction)
     {
-        float x = Input.GetAxis("Horizontal");
-        Vector3 rotatedVector3 = Quaternion.AngleAxis(x, Vector3.up) * (Vector3.right * direction.x + Vector3.forward * direction.y);
+        float x = Input.GetAxis("Mouse X");
+        Vector3 rotatedVector3 = Quaternion.AngleAxis(x*windowsRotation360Speed*Time.deltaTime, Vector3.up) * (Vector3.right * direction.x + Vector3.forward * direction.y);
         direction = Vector2.right * rotatedVector3.x + Vector2.up * rotatedVector3.z;
     }
 

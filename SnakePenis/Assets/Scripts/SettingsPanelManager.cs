@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -85,6 +86,17 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     public int Free360BonusPercent = 0;
     public string Free360BonusTitle;
 
+    [Header("Pills Blower")] 
+    public bool isPillsBlowerEnabled = false;
+    public GameObject PillsAttractor;
+    private GameObject newPillsAttractor;
+    public Text PillsBlowerButtonText;
+    public string PillsBlowerInfo;
+    public int PillsBlowerBonusPercent = 0;
+    public string PillsBlowerBonusTitle;
+
+
+
     private List<Bonus> _bonuses = null;
     public List<Bonus> Bonuses
     {
@@ -110,6 +122,12 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             unlockable.Menu.SetActive(LevelProgressionManager.CurrentLevel >= unlockable.Level);
         }
         infoText.text = "";
+    }
+
+    internal bool IsBonusAtLevel(int level)
+    {
+        Unlockable unlockable = Unlockables.Find(elem => elem.Level == level);
+        return unlockable.Level == level;
     }
 
     public IEnumerable<Bonus> BonusGenerator()
@@ -167,12 +185,19 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             bonus.Percent = Free360BonusPercent;
             yield return bonus;
         }
+        if (isPillsBlowerEnabled)
+        {
+            bonus = new Bonus();
+            bonus.Name = PillsBlowerBonusTitle;
+            bonus.Percent = PillsBlowerBonusPercent;
+            yield return bonus;
+        }
 
         //if (true)
         //{
         //    bonus = new Bonus();
         //    bonus.Name = "BONUS Test";
-        //    bonus.XPAmount = 125000 * 2;
+        //    bonus.XPAmount = 125000 * 5;
         //    yield return bonus;
         //}
     }
@@ -400,9 +425,38 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         else if (condition == false && isJumpEnabled == true)
         {
             inputHandler.SetStandardMovementType();
+            SnakeMovement snakeMovement = SnakeHead.GetComponent<SnakeMovement>();
+            if (snakeMovement)
+            {
+                snakeMovement.SetDirectionToClosestHortogonal();
+            }
             isFree360Enabled = false;
         }
         Free360ButtonText.text = (isFree360Enabled) ? "Disattiva" : "Attiva";
+    }
+
+    public void SwitchPillsBlower()
+    {
+        SwitchPillsBlower(!isPillsBlowerEnabled);
+        infoText.text = PillsBlowerInfo;
+    }
+
+    void SwitchPillsBlower(bool condition)
+    {
+        if (condition == true && isPillsBlowerEnabled == false)
+        {
+            newPillsAttractor = Instantiate(PillsAttractor, SnakeHead.transform);
+            isPillsBlowerEnabled = true;
+        }
+        else if (condition == false && isPillsBlowerEnabled == true)
+        {
+            if (newPillsAttractor)
+            {
+                Destroy(newPillsAttractor);
+            }
+            isPillsBlowerEnabled = false;
+        }
+        PillsBlowerButtonText.text = (isPillsBlowerEnabled) ? "Disattiva" : "Attiva";
     }
 
     public void LoadData(GameData data)
@@ -493,6 +547,18 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             isFree360Enabled = false;
             Free360ButtonText.text = "Attiva";
         }
+
+        if (data.PillsBlower == true)
+        {
+            SwitchPillsBlower(true);
+            PillsBlowerButtonText.text = "Disattiva";
+        }
+        else
+        {
+            print("NO PILLS BLOWER");
+            isPillsBlowerEnabled = false;
+            PillsBlowerButtonText.text = "Attiva";
+        }
     }
 
     void OnLoadComplete()
@@ -511,5 +577,6 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         data.RainbowStyle = isRainbowEnabled;
         data.MovingWalls = isMovingWallsEnabled;
         data.Free360Movement = isFree360Enabled;
+        data.PillsBlower = isPillsBlowerEnabled;
     }
 }

@@ -12,6 +12,8 @@ public class ScoreManager : MonoBehaviour, IDataPersistence
     public static string CurrentLength = "";
     public static string CurrentScore = "";
 
+    public static string ScoreBeforeBonuses = "";
+
     private void Start()
     {
         LocalScores = new List<ScoreWebInterface.ScoreElem>();

@@ -43,10 +43,23 @@ public class GameOverProcedures : MonoBehaviour
         PenisQuoteUI.text += "\nMassima Erezione : <b>" + ScoreManager.CurrentLength + " cm</b>";
         yield return new WaitForSeconds(0.8f);
 
+        // Add Old Score
+        BonusText.text += $"<color=black>BASE SCORE: {ScoreManager.ScoreBeforeBonuses}</color>\n";
+
         // Add bonuses
         foreach (SettingsPanelManager.Bonus bonus in settingsPanelManager.Bonuses)
         {
-            BonusText.text += $"{bonus.Name}: {bonus.TotalBonus}\n";
+            string colorBegin, colorEnd;
+            if (bonus.TotalBonus < 0)
+            {
+                // it's a MALUS
+                colorBegin = "<color=red>";
+                colorEnd = "</color>";
+            } else
+            {
+                colorBegin = colorEnd = "";
+            }
+            BonusText.text += $"{colorBegin}{bonus.Name}: {bonus.TotalBonus}{colorEnd}\n";
             yield return new WaitForSeconds(0.8f);
         }
 

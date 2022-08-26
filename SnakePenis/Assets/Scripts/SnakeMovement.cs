@@ -219,6 +219,7 @@ public class SnakeMovement : MonoBehaviour
         // Add Score
         ScoreManager.SetLengthAndScore(SnakeBody.Count, (SnakeBody.Count - 5) * (int)levelTime / 10 * (int)realSpeed);
 
+        ScoreManager.ScoreBeforeBonuses = ScoreManager.CurrentScore;
         // Add Bonuses Score
         foreach (SettingsPanelManager.Bonus bonus in GameGod.GetComponent<SettingsPanelManager>().Bonuses)
         {
@@ -240,5 +241,17 @@ public class SnakeMovement : MonoBehaviour
     public Vector3 ConvertToPositionOnGrid(Vector2 position)
     {
         return Vector3.right * Mathf.Round(position.x / gridScale) * gridScale + Vector3.forward * Mathf.Round(position.y / gridScale) * gridScale + Vector3.up * targetPositionOnGrid.y;
+    }
+
+    public void SetDirectionToClosestHortogonal()
+    {
+        Vector2 tmpDir = direction;
+        if (Mathf.Abs(tmpDir.x) > Mathf.Abs(tmpDir.y))
+        {
+            tmpDir.y = 0f;
+        }
+        tmpDir.Normalize();
+        direction = tmpDir;
+
     }
 }

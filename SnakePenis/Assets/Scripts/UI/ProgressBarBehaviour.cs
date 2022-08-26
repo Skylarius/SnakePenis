@@ -8,6 +8,7 @@ public class ProgressBarBehaviour : MonoBehaviour
 {
     // Start is called before the first frame update
     public GameObject ProgressBarSprite;
+    public SettingsPanelManager settingsPanelManager;
     public int initialBarPositionX = -700;
     public int finalBarPositionX = 0;
     public Text LevelXPText;
@@ -26,7 +27,7 @@ public class ProgressBarBehaviour : MonoBehaviour
         float oldCompletion = LevelProgressionManager.OldCompletionPercent;
         float currentCompletion = LevelProgressionManager.CompletionPercent;
         ProgressBarSprite.GetComponent<RectTransform>().localPosition = UnityEngine.Vector3.right * GetBarPositionX(oldCompletion);
-        LevelXPTitleText.text = (ScoreManager.CurrentScoreName == "") ? "" : (ScoreManager.CurrentScoreName + " progress");
+        LevelXPTitleText.text = (ScoreManager.CurrentScoreName == "") ? "" : ("Progressi di " + ScoreManager.CurrentScoreName);
         LevelXPText.text = "Livello : <b>" + oldLevel + "</b>";
         LevelXPText.text += "\nEXP : <b>" + LevelProgressionManager.OldLevelRelativeXP + " / " + LevelProgressionManager.GetLevelRelativeXP(oldLevel + 1) + "</b>";
         yield return new WaitForSeconds(3f);
@@ -76,6 +77,13 @@ public class ProgressBarBehaviour : MonoBehaviour
         NewLevelBubble.SetActive(true);
         yield return new WaitForSeconds(2.5f);
         NewLevelBubble.SetActive(false);
+        if (settingsPanelManager.IsBonusAtLevel(level))
+        {
+            NewLevelBubble.GetComponentInChildren<Text>().text = "MIZZICA, NUOVO POTERE SPECIALE!!!";
+            NewLevelBubble.SetActive(true);
+            yield return new WaitForSeconds(2.5f);
+            NewLevelBubble.SetActive(false);
+        }
         NewLevelBubble.GetComponentInChildren<Text>().text = "";
     }
 
