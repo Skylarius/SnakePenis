@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputHandler : MonoBehaviour
+public class InputHandler : BaseSnakeComponent
 {
 
     public delegate void MovementType(ref Vector2 direction);
@@ -10,8 +10,6 @@ public class InputHandler : MonoBehaviour
 
     public delegate bool Action();
     public List<Action> actions = null;
-
-    private SnakeMovement snakeMovement;
 
     [Header("Jump settings")]
     public Vector3 jumpDirection;

@@ -74,13 +74,16 @@ public class SnakeMovement : MonoBehaviour
         // Handle inputs (movement and additional actions)
         // If additional action is executed in this round DON'T execute movement
         bool actionExecuted = false;
-        foreach (InputHandler.Action action in inputHandler.actions)
+        if (inputHandler.enabled)
         {
-            actionExecuted = action();
-        }
-        if (!actionExecuted)
-        {
-            inputHandler.move(ref direction);
+            foreach (InputHandler.Action action in inputHandler.actions)
+            {
+                actionExecuted = action();
+            }
+            if (!actionExecuted)
+            {
+                inputHandler.move(ref direction);
+            }
         }
 
     }
@@ -130,7 +133,10 @@ public class SnakeMovement : MonoBehaviour
         PowerUpSpawner.DecreasePowerUpAmount();
         RightBall.transform.localScale += Vector3.one * 0.04f;
         LeftBall.transform.localScale += Vector3.one * 0.03f;
-        audioSystem.PlayGrowSounds();
+        if (audioSystem.enabled)
+        {
+            audioSystem.PlayGrowSounds();
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -215,7 +221,10 @@ public class SnakeMovement : MonoBehaviour
         }
         print("GAMEOVER");
         //Time.timeScale = 0;
-        audioSystem.PlayDeathSounds();
+        if (audioSystem.enabled)
+        {
+            audioSystem.PlayDeathSounds();
+        }
         // Add Score
         ScoreManager.SetLengthAndScore(SnakeBody.Count, (SnakeBody.Count - 5) * (int)levelTime / 10 * (int)realSpeed);
 

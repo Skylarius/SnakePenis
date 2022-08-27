@@ -14,13 +14,13 @@ public struct BodySizeWave
     }
 }
 
-public class SwallowWaveGenerator : MonoBehaviour
+public class SwallowWaveGenerator : BaseSnakeComponent
 {
     // Start is called before the first frame update
 
     public List<BodySizeWave> BodySizeWaveList;
     public BodySizeWave TailSizeWave;
-    private SnakeMovement snakeMovement;
+    private bool isSwallowCoroutineRunning = false; 
 
     [Header("Wave Size Settings")]
     public float WaveSize = 2f;
@@ -30,7 +30,10 @@ public class SwallowWaveGenerator : MonoBehaviour
 
     void Start()
     {
-        BodySizeWaveList = new List<BodySizeWave>();
+        if (BodySizeWaveList == null)
+        {
+            BodySizeWaveList = new List<BodySizeWave>();
+        }
         snakeMovement = GetComponent<SnakeMovement>();
         StartCoroutine(SwallowAnimationCoroutine());
     }
@@ -41,6 +44,11 @@ public class SwallowWaveGenerator : MonoBehaviour
     /// <returns></returns>
     IEnumerator SwallowAnimationCoroutine()
     {
+        if (isSwallowCoroutineRunning)
+        {
+            yield break;
+        }
+        isSwallowCoroutineRunning = true;
         GameObject SnakeBodyPart;
         Transform SnakeBoneTransform;
         while (true)
@@ -75,6 +83,7 @@ public class SwallowWaveGenerator : MonoBehaviour
             }
             yield return new WaitForEndOfFrame();
         }
+        isSwallowCoroutineRunning = false;
     }
 
     void SumWavesToTransform(BodySizeWave bodySizeWave, Transform SnakeBoneTransform)
@@ -152,7 +161,15 @@ public class SwallowWaveGenerator : MonoBehaviour
         }
     }
 
+    public void RestartSwallowAnimationCoroutine()
+    {
+        StopCoroutine(SwallowAnimationCoroutine());
+        isSwallowCoroutineRunning = false;
+        StartCoroutine(SwallowAnimationCoroutine());
+    }
 
 
-    
+
+
+
 }

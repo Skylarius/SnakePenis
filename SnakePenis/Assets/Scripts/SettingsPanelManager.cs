@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//TODO: All the colours specials should be applied to the SnakeMeshCopy
 public class SettingsPanelManager : MonoBehaviour, IDataPersistence
 {
     public ScoreManager scoreManager;
