@@ -16,6 +16,7 @@ public class SnakeMovement : MonoBehaviour
     public float segmentRotationSpeedPercent = 0.5f;
     public float rotationSpeed;
     public int gridScale = 1;
+    private bool Block = false;
 
     private ParticleSystem JoyParticleSystem;
     public List<GameObject> SnakeBody;
@@ -41,7 +42,6 @@ public class SnakeMovement : MonoBehaviour
     void Start()
     {
         isGameOver = false;
-        direction = Vector2.left;
         targetRealPosition = Vector2.right * transform.position.x + Vector2.up * transform.position.z;
         SnakeBodyTargetPositions = new List<Vector3>();
         for (int i = SnakeBody.Count; i > 0; i--)
@@ -74,7 +74,7 @@ public class SnakeMovement : MonoBehaviour
         // Handle inputs (movement and additional actions)
         // If additional action is executed in this round DON'T execute movement
         bool actionExecuted = false;
-        if (inputHandler.enabled)
+        if (inputHandler.enabled && !Block)
         {
             foreach (InputHandler.Action action in inputHandler.actions)
             {
@@ -261,6 +261,18 @@ public class SnakeMovement : MonoBehaviour
         }
         tmpDir.Normalize();
         direction = tmpDir;
+    }
 
+    public void SetBodyTargetPositionsToValue(Vector3 value)
+    {
+        for(int i = 0; i< SnakeBodyTargetPositions.Count; i++)
+        {
+            SnakeBodyTargetPositions[i] = value;
+        }
+    }
+
+    public void BlockInputForSnake(bool condition)
+    {
+        Block = condition;
     }
 }

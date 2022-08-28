@@ -5,6 +5,7 @@ using UnityEngine;
 public class RealSnakeBinder : BaseSnakeComponent
 {
     public Transform rootTail;
+    public GameObject SnakeMeshObj;
     private List<GameObject> OldSnakeStructureList;
     // Start is called before the first frame update
     void Start()
