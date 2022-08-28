@@ -4,6 +4,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//TODO: All the colours specials should be applied to the SnakeMeshCopy
+
+public class BaseBonusData
+{
+    public bool bEnabled;
+    public string Title;
+    public string Info;
+    public int BonusPercent;
+    public Text ButtonText;
+
+    public BaseBonusData()
+    {
+        bEnabled = false;
+        Title = "";
+        Info = "";
+        BonusPercent = 0;
+        ButtonText = null;
+    }
+}
+
 public class SettingsPanelManager : MonoBehaviour, IDataPersistence
 {
     public ScoreManager scoreManager;
@@ -17,6 +37,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         public int Level;
     }
 
+    [System.Serializable]
     public struct Bonus
     {
         public string Name;
@@ -94,6 +115,47 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     public string PillsBlowerInfo;
     public int PillsBlowerBonusPercent = 0;
     public string PillsBlowerBonusTitle;
+
+    [System.Serializable]
+    public struct TeleportCouple
+    {
+        public GameObject Portal1;
+        public GameObject Portal2;
+        public string BonusTitle;
+
+        public TeleportCouple(GameObject portal1, GameObject portal2) {
+            this.Portal1 = portal1;
+            this.Portal2 = portal2;
+            this.BonusTitle = "";
+        }
+
+        public bool IsNull()
+        {
+            return Portal1 == null && Portal2 == null;
+        }
+
+        public void DestroyCouple()
+        {
+            Destroy(Portal1);
+            Destroy(Portal2);
+            Portal1 = null;
+            Portal2 = null;
+        }
+    }
+
+    [Header("Teleport")]
+    public bool isTeleportEnabled = false;
+    public TeleportCouple[] TeleportCouples;
+    private TeleportCouple instancedCouple;
+    public GameObject[] WallsToAnchor;
+    public float SpawnRadius;
+    public float WallOffset;
+    public Vector3 WallRotationOffset;
+    public Text TeleportButtonText;
+    public string TeleportInfo;
+    public int TeleportBonusPercent = 0;
+    public string TeleportBonusTitle;
+
 
 
 
@@ -190,6 +252,13 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             bonus = new Bonus();
             bonus.Name = PillsBlowerBonusTitle;
             bonus.Percent = PillsBlowerBonusPercent;
+            yield return bonus;
+        }
+        if (isTeleportEnabled)
+        {
+            bonus = new Bonus();
+            bonus.Name = TeleportBonusTitle;
+            bonus.Percent = TeleportBonusPercent;
             yield return bonus;
         }
 
@@ -459,6 +528,75 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         PillsBlowerButtonText.text = (isPillsBlowerEnabled) ? "Disattiva" : "Attiva";
     }
 
+    public void SwitchTeleport()
+    {
+        SwitchTeleport(!isTeleportEnabled);
+        infoText.text = TeleportInfo;
+    }
+
+    void SwitchTeleport(bool condition)
+    {
+        if (condition == true && isTeleportEnabled == false)
+        {
+            //Select teleport couple
+            instancedCouple = new TeleportCouple(null, null);
+            int randomIndex = UnityEngine.Random.Range(0, TeleportCouples.Length);
+            TeleportCouple selectedTeleportCouple = TeleportCouples[randomIndex];
+            TeleportBonusTitle = selectedTeleportCouple.BonusTitle;
+
+            //Select walls
+            randomIndex = UnityEngine.Random.Range(0, WallsToAnchor.Length);
+            GameObject Wall1 = WallsToAnchor[randomIndex];
+            randomIndex = UnityEngine.Random.Range(0, WallsToAnchor.Length);
+            GameObject Wall2 = WallsToAnchor[randomIndex];
+
+            //Select Spawn Position Value on Walls
+            Vector3 spawnPositionPortal1, spawnPositionPortal2;
+            float spawnValuePositionPortal1, spawnValuePositionPortal2;
+            if (Wall1 == Wall2) // if sa
+            {
+                randomIndex = UnityEngine.Random.Range(0, 2) == 0 ? 1 : -1;
+                spawnValuePositionPortal1 = randomIndex * SpawnRadius;
+                spawnValuePositionPortal2 = -randomIndex * SpawnRadius;
+
+            } else
+            {
+                spawnValuePositionPortal1 = UnityEngine.Random.Range(-SpawnRadius, SpawnRadius);
+                spawnValuePositionPortal2 = UnityEngine.Random.Range(-SpawnRadius, SpawnRadius);
+            }
+
+            //Instantiate Portal and set them in instancedCouple
+            if (instancedCouple.IsNull() == false)
+            {
+                Debug.LogWarning("There is an instanced couple of teleport objects. They should not be here. Will try to proceed anyway...");
+                instancedCouple.DestroyCouple();
+            }
+            instancedCouple.Portal1 = Instantiate(selectedTeleportCouple.Portal1);
+            instancedCouple.Portal2 = Instantiate(selectedTeleportCouple.Portal2);
+            instancedCouple.Portal1.transform.rotation = Wall1.transform.rotation * Quaternion.Euler(WallRotationOffset);
+            instancedCouple.Portal2.transform.rotation = Wall2.transform.rotation * Quaternion.Euler(WallRotationOffset);
+            spawnPositionPortal1 = Wall1.transform.position + instancedCouple.Portal1.transform.right * spawnValuePositionPortal1 + instancedCouple.Portal1.transform.forward * WallOffset;
+            spawnPositionPortal2 = Wall2.transform.position + instancedCouple.Portal2.transform.right * spawnValuePositionPortal2 + instancedCouple.Portal2.transform.forward * WallOffset;
+            instancedCouple.Portal1.transform.position = spawnPositionPortal1;
+            instancedCouple.Portal2.transform.position = spawnPositionPortal2;
+
+            //Set OUT point of each portal, as specified in the TeleportCouple prefab
+            //Remember: the OUT point of a portal object is in the OTHER portal object
+            PortalManager portalManager1 = instancedCouple.Portal1.GetComponent<PortalManager>();
+            PortalManager portalManager2 = instancedCouple.Portal2.GetComponent<PortalManager>();
+            portalManager1.PortalOUTPoint = portalManager2.SelfPortalOUTPoint;
+            portalManager2.PortalOUTPoint = portalManager1.SelfPortalOUTPoint;
+
+            isTeleportEnabled = true;
+        }
+        else if (condition == false && isTeleportEnabled == true)
+        {
+            instancedCouple.DestroyCouple();
+            isTeleportEnabled = false;
+        }
+        TeleportButtonText.text = (isTeleportEnabled) ? "Disattiva" : "Attiva";
+    }
+
     public void LoadData(GameData data)
     {
         if (data.DailyBonusTimeStamp != "")
@@ -559,6 +697,18 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             isPillsBlowerEnabled = false;
             PillsBlowerButtonText.text = "Attiva";
         }
+
+        if (data.Teleport == true)
+        {
+            SwitchTeleport(true);
+            TeleportButtonText.text = "Disattiva";
+        }
+        else
+        {
+            print("NO TELEPORT");
+            isTeleportEnabled = false;
+            TeleportButtonText.text = "Attiva";
+        }
     }
 
     void OnLoadComplete()
@@ -578,5 +728,6 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         data.MovingWalls = isMovingWallsEnabled;
         data.Free360Movement = isFree360Enabled;
         data.PillsBlower = isPillsBlowerEnabled;
+        data.Teleport = isTeleportEnabled;
     }
 }

@@ -16,6 +16,7 @@ public class SnakeMovement : MonoBehaviour
     public float segmentRotationSpeedPercent = 0.5f;
     public float rotationSpeed;
     public int gridScale = 1;
+    private bool Block = false;
 
     private ParticleSystem JoyParticleSystem;
     public List<GameObject> SnakeBody;
@@ -41,7 +42,6 @@ public class SnakeMovement : MonoBehaviour
     void Start()
     {
         isGameOver = false;
-        direction = Vector2.left;
         targetRealPosition = Vector2.right * transform.position.x + Vector2.up * transform.position.z;
         SnakeBodyTargetPositions = new List<Vector3>();
         for (int i = SnakeBody.Count; i > 0; i--)
@@ -74,13 +74,16 @@ public class SnakeMovement : MonoBehaviour
         // Handle inputs (movement and additional actions)
         // If additional action is executed in this round DON'T execute movement
         bool actionExecuted = false;
-        foreach (InputHandler.Action action in inputHandler.actions)
+        if (inputHandler.enabled && !Block)
         {
-            actionExecuted = action();
-        }
-        if (!actionExecuted)
-        {
-            inputHandler.move(ref direction);
+            foreach (InputHandler.Action action in inputHandler.actions)
+            {
+                actionExecuted = action();
+            }
+            if (!actionExecuted)
+            {
+                inputHandler.move(ref direction);
+            }
         }
 
     }
@@ -130,7 +133,10 @@ public class SnakeMovement : MonoBehaviour
         PowerUpSpawner.DecreasePowerUpAmount();
         RightBall.transform.localScale += Vector3.one * 0.04f;
         LeftBall.transform.localScale += Vector3.one * 0.03f;
-        audioSystem.PlayGrowSounds();
+        if (audioSystem.enabled)
+        {
+            audioSystem.PlayGrowSounds();
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -215,7 +221,10 @@ public class SnakeMovement : MonoBehaviour
         }
         print("GAMEOVER");
         //Time.timeScale = 0;
-        audioSystem.PlayDeathSounds();
+        if (audioSystem.enabled)
+        {
+            audioSystem.PlayDeathSounds();
+        }
         // Add Score
         ScoreManager.SetLengthAndScore(SnakeBody.Count, (SnakeBody.Count - 5) * (int)levelTime / 10 * (int)realSpeed);
 
@@ -252,6 +261,18 @@ public class SnakeMovement : MonoBehaviour
         }
         tmpDir.Normalize();
         direction = tmpDir;
+    }
 
+    public void SetBodyTargetPositionsToValue(Vector3 value)
+    {
+        for(int i = 0; i< SnakeBodyTargetPositions.Count; i++)
+        {
+            SnakeBodyTargetPositions[i] = value;
+        }
+    }
+
+    public void BlockInputForSnake(bool condition)
+    {
+        Block = condition;
     }
 }

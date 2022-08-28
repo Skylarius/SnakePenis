@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputHandler : MonoBehaviour
+public class InputHandler : BaseSnakeComponent
 {
 
     public delegate void MovementType(ref Vector2 direction);
@@ -10,8 +10,6 @@ public class InputHandler : MonoBehaviour
 
     public delegate bool Action();
     public List<Action> actions = null;
-
-    private SnakeMovement snakeMovement;
 
     [Header("Jump settings")]
     public Vector3 jumpDirection;
@@ -41,6 +39,14 @@ public class InputHandler : MonoBehaviour
 
     Vector3 GetStandardDirection(ref float x, ref float z, Vector2 direction)
     {
+        if (Mathf.Abs(direction.x) < 0.01f)
+        {
+            direction.x = 0;
+        }
+        if (Mathf.Abs(direction.y) < 0.01f)
+        {
+            direction.y = 0;
+        }
         if (x == 0f && z == 0f || direction.x * x < 0 || direction.y * z < 0)
         {
             return direction; // false return, to not update direction

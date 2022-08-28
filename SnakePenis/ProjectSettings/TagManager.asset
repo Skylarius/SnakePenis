@@ -7,6 +7,7 @@ TagManager:
   - PowerUp
   - Body
   - Wall
+  - SnakeMeshRootBone
   layers:
   - Default
   - TransparentFX
