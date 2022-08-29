@@ -9,6 +9,7 @@ public class ButtonsActions : MonoBehaviour
     public Sprite playImage;
     public Sprite pauseImage;
     public GameObject SettingsMenuObj;
+    public GameObject DebugModePanel;
     public void ExitButtonFunction()
     {
         Application.Quit();
@@ -35,5 +36,18 @@ public class ButtonsActions : MonoBehaviour
     {
         print("Scene reloaded");
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void DebugModeButtonFunction()
+    {
+        if (SnakeMovement.isGameOver)
+        {
+            return;
+        }
+        Time.timeScale = (Time.timeScale == 0) ? 1 : 0;
+        if (DebugModePanel != null)
+        {
+            DebugModePanel.SetActive(Time.timeScale == 0 ? true : false);
+        }
     }
 }
