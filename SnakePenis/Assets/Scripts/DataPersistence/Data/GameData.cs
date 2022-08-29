@@ -14,6 +14,7 @@ public class GameData
 
     // Unlockables
     public string DailyBonusTimeStamp;
+    public bool Sound;
     public bool RoundedBalls;
     public bool AfroStyle;
     public bool DickingJump;
@@ -32,6 +33,9 @@ public class GameData
 
         //Daily Bonus TimeStamp
         DailyBonusTimeStamp = "";
+
+        //Sound
+        Sound = true;
 
         //Unlockables settings
         RoundedBalls = false;

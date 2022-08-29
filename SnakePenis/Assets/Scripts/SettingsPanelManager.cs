@@ -50,6 +50,13 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     public int DailyBonusXPAmount;
     public string DailyBonusTitle;
 
+    [Header("Sound")]
+    public bool isSoundEnabled;
+    public Button SoundButton;
+    public Sprite SoundOn, SoundOff;
+    public int SoundBonusPercent;
+    public string SoundBonusTitle;
+
     public List<Unlockable> Unlockables;
 
     [Header("Square Ball unlockable")]
@@ -192,6 +199,18 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         return unlockable.Level == level;
     }
 
+    public void SwitchSoundEnabled()
+    {
+        SwitchSoundEnabled(!isSoundEnabled);
+    }
+
+    public void SwitchSoundEnabled(bool condition)
+    {
+        isSoundEnabled = condition;
+        AudioListener.volume = condition ? 1f : 0f;
+        SoundButton.image.sprite = (condition) ? SoundOn : SoundOff;
+    }
+
     public IEnumerable<Bonus> BonusGenerator()
     {
         Bonus bonus;
@@ -204,6 +223,13 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             bonus.XPAmount = DailyBonusXPAmount;
             yield return bonus;
             DailyBonusTimeStamp = System.DateTime.Today.ToString("dd-MM-yyyy");
+        }
+        if (isSoundEnabled == false)
+        {
+            bonus = new Bonus();
+            bonus.Name = SoundBonusTitle;
+            bonus.Percent = SoundBonusPercent;
+            yield return bonus;
         }
         if (isRoundedBallsEnabled)
         {
@@ -606,6 +632,16 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         {
             DailyBonusTimeStamp = System.DateTime.Today.AddDays(-1).ToString("dd-MM-yyyy");
         }
+        if (data.Sound == false)
+        {
+            print("SOUND OFF");
+            SwitchSoundEnabled(false);
+        }
+        else
+        {
+            print("SOUND ON");
+            SwitchSoundEnabled(true);
+        }
         if (data.RoundedBalls == true)
         {
             SwitchBallsWithRoundedBalls(true);
@@ -721,6 +757,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         data.DailyBonusTimeStamp = System.DateTime.ParseExact(
             DailyBonusTimeStamp, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture
             ).ToString("dd-MM-yyyy");
+        data.Sound = isSoundEnabled;
         data.RoundedBalls = isRoundedBallsEnabled;
         data.AfroStyle = isAfroStyleEnabled;
         data.DickingJump = isJumpEnabled;
