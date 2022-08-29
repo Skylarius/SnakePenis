@@ -14,6 +14,7 @@ public class GameData
 
     // Unlockables
     public string DailyBonusTimeStamp;
+    public float FieldOfView;
     public bool Sound;
     public bool RoundedBalls;
     public bool AfroStyle;
@@ -36,6 +37,9 @@ public class GameData
 
         //Sound
         Sound = true;
+
+        //CameraFieldOfView
+        FieldOfView = Camera.current.fieldOfView;
 
         //Unlockables settings
         RoundedBalls = false;

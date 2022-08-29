@@ -57,6 +57,13 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     public int SoundBonusPercent;
     public string SoundBonusTitle;
 
+    [Header("Field Of View Settings")]
+    public bool isFieldOfViewShowing;
+    private float currentFieldOfView;
+    public Slider FieldOfViewSlider;
+    public Button CameraButton;
+    public Sprite CameraOn, CameraOff;
+
     public List<Unlockable> Unlockables;
 
     [Header("Square Ball unlockable")]
@@ -204,11 +211,36 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         SwitchSoundEnabled(!isSoundEnabled);
     }
 
-    public void SwitchSoundEnabled(bool condition)
+    void SwitchSoundEnabled(bool condition)
     {
         isSoundEnabled = condition;
         AudioListener.volume = condition ? 1f : 0f;
         SoundButton.image.sprite = (condition) ? SoundOn : SoundOff;
+    }
+
+    public void SwitchCameraFieldOfViewButton()
+    {
+        SwitchCameraFieldOfViewButton(!isFieldOfViewShowing);
+    }
+
+    void SwitchCameraFieldOfViewButton(bool condition)
+    {
+        isFieldOfViewShowing = condition;
+        FieldOfViewSlider.gameObject.SetActive(condition);
+        CameraButton.image.sprite = (condition) ? CameraOn : CameraOff;
+    }
+
+    public void SetCameraFieldOfView()
+    {
+        float value = FieldOfViewSlider.value;
+        SetCameraFieldOfView(value);
+    }
+
+    void SetCameraFieldOfView(float value)
+    {
+        currentFieldOfView = value;
+        Camera.main.fieldOfView = value;
+        FieldOfViewSlider.value = value;
     }
 
     public IEnumerable<Bonus> BonusGenerator()
@@ -642,6 +674,11 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             print("SOUND ON");
             SwitchSoundEnabled(true);
         }
+        if (data.FieldOfView > 0f)
+        {
+            SetCameraFieldOfView(data.FieldOfView);
+            FieldOfViewSlider.value = data.FieldOfView;
+        }
         if (data.RoundedBalls == true)
         {
             SwitchBallsWithRoundedBalls(true);
@@ -758,6 +795,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             DailyBonusTimeStamp, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture
             ).ToString("dd-MM-yyyy");
         data.Sound = isSoundEnabled;
+        data.FieldOfView = currentFieldOfView;
         data.RoundedBalls = isRoundedBallsEnabled;
         data.AfroStyle = isAfroStyleEnabled;
         data.DickingJump = isJumpEnabled;
