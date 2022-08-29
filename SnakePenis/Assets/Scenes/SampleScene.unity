@@ -6421,7 +6421,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Quale
+  m_Text: A Cappella
 --- !u!222 &922471980
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9033,9 +9033,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1808667366}
         m_TargetAssemblyTypeName: SettingsPanelManager, Scripts
-        m_MethodName: SwitchRainbowStyle
+        m_MethodName: SwitchACappella
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -11930,7 +11930,8 @@ MonoBehaviour:
   isJumpEnabled: 0
   DickingJumpButtonText: {fileID: 1927771305}
   jumpInfo: Premi sul glande per fare un salto della quaglia.
-  JumpBonusPercent: 4
+  JumpBonusPercent: 9
+  JumpBonusXPAmount: 100
   JumpBonusTitle: BONUS Uccello in aria
   isRainbowEnabled: 0
   RainbowMaterial: {fileID: 2100000, guid: f756bea2726ee664db5614846ee8455f, type: 2}
@@ -11938,12 +11939,12 @@ MonoBehaviour:
   particleSystemOriginalMaterial: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
   RainbowStyleButtonText: {fileID: 141331191}
   rainbowInfo: Tolleranza, amore e psichedelia.
-  RainbowBonusPercent: 8
+  RainbowBonusPercent: 12
   RainbowBonusTitle: BONUS Multisessuale
   isMovingWallsEnabled: 0
   MovingWall1: {fileID: 9017356347894402995, guid: 08c496bea469b5f48bf33d992a33a8aa, type: 3}
   MovingWall2: {fileID: 6479081782933927446, guid: 5a8bea9b78b7c6c4c8118866850c50eb, type: 3}
-  MovingWallsBonusPercent: 12
+  MovingWallsBonusPercent: 15
   MovingWallsBonusTitle: BONUS Muro Duro Mobile
   MovingWallsButtonText: {fileID: 500220252}
   movingWallsInfo: "Muovi il muro per vedere chi ce l'ha pi\xF9 duro"
@@ -11956,7 +11957,7 @@ MonoBehaviour:
   PillsAttractor: {fileID: 480026631406828486, guid: 29e9b9fcfa36dd84f86ad3d631993b66, type: 3}
   PillsBlowerButtonText: {fileID: 1027834475}
   PillsBlowerInfo: Attira pillole lontane. Ma perdi qualche punto...
-  PillsBlowerBonusPercent: -1
+  PillsBlowerBonusPercent: -3
   PillsBlowerBonusTitle: MALUS Te li suchi
   isTeleportEnabled: 0
   TeleportCouples:
@@ -11976,8 +11977,15 @@ MonoBehaviour:
   WallRotationOffset: {x: 0, y: 90, z: 0}
   TeleportButtonText: {fileID: 1775702980}
   TeleportInfo: "Ci\xF2 che entra...deve poi uscire"
-  TeleportBonusPercent: 10
+  TeleportBonusPercent: 30
+  TeleportBonusXPAmount: 20000
   TeleportBonusTitle: BONUS Spazio-Tempo-Orale
+  isACappellaEnabled: 0
+  ACappellaSoundtrack: {fileID: 8300000, guid: 9400170294968db45b0c6b70ed79dabf, type: 3}
+  ACappellaButtonText: {fileID: 2050906677}
+  ACappellaInfo: La colonna sonora ideale se sei costipato
+  ACappellaBonusPercent: 50
+  ACappellaBonusTitle: BONUS Cantare A Cappella
 --- !u!114 &1808667367
 MonoBehaviour:
   m_ObjectHideFlags: 0

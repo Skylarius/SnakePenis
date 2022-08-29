@@ -10,6 +10,7 @@ public class PortalManager : MonoBehaviour
     public GameObject SelfPortalOUTPoint;
     private GameObject SnakeHead;
     public GameObject SnakeMesh;
+    public static int PortalUsage;
 
     [Header("Settings")]
     public float TailDistanceToDestroyCopiedSnake = 10f;
@@ -42,6 +43,7 @@ public class PortalManager : MonoBehaviour
         snakeMovement = GameGodSingleton.Instance.GetSnakeMovementScript();
         SnakeHead = snakeMovement.gameObject;
         portalOUTManager = PortalOUTPoint.GetComponent<PortalManager>();
+        PortalUsage = 0;
     }
 
     private void Update()
@@ -164,6 +166,7 @@ public class PortalManager : MonoBehaviour
             portalOUTManager.enabled = true;
         }
         isPortalCoroutineRunning = false;
+        PortalUsage++;
     }
 
     private void SetupNewSnake(GameObject newSnake)

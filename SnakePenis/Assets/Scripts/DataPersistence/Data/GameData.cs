@@ -24,6 +24,7 @@ public class GameData
     public bool Free360Movement;
     public bool PillsBlower;
     public bool Teleport;
+    public bool ACappella;
 
     public GameData()
     {
@@ -50,5 +51,6 @@ public class GameData
         Free360Movement = false;
         PillsBlower = false;
         Teleport = false;
+        ACappella = false;
     }
 }

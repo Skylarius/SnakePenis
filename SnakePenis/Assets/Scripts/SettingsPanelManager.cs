@@ -92,6 +92,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     public Text DickingJumpButtonText;
     public string jumpInfo;
     public int JumpBonusPercent = 0;
+    public int JumpBonusXPAmount = 0;
     public string JumpBonusTitle;
 
     [Header("Rainbow unlockable")]
@@ -168,7 +169,17 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     public Text TeleportButtonText;
     public string TeleportInfo;
     public int TeleportBonusPercent = 0;
+    public int TeleportBonusXPAmount = 0;
     public string TeleportBonusTitle;
+
+    [Header("A Cappella")]
+    public bool isACappellaEnabled = false;
+    private AudioClip InitialSoundtrack;
+    public AudioClip ACappellaSoundtrack;
+    public Text ACappellaButtonText;
+    public string ACappellaInfo;
+    public int ACappellaBonusPercent = 0;
+    public string ACappellaBonusTitle;
 
 
 
@@ -275,6 +286,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             bonus = new Bonus();
             bonus.Name = JumpBonusTitle;
             bonus.Percent = JumpBonusPercent;
+            bonus.XPAmount = JumpBonusXPAmount * InputHandler.JumpsAmount * LevelProgressionManager.CurrentLevel;
             yield return bonus;
         }
         if (isAfroStyleEnabled)
@@ -317,6 +329,14 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             bonus = new Bonus();
             bonus.Name = TeleportBonusTitle;
             bonus.Percent = TeleportBonusPercent;
+            bonus.XPAmount = TeleportBonusXPAmount * PortalManager.PortalUsage;
+            yield return bonus;
+        }
+        if (isACappellaEnabled && isSoundEnabled)
+        {
+            bonus = new Bonus();
+            bonus.Name = ACappellaBonusTitle;
+            bonus.Percent = ACappellaBonusPercent;
             yield return bonus;
         }
 
@@ -655,6 +675,53 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         TeleportButtonText.text = (isTeleportEnabled) ? "Disattiva" : "Attiva";
     }
 
+    public void SwitchACappella()
+    {
+        SwitchACappella(!isACappellaEnabled);
+        infoText.text = ACappellaInfo;
+    }
+
+    void SwitchACappella(bool condition)
+    {
+        AudioSource audioSource = GetComponent<AudioSource>();
+        if (condition == true && isACappellaEnabled == false)
+        {
+            float t = audioSource.time;
+            audioSource.Stop();
+            InitialSoundtrack = audioSource.clip;
+            audioSource.clip = ACappellaSoundtrack;
+            if (t < audioSource.clip.length)
+            {
+                audioSource.time = t;
+            }
+            else
+            {
+                audioSource.time = 0f;
+            }
+            audioSource.Play();
+            isACappellaEnabled = true;
+        }
+        else if (condition == false && isACappellaEnabled == true)
+        {
+            if (InitialSoundtrack)
+            {
+                float t = audioSource.time;
+                audioSource.Stop();
+                audioSource.clip = InitialSoundtrack;
+                if (t < audioSource.clip.length)
+                {
+                    audioSource.time = t;
+                } else
+                {
+                    audioSource.time = 0f;
+                }
+                audioSource.Play();
+            }
+            isACappellaEnabled = false;
+        }
+        ACappellaButtonText.text = (isACappellaEnabled) ? "Disattiva" : "Attiva";
+    }
+
     public void LoadData(GameData data)
     {
         if (data.DailyBonusTimeStamp != "")
@@ -782,6 +849,17 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             isTeleportEnabled = false;
             TeleportButtonText.text = "Attiva";
         }
+        if (data.ACappella == true)
+        {
+            SwitchACappella(true);
+            ACappellaButtonText.text = "Disattiva";
+        }
+        else
+        {
+            print("NO A CAPPELLA");
+            isACappellaEnabled = false;
+            ACappellaButtonText.text = "Attiva";
+        }
     }
 
     void OnLoadComplete()
@@ -794,6 +872,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         data.DailyBonusTimeStamp = System.DateTime.ParseExact(
             DailyBonusTimeStamp, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture
             ).ToString("dd-MM-yyyy");
+        data.ACappella = isACappellaEnabled;
         data.Sound = isSoundEnabled;
         data.FieldOfView = currentFieldOfView;
         data.RoundedBalls = isRoundedBallsEnabled;

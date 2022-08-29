@@ -212,6 +212,11 @@ public class SnakeMovement : MonoBehaviour
 
     IEnumerator DeathCoroutine()
     {
+        if (isGameOver == true)
+        {
+            Debug.LogWarning("Game is already over. Blocking this coroutine from going to be a potential duplicate");
+            yield break;
+        }
         isGameOver = true;
         for (int i=0; i<SnakeBody.Count; i++)
         {

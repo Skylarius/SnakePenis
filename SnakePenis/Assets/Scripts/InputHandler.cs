@@ -19,6 +19,7 @@ public class InputHandler : BaseSnakeComponent
     private float SqrJumpTapRange { get { return jumpTapRange * jumpTapRange; } }
     public float jumpDoubleTapDeltaTime = 0.3f;
     private bool isJumping = false;
+    public static int JumpsAmount;
 
     [Header("Free 360 degrees movement")]
     public float windowsRotation360Speed = 10f;
@@ -35,6 +36,7 @@ public class InputHandler : BaseSnakeComponent
             actions = new List<Action>();
         }
         snakeMovement = GetComponent<SnakeMovement>();
+        JumpsAmount = 0;
     }
 
     Vector3 GetStandardDirection(ref float x, ref float z, Vector2 direction)
@@ -176,6 +178,7 @@ public class InputHandler : BaseSnakeComponent
         }
         snakeMovement.targetPositionOnGrid.y = 0;
         isJumping = false;
+        JumpsAmount++;
     }
 
     Vector3 ConvertTouchToPositionInWorld(Touch touch)
