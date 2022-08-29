@@ -50,4 +50,21 @@ public class ButtonsActions : MonoBehaviour
             DebugModePanel.SetActive(Time.timeScale == 0 ? true : false);
         }
     }
+
+    private int hiddenButtonCounter = 0;
+    public void DebugModeHiddenButtonFunction()
+    {
+        if (SnakeMovement.isGameOver)
+        {
+            return;
+        }
+        if (hiddenButtonCounter > 3)
+        {
+            hiddenButtonCounter = 0;
+            DebugModeButtonFunction();
+        } else
+        {
+            hiddenButtonCounter++;
+        }
+    }
 }
