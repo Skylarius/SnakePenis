@@ -7,11 +7,12 @@ public class PortalManager : MonoBehaviour
 {
     // Start is called before the first frame update
     public GameObject PortalINPoint, PortalOUTPoint;
-    public GameObject SnakeHead;
+    public GameObject SelfPortalOUTPoint;
+    private GameObject SnakeHead;
     public GameObject SnakeMesh;
 
     [Header("Settings")]
-    public float TailDistanceToDestroyCopiedSnake = 7f;
+    public float TailDistanceToDestroyCopiedSnake = 10f;
     public float speedSnakeIntoPortal = 10f;
 
     [Header("Animation")]
@@ -30,13 +31,16 @@ public class PortalManager : MonoBehaviour
         public Transform ObjectToAnimate;
         public Vector3 StartPosition;
         public Vector3 EndPosition;
+        public Vector3 StartRotationEuler;
+        public Vector3 EndRotationEluer;
     }
 
     public PortalSimpleAnimation[] PortalAnimation;
 
     void Start()
     {
-        snakeMovement = SnakeHead.GetComponent<SnakeMovement>();
+        snakeMovement = GameGodSingleton.Instance.GetSnakeMovementScript();
+        SnakeHead = snakeMovement.gameObject;
         portalOUTManager = PortalOUTPoint.GetComponent<PortalManager>();
     }
 
@@ -46,12 +50,20 @@ public class PortalManager : MonoBehaviour
         float distance = Vector3.Distance(transform.position, SnakeHead.transform.position);
         float finalValue = 1 - (distance - SnakeDistanceForAnimationToComplete) / SnakeDistanceToTriggerAnimation;
         finalValue = Mathf.Clamp(finalValue, 0, 1);
-        animationValue = Mathf.Lerp(animationValue, finalValue, Time.deltaTime * PortalAnimationSpeed);
+        if (isPortalCoroutineRunning == false) 
+        { 
+            animationValue = Mathf.Lerp(animationValue, finalValue, Time.deltaTime * PortalAnimationSpeed);
+        }
         for (int i = 0; i < PortalAnimation.Length; i++)
         {
             PortalAnimation[i].ObjectToAnimate.localPosition = Vector3.Lerp(
                 PortalAnimation[i].StartPosition,
                 PortalAnimation[i].EndPosition,
+                animationValue
+                );
+            PortalAnimation[i].ObjectToAnimate.localEulerAngles = Vector3.Lerp(
+                PortalAnimation[i].StartRotationEuler,
+                PortalAnimation[i].EndRotationEluer,
                 animationValue
                 );
         }
@@ -91,6 +103,9 @@ public class PortalManager : MonoBehaviour
         newSnakeMovement.LeftBall = newSnakeMovement.Tail.transform.Find("LeftBall").gameObject;
         newSnakeMovement.RightBall = newSnakeMovement.Tail.transform.Find("RightBall").gameObject;
 
+        //Set unative the tail of the original snake to make it invisible
+        snakeMovement.Tail.SetActive(false);
+
         //Activate SnakeMeshCopy and set it up to the newSnake
         GameObject SnakeMeshCopy = Instantiate(SnakeMesh);
         SetupNewSnakeMesh(NewSnake, SnakeMeshCopy);
@@ -118,7 +133,7 @@ public class PortalManager : MonoBehaviour
         snakeMovement.targetRealPosition = Vector2.right * PortalOUTPoint.transform.position.x + Vector2.up * PortalOUTPoint.transform.position.z;
         snakeMovement.direction = (Vector2.right * PortalOUTPoint.transform.forward.x + Vector2.up * PortalOUTPoint.transform.forward.z);
         snakeMovement.BlockInputForSnake(true);
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.1f);
         SnakeHead.GetComponent<Collider>().enabled = true;
         snakeMovement.BlockInputForSnake(false);
 
@@ -133,6 +148,8 @@ public class PortalManager : MonoBehaviour
                 0.001f);
             yield return new WaitForEndOfFrame();
         }
+        //Set the tail visible again once ALL the snake copy is inside the portal
+        snakeMovement.Tail.SetActive(true);
 
         //Destroy all newSnake (which was just a copy)
         NewSnake.GetComponent<RealSnakeBinder>().ResetOldStructure();
