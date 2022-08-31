@@ -51,6 +51,14 @@ public class ButtonsActions : MonoBehaviour
         }
     }
 
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            DebugModeButtonFunction();
+        }
+    }
+
     private int hiddenButtonCounter = 0;
     public void DebugModeHiddenButtonFunction()
     {

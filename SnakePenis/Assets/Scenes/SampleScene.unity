@@ -309,7 +309,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Rapace in Libert\xE0"
+  m_Text: Mostra Stats Medie
 --- !u!222 &95880287
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -469,7 +469,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Attiva
+  m_Text: Avvia
 --- !u!222 &99834296
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1492,7 +1492,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Muri muoventi
+  m_Text: Avvia Simulazione e Genera Stats
 --- !u!222 &336136826
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1799,7 +1799,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 991208807}
+      - m_Target: {fileID: 1808667368}
         m_TargetAssemblyTypeName: DebugPanelManager, Scripts
         m_MethodName: PowerUpSpawnerBoost
         m_Mode: 1
@@ -1933,9 +1933,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1808667366}
-        m_TargetAssemblyTypeName: SettingsPanelManager, Scripts
-        m_MethodName: SwitchFree360
+      - m_Target: {fileID: 1808667368}
+        m_TargetAssemblyTypeName: DebugPanelManager, Scripts
+        m_MethodName: ShowStats
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4081,7 +4081,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 991208807}
+      - m_Target: {fileID: 1808667368}
         m_TargetAssemblyTypeName: DebugPanelManager, Scripts
         m_MethodName: AddTenThousandXP
         m_Mode: 1
@@ -4371,7 +4371,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 991208807}
+      - m_Target: {fileID: 1808667368}
         m_TargetAssemblyTypeName: DebugPanelManager, Scripts
         m_MethodName: IncreaseLevel
         m_Mode: 1
@@ -4637,88 +4637,6 @@ RectTransform:
   m_AnchoredPosition: {x: -380, y: 30}
   m_SizeDelta: {x: 800, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &635233807
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 635233808}
-  - component: {fileID: 635233810}
-  - component: {fileID: 635233809}
-  m_Layer: 5
-  m_Name: InfoText
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &635233808
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 635233807}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 991208806}
-  m_RootOrder: 12
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: -330}
-  m_SizeDelta: {x: 909.4, y: 180}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &635233809
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 635233807}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 30
-    m_FontStyle: 3
-    m_BestFit: 0
-    m_MinSize: 0
-    m_MaxSize: 300
-    m_Alignment: 1
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: '
-
-'
---- !u!222 &635233810
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 635233807}
-  m_CullTransparentMesh: 1
 --- !u!1 &647601108
 GameObject:
   m_ObjectHideFlags: 0
@@ -4921,7 +4839,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 991208807}
+      - m_Target: {fileID: 1808667368}
         m_TargetAssemblyTypeName: DebugPanelManager, Scripts
         m_MethodName: DecreaseLevel
         m_Mode: 1
@@ -5061,12 +4979,12 @@ GameObject:
   m_Component:
   - component: {fileID: 694740116}
   m_Layer: 5
-  m_Name: Unlockable_5
+  m_Name: Option5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &694740116
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5173,9 +5091,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1808667366}
-        m_TargetAssemblyTypeName: SettingsPanelManager, Scripts
-        m_MethodName: SwitchMovingWalls
+      - m_Target: {fileID: 1808667368}
+        m_TargetAssemblyTypeName: DebugPanelManager, Scripts
+        m_MethodName: SimulateGameAndLogStats
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5565,19 +5483,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 725293615}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1808667366}
-        m_TargetAssemblyTypeName: SettingsPanelManager, Scripts
-        m_MethodName: SwitchMovingWalls
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &725293615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6930,7 +6836,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 991208806}
-  - component: {fileID: 991208807}
   m_Layer: 5
   m_Name: DebugPanel
   m_TagString: Untagged
@@ -6962,8 +6867,8 @@ RectTransform:
   - {fileID: 1804121503}
   - {fileID: 1717064259}
   - {fileID: 2069381948}
-  - {fileID: 635233808}
   - {fileID: 1164355459}
+  - {fileID: 1058488030}
   m_Father: {fileID: 163704969}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6972,18 +6877,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -1820, y: -866}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &991208807
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 991208805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96d5f361217b66b419c7ad31b650a2c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1027834473
 GameObject:
   m_ObjectHideFlags: 0
@@ -7293,6 +7186,86 @@ RectTransform:
   m_AnchoredPosition: {x: 380, y: 230}
   m_SizeDelta: {x: 800, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1058488029
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1058488030}
+  - component: {fileID: 1058488032}
+  - component: {fileID: 1058488031}
+  m_Layer: 5
+  m_Name: InfoText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1058488030
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1058488029}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 991208806}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: -413.5, y: 240.2}
+  m_SizeDelta: {x: 655.17, y: 125}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1058488031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1058488029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 1, b: 0.07998848, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 30
+    m_FontStyle: 3
+    m_BestFit: 0
+    m_MinSize: 0
+    m_MaxSize: 300
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: Lorem ipsum yadda yadda yadda...ie hcjsj ejcheb fkk po wjenuf sppowei fhuespak
+--- !u!222 &1058488032
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1058488029}
+  m_CullTransparentMesh: 1
 --- !u!1 &1062428910
 GameObject:
   m_ObjectHideFlags: 0
@@ -7768,7 +7741,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 991208807}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DebugPanelManager, Scripts
         m_MethodName: ResetAllData
         m_Mode: 1
@@ -8160,19 +8133,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1144801179}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1808667366}
-        m_TargetAssemblyTypeName: SettingsPanelManager, Scripts
-        m_MethodName: SwitchRainbowStyle
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1144801179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8242,7 +8203,7 @@ RectTransform:
   - {fileID: 463915062}
   - {fileID: 435687933}
   m_Father: {fileID: 991208806}
-  m_RootOrder: 13
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -9166,19 +9127,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1383216749}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1808667366}
-        m_TargetAssemblyTypeName: SettingsPanelManager, Scripts
-        m_MethodName: SwitchDickingJump
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1383216749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10725,12 +10674,12 @@ GameObject:
   m_Component:
   - component: {fileID: 1763346630}
   m_Layer: 5
-  m_Name: Unlockable_6
+  m_Name: Option6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1763346630
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11152,19 +11101,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1788386922}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1808667366}
-        m_TargetAssemblyTypeName: SettingsPanelManager, Scripts
-        m_MethodName: SwitchFree360
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1788386922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11623,6 +11560,7 @@ GameObject:
   - component: {fileID: 1808667363}
   - component: {fileID: 1808667364}
   - component: {fileID: 1808667366}
+  - component: {fileID: 1808667368}
   m_Layer: 0
   m_Name: GameGod
   m_TagString: Untagged
@@ -11888,104 +11826,117 @@ MonoBehaviour:
   CameraButton: {fileID: 1217676721}
   CameraOn: {fileID: 21300000, guid: 9103679a68896274e98e64a10e933341, type: 3}
   CameraOff: {fileID: 21300000, guid: 3757e1660888a5148a6bba0f87969cb3, type: 3}
-  Unlockables:
-  - Menu: {fileID: 432209864}
-    Level: 2
-  - Menu: {fileID: 1546815392}
-    Level: 4
-  - Menu: {fileID: 1782819403}
-    Level: 5
-  - Menu: {fileID: 424638877}
-    Level: 7
-  - Menu: {fileID: 557254922}
-    Level: 9
-  - Menu: {fileID: 1572738078}
-    Level: 10
-  - Menu: {fileID: 479999496}
-    Level: 12
-  - Menu: {fileID: 1817953571}
-    Level: 14
-  - Menu: {fileID: 1846077452}
-    Level: 16
-  - Menu: {fileID: 1902218234}
-    Level: 18
-  isRoundedBallsEnabled: 0
-  RoundedBallsButtonText: {fileID: 605925815}
-  RoundedBalls: {fileID: 1070659513439915691, guid: de7e1543c51da0242a4e2175d9e85ae0, type: 3}
   SnakeHead: {fileID: 506164130}
-  OriginalBalls: {fileID: 1777297881}
-  roundedBallInfo: Restate abbagliati dai coglioni quadrati. Rotanti.
-  RoundedBallsPercent: 3
-  RoundedBallsBonusTitle: BONUS Tetragonadi
-  isAfroStyleEnabled: 0
   OriginalPenisMesh: {fileID: 706215586}
-  Brown: {fileID: 2100000, guid: e28486f7edab90b4282b0e7b57a83ffe, type: 2}
-  DarkBrown: {fileID: 2100000, guid: 46793bdcccf2a684e80c4bc87c438c86, type: 2}
   OriginalPink: {fileID: 2100000, guid: 09418e34b51370247a549bd4827cb98f, type: 2}
   OriginalDarkPink: {fileID: 2100000, guid: 03087e7babecc2a49a45b6eaa2b9330b, type: 2}
-  AfroStyleButtonText: {fileID: 544492388}
-  afroStyleInfo: "Pi\xF9 lungo, pi\xF9 grosso, meno razzista."
-  AfroStyleBonusPercent: 7
-  AfroStyleBonusTitle: BONUS Multiculturale
-  isJumpEnabled: 0
-  DickingJumpButtonText: {fileID: 1927771305}
-  jumpInfo: Premi sul glande per fare un salto della quaglia.
-  JumpBonusPercent: 9
-  JumpBonusXPAmount: 100
-  JumpBonusTitle: BONUS Uccello in aria
-  isRainbowEnabled: 0
-  RainbowMaterial: {fileID: 2100000, guid: f756bea2726ee664db5614846ee8455f, type: 2}
-  snakeParticleSystem: {fileID: 1875910564}
-  particleSystemOriginalMaterial: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
-  RainbowStyleButtonText: {fileID: 141331191}
-  rainbowInfo: Tolleranza, amore e psichedelia.
-  RainbowBonusPercent: 12
-  RainbowBonusTitle: BONUS Multisessuale
-  isMovingWallsEnabled: 0
-  MovingWall1: {fileID: 9017356347894402995, guid: 08c496bea469b5f48bf33d992a33a8aa, type: 3}
-  MovingWall2: {fileID: 6479081782933927446, guid: 5a8bea9b78b7c6c4c8118866850c50eb, type: 3}
-  MovingWallsBonusPercent: 15
-  MovingWallsBonusTitle: BONUS Muro Duro Mobile
-  MovingWallsButtonText: {fileID: 500220252}
-  movingWallsInfo: "Muovi il muro per vedere chi ce l'ha pi\xF9 duro"
-  isFree360Enabled: 0
-  Free360ButtonText: {fileID: 1038991162}
-  Free360Info: Ruota di 360 gradi e raggiungi tutte le pillole subito
-  Free360BonusPercent: 20
-  Free360BonusTitle: BONUS Elicottero
-  isPillsBlowerEnabled: 0
-  PillsAttractor: {fileID: 480026631406828486, guid: 29e9b9fcfa36dd84f86ad3d631993b66, type: 3}
-  PillsBlowerButtonText: {fileID: 1027834475}
-  PillsBlowerInfo: Attira pillole lontane. Ma perdi qualche punto...
-  PillsBlowerBonusPercent: -3
-  PillsBlowerBonusTitle: MALUS Te li suchi
-  isTeleportEnabled: 0
-  TeleportCouples:
-  - Portal1: {fileID: 249763637052605512, guid: 39718934bb9bf40459fb61647f29b64b, type: 3}
-    Portal2: {fileID: 1388798383611509054, guid: 0846ba07ee6fcf94cb6bb0f0387e518b, type: 3}
-    BonusTitle: BONUS Spazio-Tempo-Anale
-  - Portal1: {fileID: 1508705762199246618, guid: d254b08ca9cd8354cac4667cdb55c398, type: 3}
-    Portal2: {fileID: 3062786401133438778, guid: dee8e03fa14bd7e44a1ae891479d27d5, type: 3}
-    BonusTitle: BONUS Spazio-Tempo-Orale
-  WallsToAnchor:
-  - {fileID: 849389427}
-  - {fileID: 2135614699}
-  - {fileID: 985216637}
-  - {fileID: 1122816641}
-  SpawnRadius: 30
-  WallOffset: 10
-  WallRotationOffset: {x: 0, y: 90, z: 0}
-  TeleportButtonText: {fileID: 1775702980}
-  TeleportInfo: "Ci\xF2 che entra...deve poi uscire"
-  TeleportBonusPercent: 30
-  TeleportBonusXPAmount: 20000
-  TeleportBonusTitle: BONUS Spazio-Tempo-Orale
-  isACappellaEnabled: 0
-  ACappellaSoundtrack: {fileID: 8300000, guid: 9400170294968db45b0c6b70ed79dabf, type: 3}
-  ACappellaButtonText: {fileID: 2050906677}
-  ACappellaInfo: La colonna sonora ideale se sei costipato
-  ACappellaBonusPercent: 50
-  ACappellaBonusTitle: BONUS Cantare A Cappella
+  SquareBallsSpecial:
+    enabled: 0
+    Unlockable:
+      Menu: {fileID: 432209864}
+      Level: 2
+    Title: BONUS Tetragonadi
+    Info: Restate abbagliati dai coglioni quadrati. Rotanti.
+    BonusPercent: 3
+    BonusXPAmount: 0
+    SquareBallsPrefab: {fileID: 1070659513439915691, guid: de7e1543c51da0242a4e2175d9e85ae0, type: 3}
+    OriginalBalls: {fileID: 1777297881}
+  AfroStyleSpecial:
+    enabled: 0
+    Unlockable:
+      Menu: {fileID: 1546815392}
+      Level: 4
+    Title: BONUS Multiculturale
+    Info: "Pi\xF9 lungo, pi\xF9 grosso, meno razzista."
+    BonusPercent: 7
+    BonusXPAmount: 0
+    Brown: {fileID: 2100000, guid: e28486f7edab90b4282b0e7b57a83ffe, type: 2}
+    DarkBrown: {fileID: 2100000, guid: 46793bdcccf2a684e80c4bc87c438c86, type: 2}
+  JumpingDickSpecial:
+    enabled: 0
+    Unlockable:
+      Menu: {fileID: 1782819403}
+      Level: 5
+    Title: BONUS Uccello in aria
+    Info: Premi sul glande per fare un salto della quaglia.
+    BonusPercent: 9
+    BonusXPAmount: 100
+  RainbowSpecial:
+    enabled: 0
+    Unlockable:
+      Menu: {fileID: 424638877}
+      Level: 7
+    Title: BONUS Multisessuale
+    Info: Tolleranza, amore e psichedelia.
+    BonusPercent: 12
+    BonusXPAmount: 0
+    RainbowMaterial: {fileID: 2100000, guid: f756bea2726ee664db5614846ee8455f, type: 2}
+    snakeParticleSystem: {fileID: 1875910564}
+    particleSystemOriginalMaterial: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
+  MovingWallsSpecial:
+    enabled: 0
+    Unlockable:
+      Menu: {fileID: 557254922}
+      Level: 9
+    Title: BONUS Muro Duro Mobile
+    Info: "Muovi il muro per vedere chi ce l'ha pi\xF9 duro"
+    BonusPercent: 15
+    BonusXPAmount: 0
+    MovingWall1: {fileID: 9017356347894402995, guid: 08c496bea469b5f48bf33d992a33a8aa, type: 3}
+    MovingWall2: {fileID: 6479081782933927446, guid: 5a8bea9b78b7c6c4c8118866850c50eb, type: 3}
+  Free360MovementSpecial:
+    enabled: 0
+    Unlockable:
+      Menu: {fileID: 1572738078}
+      Level: 10
+    Title: BONUS Elicottero
+    Info: Ruota di 360 gradi e raggiungi tutte le pillole subito
+    BonusPercent: 20
+    BonusXPAmount: 0
+  PillsBlowerSpecial:
+    enabled: 0
+    Unlockable:
+      Menu: {fileID: 479999496}
+      Level: 12
+    Title: MALUS Suca
+    Info: Attira pillole lontane. Ma perdi qualche punto...
+    BonusPercent: -3
+    BonusXPAmount: 0
+    PillsAttractor: {fileID: 480026631406828486, guid: 29e9b9fcfa36dd84f86ad3d631993b66, type: 3}
+  TeleportSpecial:
+    enabled: 0
+    Unlockable:
+      Menu: {fileID: 1817953571}
+      Level: 14
+    Title: BONUS Spazio-Tempo-Orale
+    Info: "Ci\xF2 che entra...deve poi uscire"
+    BonusPercent: 30
+    BonusXPAmount: 20000
+    TeleportCouples:
+    - Portal1: {fileID: 249763637052605512, guid: 39718934bb9bf40459fb61647f29b64b, type: 3}
+      Portal2: {fileID: 1388798383611509054, guid: 0846ba07ee6fcf94cb6bb0f0387e518b, type: 3}
+      BonusTitle: BONUS Spazio-Tempo-Anale
+    - Portal1: {fileID: 1508705762199246618, guid: d254b08ca9cd8354cac4667cdb55c398, type: 3}
+      Portal2: {fileID: 3062786401133438778, guid: dee8e03fa14bd7e44a1ae891479d27d5, type: 3}
+      BonusTitle: BONUS Spazio-Tempo-Orale
+    WallsToAnchor:
+    - {fileID: 849389427}
+    - {fileID: 2135614699}
+    - {fileID: 985216637}
+    - {fileID: 1122816641}
+    SpawnRadius: 30
+    WallOffset: 10
+    WallRotationOffset: {x: 0, y: 90, z: 0}
+  ACappellaSpecial:
+    enabled: 0
+    Unlockable:
+      Menu: {fileID: 1846077452}
+      Level: 16
+    Title: BONUS Cantare A Cappella
+    Info: La colonna sonora ideale se sei costipato
+    BonusPercent: 50
+    BonusXPAmount: 0
+    ACappellaSoundtrack: {fileID: 8300000, guid: 9400170294968db45b0c6b70ed79dabf, type: 3}
 --- !u!114 &1808667367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11999,6 +11950,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   snakeMovement: {fileID: 506164135}
+--- !u!114 &1808667368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1808667357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96d5f361217b66b419c7ad31b650a2c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxStatsSampleToStore: 20
+  Stats:
+    GameDurations: []
+    JumpsCount: 
+    Lengths: 
+    RealSpeeds: []
+    PortalUsages: 
+  infoText: {fileID: 1058488031}
 --- !u!1 &1817953571
 GameObject:
   m_ObjectHideFlags: 0
@@ -17252,7 +17223,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1902218235
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17901,7 +17872,6 @@ GameObject:
   - component: {fileID: 2031966841}
   - component: {fileID: 2031966840}
   - component: {fileID: 2031966839}
-  - component: {fileID: 2031966842}
   m_Layer: 5
   m_Name: Button (Legacy)
   m_TagString: Untagged
@@ -17973,19 +17943,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2031966840}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1808667366}
-        m_TargetAssemblyTypeName: SettingsPanelManager, Scripts
-        m_MethodName: SwitchBallsWithRoundedBalls
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &2031966840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18024,26 +17982,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2031966837}
   m_CullTransparentMesh: 1
---- !u!95 &2031966842
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2031966837}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 6a9ee85432aa49648b28e9add11e833c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2047190262
 GameObject:
   m_ObjectHideFlags: 0
@@ -18127,19 +18065,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2047190265}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1808667366}
-        m_TargetAssemblyTypeName: SettingsPanelManager, Scripts
-        m_MethodName: SwitchPillsBlower
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &2047190265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18517,19 +18443,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2129951659}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1808667366}
-        m_TargetAssemblyTypeName: SettingsPanelManager, Scripts
-        m_MethodName: SwitchAfroStyle
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &2129951659
 MonoBehaviour:
   m_ObjectHideFlags: 0

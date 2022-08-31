@@ -26,6 +26,9 @@ public class GameData
     public bool Teleport;
     public bool ACappella;
 
+    // Stats
+    public StatsData Stats;
+
     public GameData()
     {
         PlayerID = "NaN";
@@ -40,7 +43,7 @@ public class GameData
         Sound = true;
 
         //CameraFieldOfView
-        FieldOfView = Camera.current.fieldOfView;
+        FieldOfView = 0f;
 
         //Unlockables settings
         RoundedBalls = false;
@@ -52,5 +55,7 @@ public class GameData
         PillsBlower = false;
         Teleport = false;
         ACappella = false;
+
+        Stats = new StatsData();
     }
 }

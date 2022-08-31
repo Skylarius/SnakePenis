@@ -93,4 +93,63 @@ public class FileDataHandler
         }
         return modifiedData;
     }
+
+    public void WriteDataToFile(string dataToWrite, bool debugLog = false, UnityEngine.UI.Text LogText = null)
+    {
+        if (debugLog)
+        {
+            Debug.Log(dataToWrite);
+        }
+        if (LogText)
+        {
+            LogText.text = dataToWrite;
+        }
+        string fullPath = Path.Combine(dataDirPath, dataFileName);
+        try
+        {
+            // create the directory the file will be written
+            Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+
+            if (useEncryption)
+            {
+                dataToWrite = EncryptDecrypt(dataToWrite);
+            }
+
+            // Write file to FS
+            using (FileStream stream = new FileStream(fullPath, FileMode.Append))
+            {
+                using (StreamWriter writer = new StreamWriter(stream))
+                {
+                    writer.Write(dataToWrite);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log($"Error occurred when trying to WRITE data to file: {fullPath}\n {e}");
+        }
+    }
+
+    public void CreateFile()
+    {
+        string fullPath = Path.Combine(dataDirPath, dataFileName);
+        try
+        {
+            // create the directory the file will be written
+            Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+
+            // Write file to FS
+            using (FileStream stream = new FileStream(fullPath, FileMode.Create))
+            {
+                using (StreamWriter writer = new StreamWriter(stream))
+                {
+                    writer.Write("");
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log($"Error occurred when trying to CREATE file: {fullPath}\n {e}");
+        }
+    }
 }

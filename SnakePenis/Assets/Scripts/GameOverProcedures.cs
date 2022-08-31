@@ -49,18 +49,21 @@ public class GameOverProcedures : MonoBehaviour
         // Add bonuses
         foreach (SettingsPanelManager.Bonus bonus in settingsPanelManager.Bonuses)
         {
-            string colorBegin, colorEnd;
-            if (bonus.TotalBonus < 0)
+            if(bonus.TotalBonus > 0)
             {
-                // it's a MALUS
-                colorBegin = "<color=red>";
-                colorEnd = "</color>";
-            } else
-            {
-                colorBegin = colorEnd = "";
+                string colorBegin, colorEnd;
+                if (bonus.Percent < 0)
+                {
+                    // it's a MALUS
+                    colorBegin = "<color=red>";
+                    colorEnd = "</color>";
+                } else
+                {
+                    colorBegin = colorEnd = "";
+                }
+                BonusText.text += $"{colorBegin}{bonus.Name}: {bonus.TotalBonus}{colorEnd}\n";
+                yield return new WaitForSeconds(0.8f);
             }
-            BonusText.text += $"{colorBegin}{bonus.Name}: {bonus.TotalBonus}{colorEnd}\n";
-            yield return new WaitForSeconds(0.8f);
         }
 
         // Show score
@@ -83,7 +86,17 @@ public class GameOverProcedures : MonoBehaviour
         // Commit Score and Name
         if (ScoreManager.CurrentScoreName != "")
         {
-            yield return StartCoroutine(scoreManager.CommitScores(ScoreText));
+            if (ScoreManager.LocalScores.Exists(
+                e => e.ID == ScoreManager.CurrentID && int.Parse(e.score) > int.Parse(ScoreManager.CurrentScore)
+                )
+                ) 
+            {
+                Debug.Log("Current score is LESS than personal high score. Not committing scores");
+            } 
+            else
+            {
+                yield return StartCoroutine(scoreManager.CommitScores(ScoreText));
+            }
         }
         yield return StartCoroutine(scoreManager.LoadScores(ScoreText));
 

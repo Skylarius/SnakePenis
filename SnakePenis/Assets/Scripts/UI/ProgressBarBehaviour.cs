@@ -77,9 +77,10 @@ public class ProgressBarBehaviour : MonoBehaviour
         NewLevelBubble.SetActive(true);
         yield return new WaitForSeconds(2.5f);
         NewLevelBubble.SetActive(false);
-        if (settingsPanelManager.IsBonusAtLevel(level))
+        SettingsPanelManager.BaseSpecial special = settingsPanelManager.GetSpecialAtLevel(level);
+        if (special != null)
         {
-            NewLevelBubble.GetComponentInChildren<Text>().text = "MIZZICA, NUOVO POTERE SPECIALE!!!";
+            NewLevelBubble.GetComponentInChildren<Text>().text = "MIZZICA, HAI SBLOCCATO " + special.UnlockableText.text + "!!!";
             NewLevelBubble.SetActive(true);
             yield return new WaitForSeconds(2.5f);
             NewLevelBubble.SetActive(false);

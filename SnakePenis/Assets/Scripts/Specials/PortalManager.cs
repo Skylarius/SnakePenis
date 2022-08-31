@@ -40,7 +40,7 @@ public class PortalManager : MonoBehaviour
 
     void Start()
     {
-        snakeMovement = GameGodSingleton.Instance.GetSnakeMovementScript();
+        snakeMovement = GameGodSingleton.Instance.SnakeMovement;
         SnakeHead = snakeMovement.gameObject;
         portalOUTManager = PortalOUTPoint.GetComponent<PortalManager>();
         PortalUsage = 0;

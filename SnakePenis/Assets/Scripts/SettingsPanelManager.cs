@@ -6,23 +6,6 @@ using UnityEngine.UI;
 
 //TODO: All the colours specials should be applied to the SnakeMeshCopy
 
-public class BaseBonusData
-{
-    public bool bEnabled;
-    public string Title;
-    public string Info;
-    public int BonusPercent;
-    public Text ButtonText;
-
-    public BaseBonusData()
-    {
-        bEnabled = false;
-        Title = "";
-        Info = "";
-        BonusPercent = 0;
-        ButtonText = null;
-    }
-}
 
 public class SettingsPanelManager : MonoBehaviour, IDataPersistence
 {
@@ -64,124 +47,251 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     public Button CameraButton;
     public Sprite CameraOn, CameraOff;
 
-    public List<Unlockable> Unlockables;
-
-    [Header("Square Ball unlockable")]
-    public bool isRoundedBallsEnabled = false;
-    public Text RoundedBallsButtonText;
-    public GameObject RoundedBalls;
-    private GameObject newRoundedBalls = null;
     public GameObject SnakeHead;
-    public GameObject OriginalBalls;
-    public string roundedBallInfo;
-    public int RoundedBallsPercent = 0;
-    public string RoundedBallsBonusTitle;
-
-    [Header("Afro Style unlockable")]
-    public bool isAfroStyleEnabled = false;
     public GameObject OriginalPenisMesh;
-    public Material Brown, DarkBrown;
     public Material OriginalPink, OriginalDarkPink;
-    public Text AfroStyleButtonText;
-    public string afroStyleInfo;
-    public int AfroStyleBonusPercent = 0;
-    public string AfroStyleBonusTitle;
-
-    [Header("Jump unlockable")]
-    public bool isJumpEnabled = false;
-    public Text DickingJumpButtonText;
-    public string jumpInfo;
-    public int JumpBonusPercent = 0;
-    public int JumpBonusXPAmount = 0;
-    public string JumpBonusTitle;
-
-    [Header("Rainbow unlockable")]
-    public bool isRainbowEnabled = false;
-    public Material RainbowMaterial;
-    public ParticleSystem snakeParticleSystem;
-    public Material particleSystemOriginalMaterial;
-    public Text RainbowStyleButtonText;
-    public string rainbowInfo;
-    public int RainbowBonusPercent = 0;
-    public string RainbowBonusTitle;
-
-    [Header("Moving Walls")]
-    public bool isMovingWallsEnabled = false;
-    public GameObject MovingWall1;
-    public GameObject MovingWall2;
-    public int MovingWallsBonusPercent = 12;
-    public string MovingWallsBonusTitle;
-    private GameObject newMovingWall1 = null, newMovingWall2 = null;
-    public Text MovingWallsButtonText;
-    public string movingWallsInfo;
-
-    [Header("Free 360 Movement")]
-    public bool isFree360Enabled = false;
-    public Text Free360ButtonText;
-    public string Free360Info;
-    public int Free360BonusPercent = 0;
-    public string Free360BonusTitle;
-
-    [Header("Pills Blower")] 
-    public bool isPillsBlowerEnabled = false;
-    public GameObject PillsAttractor;
-    private GameObject newPillsAttractor;
-    public Text PillsBlowerButtonText;
-    public string PillsBlowerInfo;
-    public int PillsBlowerBonusPercent = 0;
-    public string PillsBlowerBonusTitle;
 
     [System.Serializable]
-    public struct TeleportCouple
+    public class BaseSpecial
     {
-        public GameObject Portal1;
-        public GameObject Portal2;
-        public string BonusTitle;
-
-        public TeleportCouple(GameObject portal1, GameObject portal2) {
-            this.Portal1 = portal1;
-            this.Portal2 = portal2;
-            this.BonusTitle = "";
+        public bool enabled;
+        public Unlockable Unlockable;
+        public string Title;
+        public string Info;
+        public int BonusPercent;
+        public int BonusXPAmount;
+        public Button Button
+        {
+            get
+            {
+                return this.Unlockable.Menu.GetComponentInChildren<Button>();
+            }
         }
 
-        public bool IsNull()
+        public Text ButtonText
         {
-            return Portal1 == null && Portal2 == null;
+            get
+            {
+                Button b = Button;
+                if (b!=null)
+                {
+                    return b.GetComponentInChildren<Text>();
+                } else
+                {
+                    return null;
+                }
+            }
         }
 
-        public void DestroyCouple()
+        public Text UnlockableText
         {
-            Destroy(Portal1);
-            Destroy(Portal2);
-            Portal1 = null;
-            Portal2 = null;
+            get
+            {
+                return this.Unlockable.Menu.GetComponentInChildren<Text>();
+            }
+        }
+
+        //public delegate void SwitchSpecialFunction();
+        //public SwitchSpecialFunction Switch;
+
+        public delegate void SwitchSpecialFunctionConditioned(bool condition);
+        public SwitchSpecialFunctionConditioned SwitchConditioned;
+
+        internal SettingsPanelManager settingsPanelManager;
+
+        public BaseSpecial()
+        {
+            enabled = false;
+            Title = "";
+            Info = "";
+            BonusPercent = 0;
+            BonusXPAmount = 0;
+        }
+
+        public virtual int GetXPAmount()
+        {
+            return BonusXPAmount * LevelProgressionManager.CurrentLevel;
+        }
+
+        public virtual bool IsEnabled()
+        {
+            return enabled;
+        }
+
+        public virtual void Switch()
+        {
+            SwitchConditioned(!this.enabled);
+            settingsPanelManager.infoText.text = this.Info;
+        }
+
+        public void SetSettingsPanelManager(SettingsPanelManager settingsPanelManager)
+        {
+            this.settingsPanelManager = settingsPanelManager;
+        }
+
+    }
+
+    private List<BaseSpecial> _specials;
+    public List<BaseSpecial> Specials
+    {
+        get
+        {
+            return _specials;
         }
     }
 
+    [System.Serializable]
+    public class SquareBalls : BaseSpecial
+    {
+        public GameObject SquareBallsPrefab;
+        internal GameObject newSquareBalls = null;
+        public GameObject OriginalBalls;
+    }
+
+    [System.Serializable]
+    public class AfroStyle : BaseSpecial
+    {
+        public Material Brown, DarkBrown;
+
+        public override void Switch()
+        {
+            if (settingsPanelManager.RainbowSpecial.IsEnabled())
+            {
+                settingsPanelManager.RainbowSpecial.SwitchConditioned(false);
+            }
+            base.Switch();
+        }
+    }
+
+    [System.Serializable]
+    public class JumpingDick : BaseSpecial
+    {
+        public override int GetXPAmount()
+        {
+            return BonusXPAmount * InputHandler.JumpsAmount;
+        }
+    }
+
+    [System.Serializable]
+    public class Rainbow : BaseSpecial
+    {
+        public Material RainbowMaterial;
+        public ParticleSystem snakeParticleSystem;
+        public Material particleSystemOriginalMaterial;
+
+        public override void Switch()
+        {
+            if (settingsPanelManager.AfroStyleSpecial.IsEnabled())
+            {
+                settingsPanelManager.AfroStyleSpecial.SwitchConditioned(false);
+            }
+            base.Switch();
+        }
+    }
+
+    [System.Serializable]
+    public class MovingWalls : BaseSpecial
+    {
+        public GameObject MovingWall1;
+        public GameObject MovingWall2;
+        internal GameObject newMovingWall1 = null, newMovingWall2 = null;
+    }
+
+    [System.Serializable]
+    public class Free360Movement : BaseSpecial
+    {
+
+    }
+
+    [System.Serializable]
+    public class PillsBlower : BaseSpecial
+    {
+        public GameObject PillsAttractor;
+        internal GameObject newPillsAttractor;
+    }
+
+    [System.Serializable]
+    public class Teleport : BaseSpecial
+    {
+        [System.Serializable]
+        public struct TeleportCouple
+        {
+            public GameObject Portal1;
+            public GameObject Portal2;
+            public string BonusTitle;
+
+            public TeleportCouple(GameObject Portal1, GameObject Portal2)
+            {
+                this.Portal1 = Portal1;
+                this.Portal2 = Portal2;
+                this.BonusTitle = "";
+            }
+
+            public bool IsNull()
+            {
+                return Portal1 == null && Portal2 == null;
+            }
+
+            public void DestroyCouple()
+            {
+                Destroy(Portal1);
+                Destroy(Portal2);
+                Portal1 = null;
+                Portal2 = null;
+            }
+        }
+
+        public TeleportCouple[] TeleportCouples;
+        internal TeleportCouple instancedCouple;
+        public GameObject[] WallsToAnchor;
+        public float SpawnRadius;
+        public float WallOffset;
+        public Vector3 WallRotationOffset;
+
+        public override int GetXPAmount()
+        {
+            return BonusXPAmount * PortalManager.PortalUsage;
+        }
+    }
+
+    [System.Serializable]
+    public class ACappella : BaseSpecial
+    {
+        internal AudioClip InitialSoundtrack;
+        public AudioClip ACappellaSoundtrack;
+
+        public override bool IsEnabled()
+        {
+            return enabled && settingsPanelManager.isSoundEnabled;
+        }
+    }
+
+    [Header("Square Ball unlockable")]
+    public SquareBalls SquareBallsSpecial;
+
+    [Header("Afro Style unlockable")]
+    public AfroStyle AfroStyleSpecial;
+
+    [Header("Jump unlockable")]
+    public JumpingDick JumpingDickSpecial;
+
+    [Header("Rainbow unlockable")]
+    public Rainbow RainbowSpecial;
+
+    [Header("Moving Walls")]
+    public MovingWalls MovingWallsSpecial;
+
+    [Header("Free 360 Movement")]
+    public Free360Movement Free360MovementSpecial;
+
+    [Header("Pills Blower")] 
+    public PillsBlower PillsBlowerSpecial;
+
     [Header("Teleport")]
-    public bool isTeleportEnabled = false;
-    public TeleportCouple[] TeleportCouples;
-    private TeleportCouple instancedCouple;
-    public GameObject[] WallsToAnchor;
-    public float SpawnRadius;
-    public float WallOffset;
-    public Vector3 WallRotationOffset;
-    public Text TeleportButtonText;
-    public string TeleportInfo;
-    public int TeleportBonusPercent = 0;
-    public int TeleportBonusXPAmount = 0;
-    public string TeleportBonusTitle;
+    public Teleport TeleportSpecial;
 
     [Header("A Cappella")]
-    public bool isACappellaEnabled = false;
-    private AudioClip InitialSoundtrack;
-    public AudioClip ACappellaSoundtrack;
-    public Text ACappellaButtonText;
-    public string ACappellaInfo;
-    public int ACappellaBonusPercent = 0;
-    public string ACappellaBonusTitle;
-
-
+    public ACappella ACappellaSpecial;
 
 
     private List<Bonus> _bonuses = null;
@@ -197,24 +307,61 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             return _bonuses;
         }
     }
-    
+
     void StartUpSettingsPanelManager()
     {
-        if (ScoreManager.CurrentScoreName!="" && ScoreManager.CurrentID != "")
+        SnakeHead = GameGodSingleton.Instance.SnakeMovement.gameObject;
+        if (ScoreManager.CurrentScoreName != "" && ScoreManager.CurrentID != "")
         {
             inputNameField.text = ScoreManager.CurrentScoreName;
         }
-        foreach (Unlockable unlockable in Unlockables)
-        {
-            unlockable.Menu.SetActive(LevelProgressionManager.CurrentLevel >= unlockable.Level);
-        }
         infoText.text = "";
+
+        _specials = new List<BaseSpecial>() {
+            SquareBallsSpecial,
+            AfroStyleSpecial,
+            JumpingDickSpecial,
+            RainbowSpecial,
+            MovingWallsSpecial,
+            Free360MovementSpecial,
+            PillsBlowerSpecial,
+            TeleportSpecial,
+            ACappellaSpecial
+        };
+
+        foreach (BaseSpecial special in _specials)
+        {
+            special.SetSettingsPanelManager(this);
+            special.Unlockable.Menu.SetActive(LevelProgressionManager.CurrentLevel >= special.Unlockable.Level);
+        }
+
+        SetupButtonsAction();
     }
 
-    internal bool IsBonusAtLevel(int level)
+    void SetupSpecialsDelegates()
     {
-        Unlockable unlockable = Unlockables.Find(elem => elem.Level == level);
-        return unlockable.Level == level;
+        SquareBallsSpecial.SwitchConditioned = SwitchBallsWithRoundedBalls;
+        AfroStyleSpecial.SwitchConditioned = SwitchAfroStyle;
+        JumpingDickSpecial.SwitchConditioned = SwitchDickingJump;
+        RainbowSpecial.SwitchConditioned = SwitchRainbowStyle;
+        MovingWallsSpecial.SwitchConditioned = SwitchMovingWalls;
+        Free360MovementSpecial.SwitchConditioned = SwitchFree360;
+        PillsBlowerSpecial.SwitchConditioned = SwitchPillsBlower;
+        TeleportSpecial.SwitchConditioned = SwitchTeleport;
+        ACappellaSpecial.SwitchConditioned = SwitchACappella;
+    }
+
+    void SetupButtonsAction()
+    {
+        foreach(BaseSpecial special in _specials)
+        {
+            special.Button.onClick.AddListener(special.Switch);
+        }
+    }
+
+    internal BaseSpecial GetSpecialAtLevel(int level)
+    {
+        return _specials.Find(elem => elem.Unlockable.Level == level);
     }
 
     public void SwitchSoundEnabled()
@@ -259,6 +406,8 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         Bonus bonus;
         System.DateTime dt1 = System.DateTime.Today;
         System.DateTime dt2 = System.DateTime.ParseExact(DailyBonusTimeStamp, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+
+        // Start yielding Bonuses
         if (dt1 > dt2)
         {
             bonus = new Bonus();
@@ -274,70 +423,17 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             bonus.Percent = SoundBonusPercent;
             yield return bonus;
         }
-        if (isRoundedBallsEnabled)
+
+        foreach(BaseSpecial special in _specials)
         {
-            bonus = new Bonus();
-            bonus.Name = RoundedBallsBonusTitle;
-            bonus.Percent = RoundedBallsPercent;
-            yield return bonus;
-        }
-        if (isJumpEnabled)
-        {
-            bonus = new Bonus();
-            bonus.Name = JumpBonusTitle;
-            bonus.Percent = JumpBonusPercent;
-            bonus.XPAmount = JumpBonusXPAmount * InputHandler.JumpsAmount * LevelProgressionManager.CurrentLevel;
-            yield return bonus;
-        }
-        if (isAfroStyleEnabled)
-        {
-            bonus = new Bonus();
-            bonus.Name = AfroStyleBonusTitle;
-            bonus.Percent = AfroStyleBonusPercent;
-            yield return bonus;
-        }
-        if (isRainbowEnabled)
-        {
-            bonus = new Bonus();
-            bonus.Name = RainbowBonusTitle;
-            bonus.Percent = RainbowBonusPercent;
-            yield return bonus;
-        }
-        if (isMovingWallsEnabled)
-        {
-            bonus = new Bonus();
-            bonus.Name = MovingWallsBonusTitle;
-            bonus.Percent = MovingWallsBonusPercent;
-            yield return bonus;
-        }
-        if (isFree360Enabled)
-        {
-            bonus = new Bonus();
-            bonus.Name = Free360BonusTitle;
-            bonus.Percent = Free360BonusPercent;
-            yield return bonus;
-        }
-        if (isPillsBlowerEnabled)
-        {
-            bonus = new Bonus();
-            bonus.Name = PillsBlowerBonusTitle;
-            bonus.Percent = PillsBlowerBonusPercent;
-            yield return bonus;
-        }
-        if (isTeleportEnabled)
-        {
-            bonus = new Bonus();
-            bonus.Name = TeleportBonusTitle;
-            bonus.Percent = TeleportBonusPercent;
-            bonus.XPAmount = TeleportBonusXPAmount * PortalManager.PortalUsage;
-            yield return bonus;
-        }
-        if (isACappellaEnabled && isSoundEnabled)
-        {
-            bonus = new Bonus();
-            bonus.Name = ACappellaBonusTitle;
-            bonus.Percent = ACappellaBonusPercent;
-            yield return bonus;
+            if (special.IsEnabled())
+            {
+                bonus = new Bonus();
+                bonus.Name = special.Title;
+                bonus.Percent = special.BonusPercent;
+                bonus.XPAmount = special.GetXPAmount();
+                yield return bonus;
+            }
         }
 
         //if (true)
@@ -356,13 +452,27 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         {
             return;
         }
-        foreach (SettingsPanelManager.Bonus bonus in BonusGenerator())
+        foreach (Bonus bonus in BonusGenerator())
         {
             int bonusScore = (int)(bonus.XPAmount + bonus.Percent * 0.01f * int.Parse(ScoreManager.CurrentScore));
             Bonus newBonus = bonus;
             newBonus.TotalBonus = bonusScore;
             _bonuses.Add(newBonus);
         }
+    }
+
+    public void RecalculateBonuses()
+    {
+        CalculateBonuses();
+    }
+
+    public void ResetBonuses()
+    {
+        if (_bonuses != null)
+        {
+            _bonuses.Clear();
+        }
+        _bonuses = null;
     }
 
 
@@ -380,64 +490,48 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         }
     }
 
-    public void SwitchBallsWithRoundedBalls()
-    {
-        SwitchBallsWithRoundedBalls(!isRoundedBallsEnabled);
-        infoText.text = roundedBallInfo;
-    }
-
     void SwitchBallsWithRoundedBalls(bool condition)
     {
         SnakeMovement snakeMovement = SnakeHead.GetComponent<SnakeMovement>();
         RealSnakeBinder realSnakeBinder = SnakeHead.GetComponent<RealSnakeBinder>();
         Renderer[] initialBallsRenderers = snakeMovement.SnakeBody[snakeMovement.SnakeBody.Count - 1].GetComponentsInChildren<Renderer>();
-        if (condition == true && isRoundedBallsEnabled==false) {
-            newRoundedBalls = Instantiate(RoundedBalls);
-            Renderer[] newBallsRenderers = newRoundedBalls.GetComponentsInChildren<Renderer>();
+        if (condition == true && SquareBallsSpecial.enabled == false) {
+            SquareBallsSpecial.newSquareBalls = Instantiate(SquareBallsSpecial.SquareBallsPrefab);
+            Renderer[] newBallsRenderers = SquareBallsSpecial.newSquareBalls.GetComponentsInChildren<Renderer>();
             for (int i=0; i<newBallsRenderers.Length; i++)
             {
                 newBallsRenderers[i].material = initialBallsRenderers[i].material;
             }
-            newRoundedBalls.transform.position = OriginalBalls.transform.position;
-            newRoundedBalls.transform.rotation = OriginalBalls.transform.rotation;
-            snakeMovement.SnakeBody[snakeMovement.SnakeBody.Count - 1] = newRoundedBalls;
-            snakeMovement.Tail = newRoundedBalls;
+            SquareBallsSpecial.newSquareBalls.transform.position = SquareBallsSpecial.OriginalBalls.transform.position;
+            SquareBallsSpecial.newSquareBalls.transform.rotation = SquareBallsSpecial.OriginalBalls.transform.rotation;
+            snakeMovement.SnakeBody[snakeMovement.SnakeBody.Count - 1] = SquareBallsSpecial.newSquareBalls;
+            snakeMovement.Tail = SquareBallsSpecial.newSquareBalls;
             realSnakeBinder.UpdateBinder();
-            OriginalBalls.SetActive(false);
-            isRoundedBallsEnabled = true;
-        } else if (condition == false && isRoundedBallsEnabled == true)
+            SquareBallsSpecial.OriginalBalls.SetActive(false);
+            SquareBallsSpecial.enabled = true;
+        } else if (condition == false && SquareBallsSpecial.enabled == true)
         {
-            if (OriginalBalls.activeSelf == false)
+            if (SquareBallsSpecial.OriginalBalls.activeSelf == false)
             {
-                OriginalBalls.SetActive(true);
+                SquareBallsSpecial.OriginalBalls.SetActive(true);
             }
-            if (newRoundedBalls)
+            if (SquareBallsSpecial.newSquareBalls)
             {
-                OriginalBalls.transform.position = newRoundedBalls.transform.position;
-                OriginalBalls.transform.rotation = newRoundedBalls.transform.rotation;
-                Destroy(newRoundedBalls);
+                SquareBallsSpecial.OriginalBalls.transform.position = SquareBallsSpecial.newSquareBalls.transform.position;
+                SquareBallsSpecial.OriginalBalls.transform.rotation = SquareBallsSpecial.newSquareBalls.transform.rotation;
+                Destroy(SquareBallsSpecial.newSquareBalls);
             }
-            snakeMovement.SnakeBody[snakeMovement.SnakeBody.Count - 1] = OriginalBalls;
-            snakeMovement.Tail = OriginalBalls;
-            Renderer[] OriginalBallsRenderers = OriginalBalls.GetComponentsInChildren<Renderer>();
+            snakeMovement.SnakeBody[snakeMovement.SnakeBody.Count - 1] = SquareBallsSpecial.OriginalBalls;
+            snakeMovement.Tail = SquareBallsSpecial.OriginalBalls;
+            Renderer[] OriginalBallsRenderers = SquareBallsSpecial.OriginalBalls.GetComponentsInChildren<Renderer>();
             for (int i = 0; i < OriginalBallsRenderers.Length; i++)
             {
                 OriginalBallsRenderers[i].material = initialBallsRenderers[i].material;
             }
             realSnakeBinder.UpdateBinder();
-            isRoundedBallsEnabled = false;
+            SquareBallsSpecial.enabled = false;
         }
-        RoundedBallsButtonText.text = (isRoundedBallsEnabled) ? "Disattiva" : "Attiva";
-    }
-
-    public void SwitchAfroStyle()
-    {
-        if (isRainbowEnabled)
-        {
-            SwitchRainbowStyle(false);
-        }
-        SwitchAfroStyle(!isAfroStyleEnabled);
-        infoText.text = afroStyleInfo;
+        SquareBallsSpecial.ButtonText.text = (SquareBallsSpecial.enabled) ? "Disattiva" : "Attiva";
     }
 
     void SwitchAfroStyle(bool condition)
@@ -445,57 +539,41 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         SnakeMovement snakeMovement = SnakeHead.GetComponent<SnakeMovement>();
         Renderer snakeRenderer = OriginalPenisMesh.GetComponent<Renderer>();
         Renderer[] ballsRenderers = snakeMovement.SnakeBody[snakeMovement.SnakeBody.Count - 1].GetComponentsInChildren<Renderer>();
-        if (condition == true && isAfroStyleEnabled == false)
+        if (condition == true && AfroStyleSpecial.enabled == false)
         {
             foreach (Renderer r in ballsRenderers)
             {
-                r.material = DarkBrown;
+                r.material = AfroStyleSpecial.DarkBrown;
             }
-            snakeRenderer.material = Brown;
-            isAfroStyleEnabled = true;
+            snakeRenderer.material = AfroStyleSpecial.Brown;
+            AfroStyleSpecial.enabled = true;
         }
-        else if (condition == false && isAfroStyleEnabled == true)
+        else if (condition == false && AfroStyleSpecial.enabled == true)
         {
             foreach (Renderer r in ballsRenderers)
             {
                 r.material = OriginalDarkPink;
             }
             snakeRenderer.material = OriginalPink;
-            isAfroStyleEnabled = false;
+            AfroStyleSpecial.enabled = false;
         }
-        AfroStyleButtonText.text = (isAfroStyleEnabled) ? "Disattiva" : "Attiva";
-    }
-
-    public void SwitchDickingJump()
-    {
-        SwitchDickingJump(!isJumpEnabled);
-        infoText.text = jumpInfo;
+        AfroStyleSpecial.ButtonText.text = (AfroStyleSpecial.enabled) ? "Disattiva" : "Attiva";
     }
 
     void SwitchDickingJump(bool condition)
     {
         InputHandler inputHandler = SnakeHead.GetComponent<InputHandler>();
-        if (condition == true && isJumpEnabled == false)
+        if (condition == true && JumpingDickSpecial.enabled == false)
         {
             inputHandler.EnableStandardJump();
-            isJumpEnabled = true;
+            JumpingDickSpecial.enabled = true;
         }
-        else if (condition == false && isJumpEnabled == true)
+        else if (condition == false && JumpingDickSpecial.enabled == true)
         {
             inputHandler.DisableStandardJump();
-            isJumpEnabled = false;
+            JumpingDickSpecial.enabled = false;
         }
-        DickingJumpButtonText.text = (isJumpEnabled) ? "Disattiva" : "Attiva";
-    }
-
-    public void SwitchRainbowStyle()
-    {
-        if (isAfroStyleEnabled)
-        {
-            SwitchAfroStyle(false);
-        }
-        SwitchRainbowStyle(!isRainbowEnabled);
-        infoText.text = rainbowInfo;
+        JumpingDickSpecial.ButtonText.text = (JumpingDickSpecial.enabled) ? "Disattiva" : "Attiva";
     }
 
     void SwitchRainbowStyle(bool condition)
@@ -503,73 +581,61 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         SnakeMovement snakeMovement = SnakeHead.GetComponent<SnakeMovement>();
         Renderer snakeRenderer = OriginalPenisMesh.GetComponent<Renderer>();
         Renderer[] ballsRenderers = snakeMovement.SnakeBody[snakeMovement.SnakeBody.Count - 1].GetComponentsInChildren<Renderer>();
-        if (condition == true && isRainbowEnabled == false)
+        if (condition == true && RainbowSpecial.enabled == false)
         {
             foreach (Renderer r in ballsRenderers)
             {
-                r.material = RainbowMaterial;
+                r.material = RainbowSpecial.RainbowMaterial;
             }
-            snakeRenderer.material = RainbowMaterial;
-            snakeParticleSystem.GetComponent<Renderer>().material = RainbowMaterial;
-            isRainbowEnabled = true;
+            snakeRenderer.material = RainbowSpecial.RainbowMaterial;
+            RainbowSpecial.snakeParticleSystem.GetComponent<Renderer>().material = RainbowSpecial.RainbowMaterial;
+            RainbowSpecial.enabled = true;
         }
-        else if (condition == false && isRainbowEnabled == true)
+        else if (condition == false && RainbowSpecial.enabled == true)
         {
             foreach (Renderer r in ballsRenderers)
             {
                 r.material = OriginalDarkPink;
             }
             snakeRenderer.material = OriginalPink;
-            snakeParticleSystem.GetComponent<Renderer>().material = particleSystemOriginalMaterial;
-            isRainbowEnabled = false;
+            RainbowSpecial.snakeParticleSystem.GetComponent<Renderer>().material = RainbowSpecial.particleSystemOriginalMaterial;
+            RainbowSpecial.enabled = false;
         }
-        RainbowStyleButtonText.text = (isRainbowEnabled) ? "Disattiva" : "Attiva";
-    }
-
-    public void SwitchMovingWalls()
-    {
-        SwitchMovingWalls(!isMovingWallsEnabled);
-        infoText.text = movingWallsInfo;
+        RainbowSpecial.ButtonText.text = (RainbowSpecial.enabled) ? "Disattiva" : "Attiva";
     }
 
     void SwitchMovingWalls(bool condition)
     {
-        if (condition == true && isMovingWallsEnabled == false)
+        if (condition == true && MovingWallsSpecial.enabled == false)
         {
-            newMovingWall1 = Instantiate(MovingWall1);
-            newMovingWall2 = Instantiate(MovingWall2);
-            isMovingWallsEnabled = true;
+            MovingWallsSpecial.newMovingWall1 = Instantiate(MovingWallsSpecial.MovingWall1);
+            MovingWallsSpecial.newMovingWall2 = Instantiate(MovingWallsSpecial.MovingWall2);
+            MovingWallsSpecial.enabled = true;
         }
-        else if (condition == false && isMovingWallsEnabled == true)
+        else if (condition == false && MovingWallsSpecial.enabled == true)
         {
-            if (newMovingWall1)
+            if (MovingWallsSpecial.newMovingWall1)
             {
-                Destroy(newMovingWall1);
+                Destroy(MovingWallsSpecial.newMovingWall1);
             }
-            if (newMovingWall2)
+            if (MovingWallsSpecial.newMovingWall2)
             {
-                Destroy(newMovingWall2);
+                Destroy(MovingWallsSpecial.newMovingWall2);
             }
-            isMovingWallsEnabled = false;
+            MovingWallsSpecial.enabled = false;
         }
-        MovingWallsButtonText.text = (isMovingWallsEnabled) ? "Disattiva" : "Attiva";
-    }
-
-    public void SwitchFree360()
-    {
-        SwitchFree360(!isFree360Enabled);
-        infoText.text = Free360Info;
+        MovingWallsSpecial.ButtonText.text = (MovingWallsSpecial.enabled) ? "Disattiva" : "Attiva";
     }
 
     void SwitchFree360(bool condition)
     {
         InputHandler inputHandler = SnakeHead.GetComponent<InputHandler>();
-        if (condition == true && isFree360Enabled == false)
+        if (condition == true && Free360MovementSpecial.enabled == false)
         {
             inputHandler.SetFree360MovementType();
-            isFree360Enabled = true;
+            Free360MovementSpecial.enabled = true;
         }
-        else if (condition == false && isJumpEnabled == true)
+        else if (condition == false && Free360MovementSpecial.enabled == true)
         {
             inputHandler.SetStandardMovementType();
             SnakeMovement snakeMovement = SnakeHead.GetComponent<SnakeMovement>();
@@ -577,56 +643,44 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             {
                 snakeMovement.SetDirectionToClosestHortogonal();
             }
-            isFree360Enabled = false;
+            Free360MovementSpecial.enabled = false;
         }
-        Free360ButtonText.text = (isFree360Enabled) ? "Disattiva" : "Attiva";
-    }
-
-    public void SwitchPillsBlower()
-    {
-        SwitchPillsBlower(!isPillsBlowerEnabled);
-        infoText.text = PillsBlowerInfo;
+        Free360MovementSpecial.ButtonText.text = (Free360MovementSpecial.enabled) ? "Disattiva" : "Attiva";
     }
 
     void SwitchPillsBlower(bool condition)
     {
-        if (condition == true && isPillsBlowerEnabled == false)
+        if (condition == true && PillsBlowerSpecial.enabled == false)
         {
-            newPillsAttractor = Instantiate(PillsAttractor, SnakeHead.transform);
-            isPillsBlowerEnabled = true;
+            PillsBlowerSpecial.newPillsAttractor = Instantiate(PillsBlowerSpecial.PillsAttractor, SnakeHead.transform);
+            PillsBlowerSpecial.enabled = true;
         }
-        else if (condition == false && isPillsBlowerEnabled == true)
+        else if (condition == false && PillsBlowerSpecial.enabled == true)
         {
-            if (newPillsAttractor)
+            if (PillsBlowerSpecial.newPillsAttractor)
             {
-                Destroy(newPillsAttractor);
+                Destroy(PillsBlowerSpecial.newPillsAttractor);
             }
-            isPillsBlowerEnabled = false;
+            PillsBlowerSpecial.enabled = false;
         }
-        PillsBlowerButtonText.text = (isPillsBlowerEnabled) ? "Disattiva" : "Attiva";
-    }
-
-    public void SwitchTeleport()
-    {
-        SwitchTeleport(!isTeleportEnabled);
-        infoText.text = TeleportInfo;
+        PillsBlowerSpecial.ButtonText.text = (PillsBlowerSpecial.enabled) ? "Disattiva" : "Attiva";
     }
 
     void SwitchTeleport(bool condition)
     {
-        if (condition == true && isTeleportEnabled == false)
+        if (condition == true && TeleportSpecial.enabled == false)
         {
             //Select teleport couple
-            instancedCouple = new TeleportCouple(null, null);
-            int randomIndex = UnityEngine.Random.Range(0, TeleportCouples.Length);
-            TeleportCouple selectedTeleportCouple = TeleportCouples[randomIndex];
-            TeleportBonusTitle = selectedTeleportCouple.BonusTitle;
+            TeleportSpecial.instancedCouple = new Teleport.TeleportCouple(null, null);
+            int randomIndex = UnityEngine.Random.Range(0, TeleportSpecial.TeleportCouples.Length);
+            Teleport.TeleportCouple selectedTeleportCouple = TeleportSpecial.TeleportCouples[randomIndex];
+            TeleportSpecial.Title = selectedTeleportCouple.BonusTitle;
 
             //Select walls
-            randomIndex = UnityEngine.Random.Range(0, WallsToAnchor.Length);
-            GameObject Wall1 = WallsToAnchor[randomIndex];
-            randomIndex = UnityEngine.Random.Range(0, WallsToAnchor.Length);
-            GameObject Wall2 = WallsToAnchor[randomIndex];
+            randomIndex = UnityEngine.Random.Range(0, TeleportSpecial.WallsToAnchor.Length);
+            GameObject Wall1 = TeleportSpecial.WallsToAnchor[randomIndex];
+            randomIndex = UnityEngine.Random.Range(0, TeleportSpecial.WallsToAnchor.Length);
+            GameObject Wall2 = TeleportSpecial.WallsToAnchor[randomIndex];
 
             //Select Spawn Position Value on Walls
             Vector3 spawnPositionPortal1, spawnPositionPortal2;
@@ -634,62 +688,60 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             if (Wall1 == Wall2) // if sa
             {
                 randomIndex = UnityEngine.Random.Range(0, 2) == 0 ? 1 : -1;
-                spawnValuePositionPortal1 = randomIndex * SpawnRadius;
-                spawnValuePositionPortal2 = -randomIndex * SpawnRadius;
+                spawnValuePositionPortal1 = randomIndex * TeleportSpecial.SpawnRadius;
+                spawnValuePositionPortal2 = -randomIndex * TeleportSpecial.SpawnRadius;
 
             } else
             {
-                spawnValuePositionPortal1 = UnityEngine.Random.Range(-SpawnRadius, SpawnRadius);
-                spawnValuePositionPortal2 = UnityEngine.Random.Range(-SpawnRadius, SpawnRadius);
+                spawnValuePositionPortal1 = UnityEngine.Random.Range(-TeleportSpecial.SpawnRadius, TeleportSpecial.SpawnRadius);
+                spawnValuePositionPortal2 = UnityEngine.Random.Range(-TeleportSpecial.SpawnRadius, TeleportSpecial.SpawnRadius);
             }
 
             //Instantiate Portal and set them in instancedCouple
-            if (instancedCouple.IsNull() == false)
+            if (TeleportSpecial.instancedCouple.IsNull() == false)
             {
                 Debug.LogWarning("There is an instanced couple of teleport objects. They should not be here. Will try to proceed anyway...");
-                instancedCouple.DestroyCouple();
+                TeleportSpecial.instancedCouple.DestroyCouple();
             }
-            instancedCouple.Portal1 = Instantiate(selectedTeleportCouple.Portal1);
-            instancedCouple.Portal2 = Instantiate(selectedTeleportCouple.Portal2);
-            instancedCouple.Portal1.transform.rotation = Wall1.transform.rotation * Quaternion.Euler(WallRotationOffset);
-            instancedCouple.Portal2.transform.rotation = Wall2.transform.rotation * Quaternion.Euler(WallRotationOffset);
-            spawnPositionPortal1 = Wall1.transform.position + instancedCouple.Portal1.transform.right * spawnValuePositionPortal1 + instancedCouple.Portal1.transform.forward * WallOffset;
-            spawnPositionPortal2 = Wall2.transform.position + instancedCouple.Portal2.transform.right * spawnValuePositionPortal2 + instancedCouple.Portal2.transform.forward * WallOffset;
-            instancedCouple.Portal1.transform.position = spawnPositionPortal1;
-            instancedCouple.Portal2.transform.position = spawnPositionPortal2;
+            TeleportSpecial.instancedCouple.Portal1 = Instantiate(selectedTeleportCouple.Portal1);
+            TeleportSpecial.instancedCouple.Portal2 = Instantiate(selectedTeleportCouple.Portal2);
+            TeleportSpecial.instancedCouple.Portal1.transform.rotation = Wall1.transform.rotation * Quaternion.Euler(TeleportSpecial.WallRotationOffset);
+            TeleportSpecial.instancedCouple.Portal2.transform.rotation = Wall2.transform.rotation * Quaternion.Euler(TeleportSpecial.WallRotationOffset);
+            spawnPositionPortal1 = Wall1.transform.position + 
+                TeleportSpecial.instancedCouple.Portal1.transform.right * spawnValuePositionPortal1 + 
+                TeleportSpecial.instancedCouple.Portal1.transform.forward * TeleportSpecial.WallOffset;
+            spawnPositionPortal2 = Wall2.transform.position +
+                TeleportSpecial.instancedCouple.Portal2.transform.right * spawnValuePositionPortal2 + 
+                TeleportSpecial.instancedCouple.Portal2.transform.forward * TeleportSpecial.WallOffset;
+            TeleportSpecial.instancedCouple.Portal1.transform.position = spawnPositionPortal1;
+            TeleportSpecial.instancedCouple.Portal2.transform.position = spawnPositionPortal2;
 
             //Set OUT point of each portal, as specified in the TeleportCouple prefab
             //Remember: the OUT point of a portal object is in the OTHER portal object
-            PortalManager portalManager1 = instancedCouple.Portal1.GetComponent<PortalManager>();
-            PortalManager portalManager2 = instancedCouple.Portal2.GetComponent<PortalManager>();
+            PortalManager portalManager1 = TeleportSpecial.instancedCouple.Portal1.GetComponent<PortalManager>();
+            PortalManager portalManager2 = TeleportSpecial.instancedCouple.Portal2.GetComponent<PortalManager>();
             portalManager1.PortalOUTPoint = portalManager2.SelfPortalOUTPoint;
             portalManager2.PortalOUTPoint = portalManager1.SelfPortalOUTPoint;
 
-            isTeleportEnabled = true;
+            TeleportSpecial.enabled = true;
         }
-        else if (condition == false && isTeleportEnabled == true)
+        else if (condition == false && TeleportSpecial.enabled == true)
         {
-            instancedCouple.DestroyCouple();
-            isTeleportEnabled = false;
+            TeleportSpecial.instancedCouple.DestroyCouple();
+            TeleportSpecial.enabled = false;
         }
-        TeleportButtonText.text = (isTeleportEnabled) ? "Disattiva" : "Attiva";
-    }
-
-    public void SwitchACappella()
-    {
-        SwitchACappella(!isACappellaEnabled);
-        infoText.text = ACappellaInfo;
+        TeleportSpecial.ButtonText.text = (TeleportSpecial.enabled) ? "Disattiva" : "Attiva";
     }
 
     void SwitchACappella(bool condition)
     {
         AudioSource audioSource = GetComponent<AudioSource>();
-        if (condition == true && isACappellaEnabled == false)
+        if (condition == true && ACappellaSpecial.enabled == false)
         {
             float t = audioSource.time;
             audioSource.Stop();
-            InitialSoundtrack = audioSource.clip;
-            audioSource.clip = ACappellaSoundtrack;
+            ACappellaSpecial.InitialSoundtrack = audioSource.clip;
+            audioSource.clip = ACappellaSpecial.ACappellaSoundtrack;
             if (t < audioSource.clip.length)
             {
                 audioSource.time = t;
@@ -699,15 +751,15 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
                 audioSource.time = 0f;
             }
             audioSource.Play();
-            isACappellaEnabled = true;
+            ACappellaSpecial.enabled = true;
         }
-        else if (condition == false && isACappellaEnabled == true)
+        else if (condition == false && ACappellaSpecial.enabled == true)
         {
-            if (InitialSoundtrack)
+            if (ACappellaSpecial.InitialSoundtrack)
             {
                 float t = audioSource.time;
                 audioSource.Stop();
-                audioSource.clip = InitialSoundtrack;
+                audioSource.clip = ACappellaSpecial.InitialSoundtrack;
                 if (t < audioSource.clip.length)
                 {
                     audioSource.time = t;
@@ -717,9 +769,24 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
                 }
                 audioSource.Play();
             }
-            isACappellaEnabled = false;
+            ACappellaSpecial.enabled = false;
         }
-        ACappellaButtonText.text = (isACappellaEnabled) ? "Disattiva" : "Attiva";
+        ACappellaSpecial.ButtonText.text = (ACappellaSpecial.enabled) ? "Disattiva" : "Attiva";
+    }
+
+    void LoadSpecial(BaseSpecial special, bool condition)
+    {
+        if (condition == true)
+        {
+            special.SwitchConditioned(true);
+            special.ButtonText.text = "Disattiva";
+        }
+        else
+        {
+            print($"NO {special.Title}");
+            special.enabled = false;
+            special.ButtonText.text = "Attiva";
+        }
     }
 
     public void LoadData(GameData data)
@@ -746,120 +813,21 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             SetCameraFieldOfView(data.FieldOfView);
             FieldOfViewSlider.value = data.FieldOfView;
         }
-        if (data.RoundedBalls == true)
-        {
-            SwitchBallsWithRoundedBalls(true);
-            RoundedBallsButtonText.text = "Disattiva";
-        } else
-        {
-            print("NO ROUND BALLS");
-            isRoundedBallsEnabled = false;
-            RoundedBallsButtonText.text = "Attiva";
-        }
+        SetupSpecialsDelegates();
 
-        if (data.AfroStyle == true)
+        if (data.AfroStyle == true && data.RainbowStyle == true)
         {
-            SwitchAfroStyle(true);
-            if (isRainbowEnabled)
-            {
-                SwitchRainbowStyle(false);
-                RainbowStyleButtonText.text = "Attiva";
-            }
-            AfroStyleButtonText.text = "Disattiva";
-        } else
-        {
-            print("NO AFRO");
-            isAfroStyleEnabled = false;
-            AfroStyleButtonText.text = "Attiva";
+            data.RainbowStyle = false;
         }
-
-        if (data.DickingJump == true)
-        {
-            SwitchDickingJump(true);
-            DickingJumpButtonText.text = "Disattiva";
-        }
-        else
-        {
-            print("NO JUMP");
-            isJumpEnabled = false;
-            DickingJumpButtonText.text = "Attiva";
-        }
-
-        if (data.RainbowStyle == true)
-        {
-            SwitchRainbowStyle(true);
-            if (isAfroStyleEnabled)
-            {
-                SwitchAfroStyle(false);
-                AfroStyleButtonText.text = "Attiva";
-            }
-            RainbowStyleButtonText.text = "Disattiva";
-        }
-        else
-        {
-            print("NO RAINBOW");
-            isRainbowEnabled = false;
-            RainbowStyleButtonText.text = "Attiva";
-        }
-
-        if (data.MovingWalls == true)
-        {
-            SwitchMovingWalls(true);
-            MovingWallsButtonText.text = "Disattiva";
-        }
-        else
-        {
-            print("NO MOVING WALLS");
-            isMovingWallsEnabled = false;
-            MovingWallsButtonText.text = "Attiva";
-        }
-
-        if (data.Free360Movement == true)
-        {
-            SwitchFree360(true);
-            Free360ButtonText.text = "Disattiva";
-        }
-        else
-        {
-            print("NO FREE 360");
-            isFree360Enabled = false;
-            Free360ButtonText.text = "Attiva";
-        }
-
-        if (data.PillsBlower == true)
-        {
-            SwitchPillsBlower(true);
-            PillsBlowerButtonText.text = "Disattiva";
-        }
-        else
-        {
-            print("NO PILLS BLOWER");
-            isPillsBlowerEnabled = false;
-            PillsBlowerButtonText.text = "Attiva";
-        }
-
-        if (data.Teleport == true)
-        {
-            SwitchTeleport(true);
-            TeleportButtonText.text = "Disattiva";
-        }
-        else
-        {
-            print("NO TELEPORT");
-            isTeleportEnabled = false;
-            TeleportButtonText.text = "Attiva";
-        }
-        if (data.ACappella == true)
-        {
-            SwitchACappella(true);
-            ACappellaButtonText.text = "Disattiva";
-        }
-        else
-        {
-            print("NO A CAPPELLA");
-            isACappellaEnabled = false;
-            ACappellaButtonText.text = "Attiva";
-        }
+        LoadSpecial(SquareBallsSpecial, data.RoundedBalls);
+        LoadSpecial(AfroStyleSpecial, data.AfroStyle);
+        LoadSpecial(JumpingDickSpecial, data.DickingJump);
+        LoadSpecial(RainbowSpecial, data.RainbowStyle);
+        LoadSpecial(MovingWallsSpecial, data.MovingWalls);
+        LoadSpecial(Free360MovementSpecial, data.Free360Movement);
+        LoadSpecial(PillsBlowerSpecial, data.PillsBlower);
+        LoadSpecial(TeleportSpecial, data.Teleport);
+        LoadSpecial(ACappellaSpecial, data.ACappella);
     }
 
     void OnLoadComplete()
@@ -872,16 +840,17 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         data.DailyBonusTimeStamp = System.DateTime.ParseExact(
             DailyBonusTimeStamp, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture
             ).ToString("dd-MM-yyyy");
-        data.ACappella = isACappellaEnabled;
+
         data.Sound = isSoundEnabled;
         data.FieldOfView = currentFieldOfView;
-        data.RoundedBalls = isRoundedBallsEnabled;
-        data.AfroStyle = isAfroStyleEnabled;
-        data.DickingJump = isJumpEnabled;
-        data.RainbowStyle = isRainbowEnabled;
-        data.MovingWalls = isMovingWallsEnabled;
-        data.Free360Movement = isFree360Enabled;
-        data.PillsBlower = isPillsBlowerEnabled;
-        data.Teleport = isTeleportEnabled;
+        data.RoundedBalls = SquareBallsSpecial.enabled;
+        data.AfroStyle = AfroStyleSpecial.enabled;
+        data.DickingJump = JumpingDickSpecial.enabled;
+        data.RainbowStyle = RainbowSpecial.enabled;
+        data.MovingWalls = MovingWallsSpecial.enabled;
+        data.Free360Movement = Free360MovementSpecial.enabled;
+        data.PillsBlower = PillsBlowerSpecial.enabled;
+        data.Teleport = TeleportSpecial.enabled;
+        data.ACappella = ACappellaSpecial.enabled;
     }
 }

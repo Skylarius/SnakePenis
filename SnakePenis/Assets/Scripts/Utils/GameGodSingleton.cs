@@ -19,8 +19,19 @@ public class GameGodSingleton : MonoBehaviour
     [SerializeField]
     private SnakeMovement snakeMovement;
 
-    public SnakeMovement GetSnakeMovementScript()
+    public SnakeMovement SnakeMovement
     {
-        return snakeMovement;
+        get
+        {
+            return snakeMovement;
+        }
+    }
+
+    public SettingsPanelManager SettingsPanelManager
+    {
+        get
+        {
+            return GetComponent<SettingsPanelManager>();
+        }
     }
 }
