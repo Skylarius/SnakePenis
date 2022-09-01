@@ -27,6 +27,14 @@ public class GameGodSingleton : MonoBehaviour
         }
     }
 
+    public InputHandler InputHandler
+    {
+        get
+        {
+            return snakeMovement.gameObject.GetComponent<InputHandler>();
+        }
+    }
+
     public SettingsPanelManager SettingsPanelManager
     {
         get

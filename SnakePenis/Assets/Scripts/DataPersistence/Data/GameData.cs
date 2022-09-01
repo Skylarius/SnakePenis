@@ -16,6 +16,9 @@ public class GameData
     public string DailyBonusTimeStamp;
     public float FieldOfView;
     public bool Sound;
+    public float TouchSensitivity;
+
+    //
     public bool RoundedBalls;
     public bool AfroStyle;
     public bool DickingJump;
@@ -25,6 +28,7 @@ public class GameData
     public bool PillsBlower;
     public bool Teleport;
     public bool ACappella;
+    public bool FirstPerson;
 
     // Stats
     public StatsData Stats;
@@ -44,6 +48,9 @@ public class GameData
 
         //CameraFieldOfView
         FieldOfView = 0f;
+
+        //Touch Sensitivity
+        TouchSensitivity = 0f;
 
         //Unlockables settings
         RoundedBalls = false;

@@ -94,7 +94,7 @@ public class FileDataHandler
         return modifiedData;
     }
 
-    public void WriteDataToFile(string dataToWrite, bool debugLog = false, UnityEngine.UI.Text LogText = null)
+    public void WriteDataToFile(string dataToWrite, UnityEngine.UI.Text LogText = null, bool debugLog = false)
     {
         if (debugLog)
         {

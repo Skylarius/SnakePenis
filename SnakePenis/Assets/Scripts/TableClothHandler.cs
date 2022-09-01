@@ -12,9 +12,4 @@ public class TableClothHandler : MonoBehaviour
         TableClothPlane.GetComponent<Renderer>().material.mainTexture = TableClothPatterns[Random.Range(0, TableClothPatterns.Count)];
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

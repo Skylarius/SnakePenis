@@ -47,6 +47,14 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     public Button CameraButton;
     public Sprite CameraOn, CameraOff;
 
+    [Header("Touch Sensitivity Settings")]
+    public bool isTouchSensitivityShowing;
+    private float currentTouchSensitivity;
+    public Slider TouchSensitivitySlider;
+    public Button TouchSensitivityButton;
+    public Sprite TouchSensitivityOn, TouchSensitivityOff;
+
+    [Header("Globals")]
     public GameObject SnakeHead;
     public GameObject OriginalPenisMesh;
     public Material OriginalPink, OriginalDarkPink;
@@ -200,7 +208,14 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     [System.Serializable]
     public class Free360Movement : BaseSpecial
     {
-
+        public override void Switch()
+        {
+            if (settingsPanelManager.FirstPersonSpecial.IsEnabled())
+            {
+                settingsPanelManager.FirstPersonSpecial.SwitchConditioned(false);
+            }
+            base.Switch();
+        }
     }
 
     [System.Serializable]
@@ -266,6 +281,28 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         }
     }
 
+    [System.Serializable]
+    public class FirstPerson : BaseSpecial
+    {
+        public Camera FirstPersonCamera;
+        internal Camera OldCamera = null;
+        internal Camera newFirstPersonCamera = null;
+
+        public override void Switch()
+        {
+            if (settingsPanelManager.Free360MovementSpecial.IsEnabled())
+            {
+                settingsPanelManager.Free360MovementSpecial.SwitchConditioned(false);
+            }
+            base.Switch();
+        }
+
+        public override int GetXPAmount()
+        {
+            return int.Parse(ScoreManager.ScoreBeforeBonuses) == 0 ? 0 : BonusXPAmount;
+        }
+    }
+
     [Header("Square Ball unlockable")]
     public SquareBalls SquareBallsSpecial;
 
@@ -292,6 +329,9 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
 
     [Header("A Cappella")]
     public ACappella ACappellaSpecial;
+
+    [Header("First Person View")]
+    public FirstPerson FirstPersonSpecial;
 
 
     private List<Bonus> _bonuses = null;
@@ -326,7 +366,8 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             Free360MovementSpecial,
             PillsBlowerSpecial,
             TeleportSpecial,
-            ACappellaSpecial
+            ACappellaSpecial,
+            FirstPersonSpecial
         };
 
         foreach (BaseSpecial special in _specials)
@@ -349,6 +390,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         PillsBlowerSpecial.SwitchConditioned = SwitchPillsBlower;
         TeleportSpecial.SwitchConditioned = SwitchTeleport;
         ACappellaSpecial.SwitchConditioned = SwitchACappella;
+        FirstPersonSpecial.SwitchConditioned = SwitchFirstPerson;
     }
 
     void SetupButtonsAction()
@@ -378,6 +420,10 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
 
     public void SwitchCameraFieldOfViewButton()
     {
+        if (isTouchSensitivityShowing)
+        {
+            SwitchTouchSensitivityButton(false);
+        }
         SwitchCameraFieldOfViewButton(!isFieldOfViewShowing);
     }
 
@@ -401,6 +447,35 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         FieldOfViewSlider.value = value;
     }
 
+    public void SwitchTouchSensitivityButton()
+    {
+        if (isFieldOfViewShowing)
+        {
+            SwitchCameraFieldOfViewButton(false);
+        }
+        SwitchTouchSensitivityButton(!isTouchSensitivityShowing);
+    }
+
+    void SwitchTouchSensitivityButton(bool condition)
+    {
+        isTouchSensitivityShowing = condition;
+        TouchSensitivitySlider.gameObject.SetActive(condition);
+        TouchSensitivityButton.image.sprite = (condition) ? TouchSensitivityOn : TouchSensitivityOff;
+    }
+
+    public void SetTouchSensitivity()
+    {
+        float value = TouchSensitivitySlider.value;
+        SetTouchSensitivity(value);
+    }
+
+    void SetTouchSensitivity(float value)
+    {
+        currentTouchSensitivity = value;
+        GameGodSingleton.Instance.InputHandler.AndroidRotationFirstPersonSpeed = value;
+        TouchSensitivitySlider.value = value;
+    }
+
     public IEnumerable<Bonus> BonusGenerator()
     {
         Bonus bonus;
@@ -412,7 +487,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         {
             bonus = new Bonus();
             bonus.Name = DailyBonusTitle;
-            bonus.XPAmount = DailyBonusXPAmount;
+            bonus.XPAmount = DailyBonusXPAmount * LevelProgressionManager.CurrentLevel;
             yield return bonus;
             DailyBonusTimeStamp = System.DateTime.Today.ToString("dd-MM-yyyy");
         }
@@ -565,12 +640,25 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         InputHandler inputHandler = SnakeHead.GetComponent<InputHandler>();
         if (condition == true && JumpingDickSpecial.enabled == false)
         {
-            inputHandler.EnableStandardJump();
+            if (FirstPersonSpecial.IsEnabled())
+            {
+                inputHandler.EnableFirstPersonJump();
+            } else
+            {
+                inputHandler.EnableStandardJump();
+            }
             JumpingDickSpecial.enabled = true;
         }
         else if (condition == false && JumpingDickSpecial.enabled == true)
         {
-            inputHandler.DisableStandardJump();
+            if (FirstPersonSpecial.IsEnabled())
+            {
+                inputHandler.DisableFirstPersonJump();
+            }
+            else
+            {
+                inputHandler.DisableStandardJump();
+            }
             JumpingDickSpecial.enabled = false;
         }
         JumpingDickSpecial.ButtonText.text = (JumpingDickSpecial.enabled) ? "Disattiva" : "Attiva";
@@ -774,6 +862,50 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         ACappellaSpecial.ButtonText.text = (ACappellaSpecial.enabled) ? "Disattiva" : "Attiva";
     }
 
+    void SwitchFirstPerson(bool condition)
+    {
+        InputHandler inputHandler = SnakeHead.GetComponent<InputHandler>();
+        if (condition == true && FirstPersonSpecial.enabled == false)
+        {
+            FirstPersonSpecial.OldCamera = Camera.main;
+            FirstPersonSpecial.newFirstPersonCamera = Instantiate(FirstPersonSpecial.FirstPersonCamera);
+            Camera.SetupCurrent(FirstPersonSpecial.newFirstPersonCamera);
+            FirstPersonSpecial.OldCamera.gameObject.SetActive(false);
+            inputHandler.SetFirstPersonMovementType();
+            if (JumpingDickSpecial.IsEnabled())
+            {
+                inputHandler.DisableStandardJump();
+                inputHandler.EnableFirstPersonJump();
+            }
+            FirstPersonSpecial.enabled = true;
+        }
+        else if (condition == false && FirstPersonSpecial.enabled == true)
+        {
+            if (FirstPersonSpecial.OldCamera != null)
+            {
+                FirstPersonSpecial.OldCamera.gameObject.SetActive(true);
+                Camera.SetupCurrent(FirstPersonSpecial.OldCamera);
+            }
+            if (FirstPersonSpecial.newFirstPersonCamera)
+            {
+                Destroy(FirstPersonSpecial.newFirstPersonCamera.gameObject);
+            }
+            inputHandler.SetStandardMovementType();
+            if (JumpingDickSpecial.IsEnabled())
+            {
+                inputHandler.DisableFirstPersonJump();
+                inputHandler.EnableStandardJump();
+            }
+            SnakeMovement snakeMovement = SnakeHead.GetComponent<SnakeMovement>();
+            if (snakeMovement)
+            {
+                snakeMovement.SetDirectionToClosestHortogonal();
+            }
+            FirstPersonSpecial.enabled = false;
+        }
+        FirstPersonSpecial.ButtonText.text = (FirstPersonSpecial.enabled) ? "Disattiva" : "Attiva";
+    }
+
     void LoadSpecial(BaseSpecial special, bool condition)
     {
         if (condition == true)
@@ -813,6 +945,11 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             SetCameraFieldOfView(data.FieldOfView);
             FieldOfViewSlider.value = data.FieldOfView;
         }
+        if (data.TouchSensitivity > 0f)
+        {
+            SetTouchSensitivity(data.TouchSensitivity);
+            TouchSensitivitySlider.value = data.TouchSensitivity;
+        }
         SetupSpecialsDelegates();
 
         if (data.AfroStyle == true && data.RainbowStyle == true)
@@ -828,6 +965,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         LoadSpecial(PillsBlowerSpecial, data.PillsBlower);
         LoadSpecial(TeleportSpecial, data.Teleport);
         LoadSpecial(ACappellaSpecial, data.ACappella);
+        LoadSpecial(FirstPersonSpecial, data.FirstPerson);
     }
 
     void OnLoadComplete()
@@ -843,6 +981,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
 
         data.Sound = isSoundEnabled;
         data.FieldOfView = currentFieldOfView;
+        data.TouchSensitivity = currentTouchSensitivity;
         data.RoundedBalls = SquareBallsSpecial.enabled;
         data.AfroStyle = AfroStyleSpecial.enabled;
         data.DickingJump = JumpingDickSpecial.enabled;
@@ -852,5 +991,6 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         data.PillsBlower = PillsBlowerSpecial.enabled;
         data.Teleport = TeleportSpecial.enabled;
         data.ACappella = ACappellaSpecial.enabled;
+        data.FirstPerson = FirstPersonSpecial.enabled;
     }
 }

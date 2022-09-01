@@ -111,8 +111,8 @@ public class DebugPanelManager : MonoBehaviour, IDataPersistence
             PortalManager.PortalUsage = statsSample.PortalUsage;
 
             dataHandler.WriteDataToFile(
-                $"Level {LevelProgressionManager.CurrentLevel} , Game #{countGamesForEachLevel}, Duration {statsSample.GameDuration}\n",
-                infoText);
+                $"Level {LevelProgressionManager.CurrentLevel} , Game #{countGamesForEachLevel}, Duration {statsSample.GameDuration}\n"
+                );
             if (settingsPanelManager.JumpingDickSpecial.enabled)
             {
                 dataHandler.WriteDataToFile($"Jumps: {InputHandler.JumpsAmount}, ");
@@ -141,20 +141,26 @@ public class DebugPanelManager : MonoBehaviour, IDataPersistence
             if (levelAtStartGame != LevelProgressionManager.CurrentLevel)
             {
                 dataHandler.WriteDataToFile(
-                    $"--> Reached Level {LevelProgressionManager.CurrentLevel} in {countGamesForEachLevel} games (+{(totalTime - lastTotalTime )/ (60 * 60)} hours).\n",
-                    infoText);
+                    $"--> Reached Level {LevelProgressionManager.CurrentLevel} in {countGamesForEachLevel} games (+{(totalTime - lastTotalTime )/ (60 * 60)} hours).\n", infoText
+                    );
                 lastTotalTime = totalTime;
                 countGamesForEachLevel = 0;
             }
             dataHandler.WriteDataToFile($"Level Progr.: {LevelProgressionManager.CurrentRelativeXP} / {LevelProgressionManager.NextLevelRelativeXP} ({(int)(LevelProgressionManager.CompletionPercent * 100)} % )\n");
-
+            infoText.text = $"Level {LevelProgressionManager.CurrentLevel} , Game #{countGamesForEachLevel}, Time Passed {(int)(totalTime - lastTotalTime) / 3600} h {(int)(totalTime - lastTotalTime) / 60 % 60} m\n ||";
+            int completionPercent = (int)(LevelProgressionManager.CompletionPercent * 100);
+            for (int i = 0; i < completionPercent; i+=5)
+            {
+                infoText.text += "=";
+            }
+            infoText.text += ">>";
 
             totalTime += statsSample.GameDuration;
             if (totalTime > 60 * 60 * 24 * 100)
             {
                 dataHandler.WriteDataToFile(
-                    "Taking more than 100 days. Makes no sense: abort.\n",
-                    infoText);
+                    "Taking more than 100 days. Makes no sense: abort.\n"
+                    );
                 break;
             }
 
@@ -165,7 +171,7 @@ public class DebugPanelManager : MonoBehaviour, IDataPersistence
                 settingsPanelManager.Specials[i].enabled = InitialSpecialsEnabled[i];
             }
             dataHandler.WriteDataToFile("\n");
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.05f);
         }
         dataHandler.WriteDataToFile(
             $"\n\n --> According to statistics, you will reach level {LevelProgressionManager.CurrentLevel} in {totalTime / (60 * 60)} hours ({totalTime / (60 * 60 * 24)} days)",
@@ -218,6 +224,10 @@ public class DebugPanelManager : MonoBehaviour, IDataPersistence
 
     public void SaveData(ref GameData data)
     {
+        if (int.Parse(ScoreManager.ScoreBeforeBonuses) == 0)
+        {
+            return;
+        }
         if (data.Stats == null)
         {
             data.Stats = new StatsData();
@@ -236,7 +246,6 @@ public class DebugPanelManager : MonoBehaviour, IDataPersistence
         {
             sample.PortalUsage = PortalManager.PortalUsage;
         }
-
         data.Stats.Samples.Add(sample);
         Debug.Log($"Saved {sample.ToString()}");
 

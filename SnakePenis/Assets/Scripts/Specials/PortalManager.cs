@@ -74,7 +74,7 @@ public class PortalManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == SnakeHead && isPortalCoroutineRunning == false)
+        if (other.gameObject == SnakeHead && isPortalCoroutineRunning == false && SnakeMovement.isGameOver == false)
         {
             StartCoroutine(PortalCoroutine());
         }

@@ -108,9 +108,16 @@ public class SnakeMovement : MonoBehaviour
         }
 
         targetPositionOnGrid = ConvertToPositionOnGrid(targetRealPosition);
-        Quaternion targetRotation = Quaternion.LookRotation(Vector3.right * direction.x + Vector3.forward * direction.y, Vector3.up);
         transform.position = Vector3.Lerp(transform.position, targetPositionOnGrid, Time.deltaTime * realSpeed * speedPercentage);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+        Vector3 rotationToLook = Vector3.right * direction.x + Vector3.forward * direction.y;
+        if (rotationToLook != Vector3.zero)
+        {
+            transform.rotation = Quaternion.Lerp(
+                transform.rotation,
+                Quaternion.LookRotation(rotationToLook, Vector3.up),
+                Time.deltaTime * rotationSpeed
+                );
+        }
     }
 
     private void Grow()
