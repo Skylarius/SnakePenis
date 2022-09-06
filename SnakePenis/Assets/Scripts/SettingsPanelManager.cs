@@ -208,14 +208,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     [System.Serializable]
     public class Free360Movement : BaseSpecial
     {
-        public override void Switch()
-        {
-            if (settingsPanelManager.FirstPersonSpecial.IsEnabled())
-            {
-                settingsPanelManager.FirstPersonSpecial.SwitchConditioned(false);
-            }
-            base.Switch();
-        }
+
     }
 
     [System.Serializable]
@@ -287,15 +280,6 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         public Camera FirstPersonCamera;
         internal Camera OldCamera = null;
         internal Camera newFirstPersonCamera = null;
-
-        public override void Switch()
-        {
-            if (settingsPanelManager.Free360MovementSpecial.IsEnabled())
-            {
-                settingsPanelManager.Free360MovementSpecial.SwitchConditioned(false);
-            }
-            base.Switch();
-        }
 
         public override int GetXPAmount()
         {
@@ -720,12 +704,24 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         InputHandler inputHandler = SnakeHead.GetComponent<InputHandler>();
         if (condition == true && Free360MovementSpecial.enabled == false)
         {
-            inputHandler.SetFree360MovementType();
+            if (FirstPersonSpecial.IsEnabled())
+            {
+                inputHandler.SetFirstPersonFree360MovementType();
+            } else
+            {
+                inputHandler.SetFree360MovementType();
+            }
             Free360MovementSpecial.enabled = true;
         }
         else if (condition == false && Free360MovementSpecial.enabled == true)
         {
-            inputHandler.SetStandardMovementType();
+            if (FirstPersonSpecial.IsEnabled())
+            {
+                inputHandler.SetFirstPerson90RotationMovementType();
+            } else
+            {
+                inputHandler.SetStandardMovementType();
+            }
             SnakeMovement snakeMovement = SnakeHead.GetComponent<SnakeMovement>();
             if (snakeMovement)
             {
@@ -871,11 +867,17 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             FirstPersonSpecial.newFirstPersonCamera = Instantiate(FirstPersonSpecial.FirstPersonCamera);
             Camera.SetupCurrent(FirstPersonSpecial.newFirstPersonCamera);
             FirstPersonSpecial.OldCamera.gameObject.SetActive(false);
-            inputHandler.SetFirstPersonMovementType();
             if (JumpingDickSpecial.IsEnabled())
             {
                 inputHandler.DisableStandardJump();
                 inputHandler.EnableFirstPersonJump();
+            }
+            if (Free360MovementSpecial.IsEnabled())
+            {
+                inputHandler.SetFirstPersonFree360MovementType();
+            } else
+            {
+                inputHandler.SetFirstPerson90RotationMovementType();
             }
             FirstPersonSpecial.enabled = true;
         }
@@ -890,7 +892,14 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             {
                 Destroy(FirstPersonSpecial.newFirstPersonCamera.gameObject);
             }
-            inputHandler.SetStandardMovementType();
+            if (Free360MovementSpecial.IsEnabled())
+            {
+                inputHandler.SetFree360MovementType();
+            } else
+            {
+                inputHandler.SetStandardMovementType();
+            }
+            
             if (JumpingDickSpecial.IsEnabled())
             {
                 inputHandler.DisableFirstPersonJump();

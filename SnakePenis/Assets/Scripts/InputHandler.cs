@@ -32,6 +32,10 @@ public class InputHandler : BaseSnakeComponent
     public float minAndroidSwipeJumpThreshold = 10f;
     private float AndroidInitialJumpTime;
     public float maxAndroidSwipeJumpDeltaTime = 1f;
+    private float AndroidInitialSwipeTime;
+    public float maxAndroidSwipeDeltaTime = 1f;
+    public float minAndroidMovementSwipeThreshold = 10f;
+    private bool isTurning90Deg = false;
 
     private void Start()
     {
@@ -188,6 +192,71 @@ public class InputHandler : BaseSnakeComponent
         }
     }
 
+    void AndroidFirstPerson90RotationMovementSwipe(ref Vector2 direction)
+    {
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            switch (touch.phase)
+            {
+                case TouchPhase.Began:
+                    AndroidInitialTouchPosition = touch.position;
+                    AndroidInitialSwipeTime = Time.time;
+                    isTurning90Deg = false;
+                    break;
+                case TouchPhase.Moved:
+                case TouchPhase.Stationary:
+                    if (Time.time - AndroidInitialSwipeTime > maxAndroidSwipeDeltaTime || isTurning90Deg)
+                    {
+                        return;
+                    }
+                    float touchDirectionX = touch.position.x - AndroidInitialTouchPosition.x;
+                    if (touchDirectionX > minAndroidMovementSwipeThreshold || touchDirectionX < -minAndroidMovementSwipeThreshold)
+                    {
+                        if (touchDirectionX > 0)
+                        {
+                            touchDirectionX = 90f;
+                        }
+                        if (touchDirectionX < 0)
+                        {
+                            touchDirectionX = -90f;
+                        }
+                        Vector3 rotatedVector3 = Quaternion.AngleAxis(touchDirectionX, Vector3.up) * (Vector3.right * direction.x + Vector3.forward * direction.y);
+                        direction = Vector2.right * rotatedVector3.x + Vector2.up * rotatedVector3.z;
+                        isTurning90Deg = true;
+                    }
+                    break;
+                case TouchPhase.Ended:
+                    isTurning90Deg = false;
+                    break;
+            }
+        }
+    }
+
+    void WindowsFirstPerson90RotationMovement(ref Vector2 direction)
+    {
+        float x = Input.GetAxis("Horizontal");
+        if (x > 0 && !isTurning90Deg)
+        {
+            x = 90f;
+            isTurning90Deg = true;
+        }
+        else if (x < 0 && !isTurning90Deg)
+        {
+            x = -90f;
+            isTurning90Deg = true;
+        }
+        else if (x == 0 && isTurning90Deg)
+        {
+            isTurning90Deg = false;
+        } else
+        {
+            x = 0f;
+        }
+        Vector3 rotatedVector3 = Quaternion.AngleAxis(x, Vector3.up) * (Vector3.right * direction.x + Vector3.forward * direction.y);
+        direction = Vector2.right * rotatedVector3.x + Vector2.up * rotatedVector3.z;
+    }
+
     bool StandardWindowsJump()
     {
         if (Input.GetButtonDown("Jump") && !isJumping)
@@ -225,11 +294,6 @@ public class InputHandler : BaseSnakeComponent
     bool FirstPersonWindowsJump()
     {
         return StandardWindowsJump();
-    }
-
-    bool FirstPersonAndroidJump()
-    {
-        return false; // TO DO: IMPLEMENT
     }
 
     bool FirstPersonAndroidJumpSwipe()
@@ -345,7 +409,13 @@ public class InputHandler : BaseSnakeComponent
                 Android360DegreeMovement : Windows360DegreeMovement;
     }
 
-    public void SetFirstPersonMovementType()
+    internal void SetFirstPerson90RotationMovementType()
+    {
+        move = (PlatformUtils.platform == RuntimePlatform.Android) ?
+                AndroidFirstPerson90RotationMovementSwipe : WindowsFirstPerson90RotationMovement;
+    }
+
+    public void SetFirstPersonFree360MovementType()
     {
         move = (PlatformUtils.platform == RuntimePlatform.Android) ?
                 AndroidFirstPersonMovementSwipe : WindowsFirstPersonMovement;
