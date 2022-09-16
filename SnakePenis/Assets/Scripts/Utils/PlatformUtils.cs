@@ -1,4 +1,4 @@
-#define UNITY_EDITOR_ANDROID
+//#define UNITY_EDITOR_ANDROID
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

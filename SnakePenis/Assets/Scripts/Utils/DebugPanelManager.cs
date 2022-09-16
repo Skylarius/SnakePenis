@@ -80,7 +80,7 @@ public class DebugPanelManager : MonoBehaviour, IDataPersistence
         dataHandler.CreateFile();
         float totalTime = 0f;
         int LevelToReach = 20;
-        SettingsPanelManager settingsPanelManager = GameGodSingleton.Instance.SettingsPanelManager;
+        SettingsPanelManager settingsPanelManager = GameGodSingleton.SettingsPanelManager;
 
 
         BigInteger StartTotalXP = LevelProgressionManager.TotalXP;
@@ -224,7 +224,7 @@ public class DebugPanelManager : MonoBehaviour, IDataPersistence
 
     public void SaveData(ref GameData data)
     {
-        if (int.Parse(ScoreManager.ScoreBeforeBonuses) == 0)
+        if (ScoreManager.ScoreBeforeBonuses == "" || int.Parse(ScoreManager.ScoreBeforeBonuses) == 0)
         {
             return;
         }
@@ -234,9 +234,9 @@ public class DebugPanelManager : MonoBehaviour, IDataPersistence
         }
 
         StatsSample sample = new StatsSample();
-        sample.GameDuration = GameGodSingleton.Instance.SnakeMovement.levelTime;
-        sample.Length = GameGodSingleton.Instance.SnakeMovement.SnakeBody.Count;
-        sample.RealSpeed = GameGodSingleton.Instance.SnakeMovement.realSpeed;
+        sample.GameDuration = GameGodSingleton.SnakeMovement.levelTime;
+        sample.Length = GameGodSingleton.SnakeMovement.SnakeBody.Count;
+        sample.RealSpeed = GameGodSingleton.SnakeMovement.realSpeed;
         sample.Level = LevelProgressionManager.CurrentLevel;
         if (InputHandler.JumpsAmount > 0)
         {

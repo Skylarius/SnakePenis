@@ -136,8 +136,6 @@ public class SnakeMovement : MonoBehaviour
             JoyParticleSystem.Play();
         }
         realSpeed += 0.6f;
-        PowerUpSpawner.IncreaseSpawnFrequency(0.01f);
-        PowerUpSpawner.DecreasePowerUpAmount();
         RightBall.transform.localScale += Vector3.one * 0.04f;
         LeftBall.transform.localScale += Vector3.one * 0.03f;
         if (audioSystem.enabled)
@@ -151,7 +149,8 @@ public class SnakeMovement : MonoBehaviour
         if (isGameOver) return;
         if (other.gameObject.CompareTag("PowerUp"))
         {
-
+            GameGodSingleton.PowerUpSpawner.IncreaseSpawnFrequency(0.01f);
+            GameGodSingleton.PowerUpSpawner.DecreasePowerUpAmount(other.gameObject);
             Grow();
             StartCoroutine(PickupAnimationCoroutine(other.gameObject));
         }

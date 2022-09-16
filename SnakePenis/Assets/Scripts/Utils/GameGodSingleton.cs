@@ -19,27 +19,65 @@ public class GameGodSingleton : MonoBehaviour
     [SerializeField]
     private SnakeMovement snakeMovement;
 
-    public SnakeMovement SnakeMovement
+    [SerializeField]
+    private GameObject mainGround;
+
+    [SerializeField]
+    private GameObject mainCameraObject;
+
+    public static SnakeMovement SnakeMovement
     {
         get
         {
-            return snakeMovement;
+            return Instance.snakeMovement;
         }
     }
 
-    public InputHandler InputHandler
+    public static InputHandler InputHandler
     {
         get
         {
-            return snakeMovement.gameObject.GetComponent<InputHandler>();
+            return SnakeMovement.gameObject.GetComponent<InputHandler>();
         }
     }
 
-    public SettingsPanelManager SettingsPanelManager
+    public static SettingsPanelManager SettingsPanelManager
     {
         get
         {
-            return GetComponent<SettingsPanelManager>();
+            return Instance.GetComponent<SettingsPanelManager>();
+        }
+    }
+
+    public static PlaygroundGenerator PlaygroundGenerator
+    {
+        get
+        {
+            return Instance.GetComponent<PlaygroundGenerator>();
+        }
+    }
+
+    public static PowerUpSpawner PowerUpSpawner
+    {
+        get
+        {
+            return Instance.GetComponent<PowerUpSpawner>();
+        }
+    }
+
+    public static GameObject MainGround
+    {
+        get
+        {
+            return Instance.mainGround;
+        }
+    }
+
+    public static Camera MainCamera
+    {
+        get
+        {
+            return Instance.mainCameraObject.GetComponent<Camera>();
         }
     }
 }

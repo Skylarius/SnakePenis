@@ -250,8 +250,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         }
 
         public TeleportCouple[] TeleportCouples;
-        internal TeleportCouple instancedCouple;
-        public GameObject[] WallsToAnchor;
+        internal List<TeleportCouple> instancedCouples;
         public float SpawnRadius;
         public float WallOffset;
         public Vector3 WallRotationOffset;
@@ -280,11 +279,21 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         public Camera FirstPersonCamera;
         internal Camera OldCamera = null;
         internal Camera newFirstPersonCamera = null;
+        public float CameraHeight = 20f;
 
         public override int GetXPAmount()
         {
-            return int.Parse(ScoreManager.ScoreBeforeBonuses) == 0 ? 0 : BonusXPAmount;
+            return (ScoreManager.ScoreBeforeBonuses == "" || int.Parse(ScoreManager.ScoreBeforeBonuses) == 0) ? 0 : BonusXPAmount;
         }
+    }
+
+    [System.Serializable]
+    public class Labyrinth : BaseSpecial
+    {
+        public Camera LabyrinthCamera;
+        internal Camera OldCamera = null;
+        internal Camera newLabyrinthCamera = null;
+        public bool disableNextGame = false;
     }
 
     [Header("Square Ball unlockable")]
@@ -317,6 +326,9 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     [Header("First Person View")]
     public FirstPerson FirstPersonSpecial;
 
+    [Header("Labyrinth")]
+    public Labyrinth LabyrinthSpecial;
+
 
     private List<Bonus> _bonuses = null;
     public List<Bonus> Bonuses
@@ -334,7 +346,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
 
     void StartUpSettingsPanelManager()
     {
-        SnakeHead = GameGodSingleton.Instance.SnakeMovement.gameObject;
+        SnakeHead = GameGodSingleton.SnakeMovement.gameObject;
         if (ScoreManager.CurrentScoreName != "" && ScoreManager.CurrentID != "")
         {
             inputNameField.text = ScoreManager.CurrentScoreName;
@@ -351,7 +363,8 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             PillsBlowerSpecial,
             TeleportSpecial,
             ACappellaSpecial,
-            FirstPersonSpecial
+            FirstPersonSpecial,
+            LabyrinthSpecial
         };
 
         foreach (BaseSpecial special in _specials)
@@ -375,6 +388,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         TeleportSpecial.SwitchConditioned = SwitchTeleport;
         ACappellaSpecial.SwitchConditioned = SwitchACappella;
         FirstPersonSpecial.SwitchConditioned = SwitchFirstPerson;
+        LabyrinthSpecial.SwitchConditioned = SwitchLabyrinth;
     }
 
     void SetupButtonsAction()
@@ -456,7 +470,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     void SetTouchSensitivity(float value)
     {
         currentTouchSensitivity = value;
-        GameGodSingleton.Instance.InputHandler.AndroidRotationFirstPersonSpeed = value;
+        GameGodSingleton.InputHandler.AndroidRotationFirstPersonSpeed = value;
         TouchSensitivitySlider.value = value;
     }
 
@@ -755,66 +769,113 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         if (condition == true && TeleportSpecial.enabled == false)
         {
             //Select teleport couple
-            TeleportSpecial.instancedCouple = new Teleport.TeleportCouple(null, null);
             int randomIndex = UnityEngine.Random.Range(0, TeleportSpecial.TeleportCouples.Length);
             Teleport.TeleportCouple selectedTeleportCouple = TeleportSpecial.TeleportCouples[randomIndex];
             TeleportSpecial.Title = selectedTeleportCouple.BonusTitle;
 
-            //Select walls
-            randomIndex = UnityEngine.Random.Range(0, TeleportSpecial.WallsToAnchor.Length);
-            GameObject Wall1 = TeleportSpecial.WallsToAnchor[randomIndex];
-            randomIndex = UnityEngine.Random.Range(0, TeleportSpecial.WallsToAnchor.Length);
-            GameObject Wall2 = TeleportSpecial.WallsToAnchor[randomIndex];
-
-            //Select Spawn Position Value on Walls
-            Vector3 spawnPositionPortal1, spawnPositionPortal2;
-            float spawnValuePositionPortal1, spawnValuePositionPortal2;
-            if (Wall1 == Wall2) // if sa
+            GameObject Wall1, Wall2;
+            List<GameObject> Walls = GetAllWalls();
+            List<Tuple<GameObject, GameObject>> WallsCouples = new List<Tuple<GameObject, GameObject>>();
+            for (int i = 0; i < Walls.Count / 2; i += 2)
             {
-                randomIndex = UnityEngine.Random.Range(0, 2) == 0 ? 1 : -1;
-                spawnValuePositionPortal1 = randomIndex * TeleportSpecial.SpawnRadius;
-                spawnValuePositionPortal2 = -randomIndex * TeleportSpecial.SpawnRadius;
-
-            } else
-            {
-                spawnValuePositionPortal1 = UnityEngine.Random.Range(-TeleportSpecial.SpawnRadius, TeleportSpecial.SpawnRadius);
-                spawnValuePositionPortal2 = UnityEngine.Random.Range(-TeleportSpecial.SpawnRadius, TeleportSpecial.SpawnRadius);
+                Wall1 = Walls[UnityEngine.Random.Range(0, Walls.Count)];
+                Wall2 = Walls[UnityEngine.Random.Range(0, Walls.Count)];
+                WallsCouples.Add(new Tuple<GameObject, GameObject>(Wall1, Wall2));
+                Walls.RemoveAll(w => w == Wall1 || w == Wall2);
             }
 
-            //Instantiate Portal and set them in instancedCouple
-            if (TeleportSpecial.instancedCouple.IsNull() == false)
+            foreach (Tuple<GameObject, GameObject> wallCouple in WallsCouples)
             {
-                Debug.LogWarning("There is an instanced couple of teleport objects. They should not be here. Will try to proceed anyway...");
-                TeleportSpecial.instancedCouple.DestroyCouple();
+                InstanceTeleportCoupleToWalls(selectedTeleportCouple, wallCouple.Item1, wallCouple.Item2);
             }
-            TeleportSpecial.instancedCouple.Portal1 = Instantiate(selectedTeleportCouple.Portal1);
-            TeleportSpecial.instancedCouple.Portal2 = Instantiate(selectedTeleportCouple.Portal2);
-            TeleportSpecial.instancedCouple.Portal1.transform.rotation = Wall1.transform.rotation * Quaternion.Euler(TeleportSpecial.WallRotationOffset);
-            TeleportSpecial.instancedCouple.Portal2.transform.rotation = Wall2.transform.rotation * Quaternion.Euler(TeleportSpecial.WallRotationOffset);
-            spawnPositionPortal1 = Wall1.transform.position + 
-                TeleportSpecial.instancedCouple.Portal1.transform.right * spawnValuePositionPortal1 + 
-                TeleportSpecial.instancedCouple.Portal1.transform.forward * TeleportSpecial.WallOffset;
-            spawnPositionPortal2 = Wall2.transform.position +
-                TeleportSpecial.instancedCouple.Portal2.transform.right * spawnValuePositionPortal2 + 
-                TeleportSpecial.instancedCouple.Portal2.transform.forward * TeleportSpecial.WallOffset;
-            TeleportSpecial.instancedCouple.Portal1.transform.position = spawnPositionPortal1;
-            TeleportSpecial.instancedCouple.Portal2.transform.position = spawnPositionPortal2;
 
-            //Set OUT point of each portal, as specified in the TeleportCouple prefab
-            //Remember: the OUT point of a portal object is in the OTHER portal object
-            PortalManager portalManager1 = TeleportSpecial.instancedCouple.Portal1.GetComponent<PortalManager>();
-            PortalManager portalManager2 = TeleportSpecial.instancedCouple.Portal2.GetComponent<PortalManager>();
-            portalManager1.PortalOUTPoint = portalManager2.SelfPortalOUTPoint;
-            portalManager2.PortalOUTPoint = portalManager1.SelfPortalOUTPoint;
 
             TeleportSpecial.enabled = true;
         }
         else if (condition == false && TeleportSpecial.enabled == true)
         {
-            TeleportSpecial.instancedCouple.DestroyCouple();
+            foreach (Teleport.TeleportCouple instancedCouple in TeleportSpecial.instancedCouples)
+            {
+                instancedCouple.DestroyCouple();
+            }
+            TeleportSpecial.instancedCouples.Clear();
             TeleportSpecial.enabled = false;
         }
         TeleportSpecial.ButtonText.text = (TeleportSpecial.enabled) ? "Disattiva" : "Attiva";
+    }
+
+    private List<GameObject> GetAllWalls()
+    {
+        List<GameObject> AllWalls = new List<GameObject>();
+        if (LabyrinthSpecial.enabled)
+        {
+            foreach (Tile t in GameGodSingleton.PlaygroundGenerator.GeneratedTiles)
+            {
+                AllWalls.AddRange(t.GetWalls());
+            }
+            return AllWalls;
+        } else
+        {
+            TileData td = GameGodSingleton.MainGround.GetComponent<TileData>();
+            if (td)
+            {
+               AllWalls.AddRange(td.Walls);
+            }
+        }
+        return AllWalls;
+    }
+
+    void InstanceTeleportCoupleToWalls(Teleport.TeleportCouple selectedTeleportCouple, GameObject Wall1, GameObject Wall2)
+    {
+        //Select Spawn Position Value on Walls
+        Vector3 spawnPositionPortal1, spawnPositionPortal2;
+        float spawnValuePositionPortal1, spawnValuePositionPortal2;
+        if (Wall1 == Wall2) // if sa
+        {
+            int randomIndex = UnityEngine.Random.Range(0, 2) == 0 ? 1 : -1;
+            spawnValuePositionPortal1 = randomIndex * TeleportSpecial.SpawnRadius;
+            spawnValuePositionPortal2 = -randomIndex * TeleportSpecial.SpawnRadius;
+
+        }
+        else
+        {
+            spawnValuePositionPortal1 = UnityEngine.Random.Range(-TeleportSpecial.SpawnRadius, TeleportSpecial.SpawnRadius);
+            spawnValuePositionPortal2 = UnityEngine.Random.Range(-TeleportSpecial.SpawnRadius, TeleportSpecial.SpawnRadius);
+        }
+
+        //Instantiate Portal and set them in instancedCouple
+        Teleport.TeleportCouple instancedCouple = new Teleport.TeleportCouple(null, null);
+        if (instancedCouple.IsNull() == false)
+        {
+            Debug.LogWarning("There is an instanced couple of teleport objects. They should not be here. Will try to proceed anyway...");
+            instancedCouple.DestroyCouple();
+        }
+        instancedCouple.Portal1 = Instantiate(selectedTeleportCouple.Portal1);
+        instancedCouple.Portal2 = Instantiate(selectedTeleportCouple.Portal2);
+        instancedCouple.Portal1.transform.rotation = Wall1.transform.rotation * Quaternion.Euler(TeleportSpecial.WallRotationOffset);
+        instancedCouple.Portal2.transform.rotation = Wall2.transform.rotation * Quaternion.Euler(TeleportSpecial.WallRotationOffset);
+        spawnPositionPortal1 = Wall1.transform.position +
+            instancedCouple.Portal1.transform.right * spawnValuePositionPortal1 +
+            instancedCouple.Portal1.transform.forward * TeleportSpecial.WallOffset;
+        spawnPositionPortal2 = Wall2.transform.position +
+            instancedCouple.Portal2.transform.right * spawnValuePositionPortal2 +
+            instancedCouple.Portal2.transform.forward * TeleportSpecial.WallOffset;
+        instancedCouple.Portal1.transform.position = spawnPositionPortal1;
+        instancedCouple.Portal2.transform.position = spawnPositionPortal2;
+
+        //Set OUT point of each portal, as specified in the TeleportCouple prefab
+        //Remember: the OUT point of a portal object is in the OTHER portal object
+        PortalManager portalManager1 = instancedCouple.Portal1.GetComponent<PortalManager>();
+        PortalManager portalManager2 = instancedCouple.Portal2.GetComponent<PortalManager>();
+        portalManager1.PortalOUTPoint = portalManager2.SelfPortalOUTPoint;
+        portalManager2.PortalOUTPoint = portalManager1.SelfPortalOUTPoint;
+
+        // Add instanced couple of portals to the List
+        if (TeleportSpecial.instancedCouples == null)
+        {
+            TeleportSpecial.instancedCouples = new List<Teleport.TeleportCouple>();
+        }
+        TeleportSpecial.instancedCouples.Add(instancedCouple);
     }
 
     void SwitchACappella(bool condition)
@@ -863,10 +924,23 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         InputHandler inputHandler = SnakeHead.GetComponent<InputHandler>();
         if (condition == true && FirstPersonSpecial.enabled == false)
         {
-            FirstPersonSpecial.OldCamera = Camera.main;
-            FirstPersonSpecial.newFirstPersonCamera = Instantiate(FirstPersonSpecial.FirstPersonCamera);
-            Camera.SetupCurrent(FirstPersonSpecial.newFirstPersonCamera);
-            FirstPersonSpecial.OldCamera.gameObject.SetActive(false);
+            //FirstPersonSpecial.OldCamera = Camera.main;
+            //FirstPersonSpecial.newFirstPersonCamera = Instantiate(FirstPersonSpecial.FirstPersonCamera);
+            //Camera.SetupCurrent(FirstPersonSpecial.newFirstPersonCamera);
+            //FirstPersonSpecial.newFirstPersonCamera.GetComponent<FirstPersonCameraController>().offset = Vector3.up * FirstPersonSpecial.CameraHeight;
+            //if (LabyrinthSpecial.enabled && LabyrinthSpecial.newLabyrinthCamera != null)
+            //{
+            //    LabyrinthSpecial.OldCamera = Camera.main;
+            //    LabyrinthSpecial.newLabyrinthCamera = Instantiate(LabyrinthSpecial.LabyrinthCamera);
+            //    LabyrinthSpecial.newLabyrinthCamera.gameObject.SetActive(true);
+            //    Camera.SetupCurrent(LabyrinthSpecial.newLabyrinthCamera);
+            //    LabyrinthSpecial.OldCamera.gameObject.SetActive(false);
+            //}
+            //else
+            //{
+            //    FirstPersonSpecial.OldCamera.gameObject.SetActive(false);
+            //}
+            UseCamera(CameraType.FirstPerson);
             if (JumpingDickSpecial.IsEnabled())
             {
                 inputHandler.DisableStandardJump();
@@ -883,10 +957,13 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         }
         else if (condition == false && FirstPersonSpecial.enabled == true)
         {
-            if (FirstPersonSpecial.OldCamera != null)
+            if (LabyrinthSpecial.enabled)
             {
-                FirstPersonSpecial.OldCamera.gameObject.SetActive(true);
-                Camera.SetupCurrent(FirstPersonSpecial.OldCamera);
+                UseCamera(CameraType.Labyrinth);
+            }
+            else
+            {
+                UseCamera(CameraType.Main);
             }
             if (FirstPersonSpecial.newFirstPersonCamera)
             {
@@ -913,6 +990,131 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             FirstPersonSpecial.enabled = false;
         }
         FirstPersonSpecial.ButtonText.text = (FirstPersonSpecial.enabled) ? "Disattiva" : "Attiva";
+    }
+
+    void SwitchLabyrinth(bool condition)
+    {
+        if (condition == true && LabyrinthSpecial.enabled == false)
+        {
+            GameGodSingleton.MainGround.SetActive(false);
+            GameGodSingleton.PlaygroundGenerator.GeneratePlayground();
+            if (GameGodSingleton.PlaygroundGenerator.GeneratedTiles != null)
+            {
+                GameGodSingleton.PowerUpSpawner.SetSpawnAreasFromTiles(GameGodSingleton.PlaygroundGenerator.GeneratedTiles);
+            }
+            if (FirstPersonSpecial.enabled)
+            {
+                UseCamera(CameraType.FirstPerson);
+            } else
+            {
+                UseCamera(CameraType.Labyrinth);
+            }
+            LabyrinthSpecial.enabled = true;
+
+            // Replace all the portals
+            if (TeleportSpecial.enabled)
+            {
+                SwitchTeleport(false);
+                SwitchTeleport(true);
+            }
+        }
+        else if (condition == false && LabyrinthSpecial.enabled == true)
+        {
+            if (LabyrinthSpecial.disableNextGame == false)
+            {
+                //TODO: create alert system
+                Debug.Log("Will disable feature next game");
+                LabyrinthSpecial.disableNextGame = true;
+            } else
+            {
+                LabyrinthSpecial.disableNextGame = false;
+            }
+            if (FirstPersonSpecial.enabled)
+            {
+                UseCamera(CameraType.FirstPerson);
+            } else
+            {
+                UseCamera(CameraType.Main);
+            }
+        }
+        LabyrinthSpecial.ButtonText.text = (LabyrinthSpecial.enabled && !LabyrinthSpecial.disableNextGame) ? "Disattiva" : "Attiva";
+    }
+
+    void UseLabyrinthCamera(bool condition)
+    {
+        if (condition)
+        {
+            if (LabyrinthSpecial.newLabyrinthCamera == null)
+            {
+                LabyrinthSpecial.newLabyrinthCamera = Instantiate(LabyrinthSpecial.LabyrinthCamera);
+            }
+            LabyrinthSpecial.newLabyrinthCamera.gameObject.SetActive(true);
+            Camera.SetupCurrent(LabyrinthSpecial.newLabyrinthCamera);
+        } else
+        {
+            if (LabyrinthSpecial.newLabyrinthCamera != null)
+            {
+                Destroy(LabyrinthSpecial.newLabyrinthCamera.gameObject);
+            }
+        }
+    }
+
+    void UseMainCamera(bool condition)
+    {
+        if (condition)
+        {
+            GameGodSingleton.MainCamera.gameObject.SetActive(true);
+            Camera.SetupCurrent(GameGodSingleton.MainCamera);
+        } else
+        {
+            GameGodSingleton.MainCamera.gameObject.SetActive(false);
+        }
+    }
+
+    void UseFirstPersonCamera(bool condition)
+    {
+        if (condition)
+        {
+            if (FirstPersonSpecial.newFirstPersonCamera == null)
+            {
+                FirstPersonSpecial.newFirstPersonCamera = Instantiate(FirstPersonSpecial.FirstPersonCamera);
+            }
+            Camera.SetupCurrent(FirstPersonSpecial.newFirstPersonCamera);
+            FirstPersonSpecial.newFirstPersonCamera.GetComponent<FirstPersonCameraController>().offset = Vector3.up * FirstPersonSpecial.CameraHeight;
+        } else
+        {
+            if (FirstPersonSpecial.newFirstPersonCamera != null)
+            {
+                Destroy(FirstPersonSpecial.newFirstPersonCamera.gameObject);
+            }
+        }
+    }
+
+    public enum CameraType
+    {
+        Main, FirstPerson, Labyrinth
+    }
+
+    public void UseCamera(CameraType type)
+    {
+        switch (type)
+        {
+            case CameraType.Main:
+                UseFirstPersonCamera(false);
+                UseLabyrinthCamera(false);
+                UseMainCamera(true);
+                break;
+            case CameraType.FirstPerson:
+                UseMainCamera(false);
+                UseLabyrinthCamera(false);
+                UseFirstPersonCamera(true);
+                break;
+            case CameraType.Labyrinth:
+                UseFirstPersonCamera(false);
+                UseMainCamera(false);
+                UseLabyrinthCamera(true);
+                break;
+        }
     }
 
     void LoadSpecial(BaseSpecial special, bool condition)
@@ -975,6 +1177,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         LoadSpecial(TeleportSpecial, data.Teleport);
         LoadSpecial(ACappellaSpecial, data.ACappella);
         LoadSpecial(FirstPersonSpecial, data.FirstPerson);
+        LoadSpecial(LabyrinthSpecial, data.Labyrinth);
     }
 
     void OnLoadComplete()
@@ -1001,5 +1204,6 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         data.Teleport = TeleportSpecial.enabled;
         data.ACappella = ACappellaSpecial.enabled;
         data.FirstPerson = FirstPersonSpecial.enabled;
+        data.Labyrinth = LabyrinthSpecial.enabled && !LabyrinthSpecial.disableNextGame;
     }
 }

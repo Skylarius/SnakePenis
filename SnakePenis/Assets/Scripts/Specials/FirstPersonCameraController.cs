@@ -17,9 +17,8 @@ public class FirstPersonCameraController : MonoBehaviour
 
     void Start()
     {
-        target = GameGodSingleton.Instance.SnakeMovement.gameObject.transform;
+        target = GameGodSingleton.SnakeMovement.gameObject.transform;
         anchor = target;
-        offset = target.InverseTransformVector(transform.position - target.position);
     }
 
     // Update is called once per frame

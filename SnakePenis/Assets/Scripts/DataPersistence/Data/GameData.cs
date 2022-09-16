@@ -12,13 +12,15 @@ public class GameData
     public string TotalXP;
     public string Level;
 
-    // Unlockables
-    public string DailyBonusTimeStamp;
+    // Settings
     public float FieldOfView;
     public bool Sound;
     public float TouchSensitivity;
 
-    //
+    // Daily Bonus
+    public string DailyBonusTimeStamp;
+
+    // Specials
     public bool RoundedBalls;
     public bool AfroStyle;
     public bool DickingJump;
@@ -29,6 +31,7 @@ public class GameData
     public bool Teleport;
     public bool ACappella;
     public bool FirstPerson;
+    public bool Labyrinth;
 
     // Stats
     public StatsData Stats;
@@ -62,6 +65,7 @@ public class GameData
         PillsBlower = false;
         Teleport = false;
         ACappella = false;
+        Labyrinth = false;
 
         Stats = new StatsData();
     }
