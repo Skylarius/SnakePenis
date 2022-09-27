@@ -6,4 +6,5 @@ using UnityEngine;
 public class TileData : MonoBehaviour
 {
     public List<GameObject> Walls;
+    public List<GameObject> Ground;
 }

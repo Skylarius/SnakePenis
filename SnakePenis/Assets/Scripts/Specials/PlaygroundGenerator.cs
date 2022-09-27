@@ -142,7 +142,7 @@ public class Tile
 
         foreach (Vector2 v in spawnArea.Vertices)
         {
-            Debug.DrawRay(this.GetRealPosition() + new Vector3(v.x, 0, v.y), Vector3.up * 100, Color.red, 1000);
+            Debug.DrawRay(this.GetRealPosition() + new Vector3(v.x, 0, v.y), Vector3.up * 100, Color.red, 20);
         }
     }
 
@@ -183,7 +183,6 @@ public class Tile
     public static float Height = -3f;
     [SerializeField] public static TileSize Size = new TileSize() { Width = 190 };
     public static Vector3 startingTilePosition = Vector3.zero + Vector3.up * Height;
-    public List<GameObject> Walls;
     private List<Tile> ConnectedTiles;
 
     public Tile(Tile t)
@@ -452,6 +451,18 @@ public class Tile
             return tileData.Walls;
         }
         return new List<GameObject>();
+    }
+
+    public void SetBoardTexture(Texture texture)
+    {
+        TileData td = TileGroundObj.GetComponent<TileData>();
+        if (td)
+        {
+            foreach (GameObject ground in td.Ground)
+            {
+                ground.GetComponent<Renderer>().material.mainTexture = texture;
+            }
+        }
     }
 }
 

@@ -1014,6 +1014,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         {
             GameGodSingleton.MainGround.SetActive(false);
             GameGodSingleton.PlaygroundGenerator.GeneratePlayground();
+            GameGodSingleton.TableClothHandler.AddPatternToGeneratedPlayground();
             if (GameGodSingleton.PlaygroundGenerator.GeneratedTiles != null)
             {
                 GameGodSingleton.PowerUpSpawner.SetSpawnAreasFromTiles(GameGodSingleton.PlaygroundGenerator.GeneratedTiles);

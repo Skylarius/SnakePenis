@@ -733,7 +733,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 41
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 300
@@ -1401,7 +1401,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 41
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 300
@@ -4045,7 +4045,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 41
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 300
@@ -6174,7 +6174,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 41
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 300
@@ -6696,7 +6696,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 41
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 300
@@ -7963,7 +7963,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 41
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 300
@@ -10178,7 +10178,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 41
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 300
@@ -10814,7 +10814,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 41
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 300
@@ -12983,44 +12983,33 @@ MonoBehaviour:
   InitialTile:
     TileGroundObj: {fileID: 7168034891996584457, guid: a136e24cc5d0af047b27f8f46ee5688c, type: 3}
     Orientations: 01000000
-    Walls: []
   Tiles:
   - TileGroundObj: {fileID: 7168034891996584457, guid: 03c213c77933f634496de2b51b9e75d0, type: 3}
     Orientations: ffffffff
-    Walls: []
   - TileGroundObj: {fileID: 7168034891996584457, guid: 83bd50f7aee518249bac3772e0c1d524, type: 3}
     Orientations: ffffffff01000000
-    Walls: []
   - TileGroundObj: {fileID: 7168034891996584457, guid: 6d800ad00eb63214583f6d9a21dbf834, type: 3}
     Orientations: fffffffff6ffffff
-    Walls: []
   - TileGroundObj: {fileID: 7168034891996584457, guid: c0a24a4320dee9c4eb4ae229f8a83edd, type: 3}
     Orientations: 0a00000001000000
-    Walls: []
   - TileGroundObj: {fileID: 7168034891996584457, guid: 5ee8e331bd678194c88001c8dab5fbeb, type: 3}
     Orientations: 0a000000f6ffffff
-    Walls: []
   - TileGroundObj: {fileID: 7168034891996584457, guid: dd1fac51e0141eb448a7472ddbfb3951, type: 3}
     Orientations: 0a000000f6ffffff01000000
-    Walls: []
   - TileGroundObj: {fileID: 7168034891996584457, guid: 3c3d93012c6336b4c97804e05a86b34c, type: 3}
     Orientations: 0a000000ffffffff
-    Walls: []
   - TileGroundObj: {fileID: 7168034891996584457, guid: 6dac5135594912149b2b6f3f8783f3df, type: 3}
     Orientations: f6ffffff01000000
-    Walls: []
   - TileGroundObj: {fileID: 7168034891996584457, guid: a136e24cc5d0af047b27f8f46ee5688c, type: 3}
     Orientations: 01000000
-    Walls: []
   - TileGroundObj: {fileID: 7168034891996584457, guid: 15c86387e5078d046a0d52f89408d753, type: 3}
     Orientations: 0a000000
-    Walls: []
   - TileGroundObj: {fileID: 7168034891996584457, guid: 3f63388f2ee56db48bf96be87341b9a7, type: 3}
     Orientations: f6ffffff
-    Walls: []
   - TileGroundObj: {fileID: 7168034891996584457, guid: 303f18bf39886b94a8bf5c28adb992c3, type: 3}
     Orientations: 0a000000f6ffffffffffffff
-    Walls: []
+  - TileGroundObj: {fileID: 7168034891996584457, guid: 5dd52fdde8253ea479c467e0d3c3df62, type: 3}
+    Orientations: 0a000000f6ffffffffffffff01000000
   GeneratedTiles: []
   minTilesCount: 10
   maxTilesCount: 20
@@ -13048,6 +13037,9 @@ MonoBehaviour:
   QuotesTable:
     m_TableReference:
       m_TableCollectionName: GUID:e420ef5f4700b1a46bb52e507b753ffe
+  EN: {fileID: 11400000, guid: 454eb4b054af8bc4e852c16a4bfb2585, type: 2}
+  FR: {fileID: 11400000, guid: 42ac4a7aa4539984e861efcabdfd4004, type: 2}
+  IT: {fileID: 11400000, guid: ad98a96345f84694ab676c3769fae480, type: 2}
 --- !u!1 &1817953571
 GameObject:
   m_ObjectHideFlags: 0
@@ -18682,7 +18674,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 41
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 300
@@ -18803,7 +18795,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 41
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 300
@@ -19080,7 +19072,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 41
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 300

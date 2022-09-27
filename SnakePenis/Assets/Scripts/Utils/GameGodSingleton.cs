@@ -80,4 +80,12 @@ public class GameGodSingleton : MonoBehaviour
             return Instance.mainCameraObject.GetComponent<Camera>();
         }
     }
+
+    public static TableClothHandler TableClothHandler
+    {
+        get
+        {
+            return Instance.GetComponent<TableClothHandler>();
+        }
+    }
 }

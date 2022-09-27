@@ -12,6 +12,9 @@ public class LocalizedStringUser : MonoBehaviour
     public LocalizedStringTable SpecialsStringTable;
     public LocalizedStringTable QuotesTable;
 
+    [Header("Locales")]
+    public Locale EN, FR, IT;
+
     private void Awake()
     {
         if (Instance != null)
@@ -19,6 +22,25 @@ public class LocalizedStringUser : MonoBehaviour
             Debug.LogError("Found more than one LocalizedStringUser in the scene.");
         }
         Instance = this;
+    }
+
+    private void Start()
+    {
+        if (Application.systemLanguage == SystemLanguage.French)
+        {
+            Debug.Log("This system is in French. ");
+            LocalizationSettings.SelectedLocale = FR;
+        }
+        else if (Application.systemLanguage == SystemLanguage.English)
+        {
+            Debug.Log("This system is in English. ");
+            LocalizationSettings.SelectedLocale = EN;
+        }
+        else if (Application.systemLanguage == SystemLanguage.Italian)
+        {
+            Debug.Log("This system is in English. ");
+            LocalizationSettings.SelectedLocale = IT;
+        }
     }
 
     public static string GetLocalizedStringWithPlayerName(string s)
