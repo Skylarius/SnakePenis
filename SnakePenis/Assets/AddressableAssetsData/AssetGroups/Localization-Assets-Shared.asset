@@ -33,6 +33,28 @@ MonoBehaviour:
     m_Address: Assets/Localization/Quotes Shared Data.asset
     m_ReadOnly: 1
     m_SerializedLabels: []
+  - m_GUID: 5eea6e15617a74148bbfe75b48fe18c6
+    m_Address: Assets/Localization/SoundEffects Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+  - m_GUID: 781c76b3cda2a534a8ce753e690c0fd9
+    m_Address: death2
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-fr
+    - Locale-en
+  - m_GUID: ba5796a2818069f4e8a09ac8b0f528f6
+    m_Address: death1
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Locale-fr
+  - m_GUID: 24056b082cc28434094e5fccf73a9927
+    m_Address: death0
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Locale-fr
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: d2eab36990f17b4429ffccca6c722885, type: 2}
   m_SchemaSet:

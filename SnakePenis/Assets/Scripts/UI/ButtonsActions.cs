@@ -10,6 +10,7 @@ public class ButtonsActions : MonoBehaviour
     public Sprite pauseImage;
     public GameObject SettingsMenuObj;
     public GameObject DebugModePanel;
+    public GameObject LanguagePanel;
     public void ExitButtonFunction()
     {
         Application.Quit();
@@ -74,5 +75,16 @@ public class ButtonsActions : MonoBehaviour
         {
             hiddenButtonCounter++;
         }
+    }
+
+    public void SetLanguageButtonFunction(UnityEngine.Localization.Locale l)
+    {
+        LocalizedStringUser.SetLanguage(l);
+        LanguagePanel.SetActive(false);
+    }
+
+    public void ToggleLanguagePanel()
+    {
+        LanguagePanel.SetActive(!LanguagePanel.activeSelf);
     }
 }

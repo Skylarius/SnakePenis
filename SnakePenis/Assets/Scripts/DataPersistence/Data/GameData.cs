@@ -33,6 +33,9 @@ public class GameData
     public bool FirstPerson;
     public bool Labyrinth;
 
+    //Language
+    public string Language;
+
     // Stats
     public StatsData Stats;
 
@@ -66,6 +69,9 @@ public class GameData
         Teleport = false;
         ACappella = false;
         Labyrinth = false;
+
+        //Language
+        Language = "";
 
         Stats = new StatsData();
     }

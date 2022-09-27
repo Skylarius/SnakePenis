@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 
-public class LocalizedStringUser : MonoBehaviour
+public class LocalizedStringUser : MonoBehaviour, IDataPersistence
 {
     public static LocalizedStringUser Instance { get; private set; }
     public LocalizedStringTable UITextStringTable;
@@ -14,6 +14,7 @@ public class LocalizedStringUser : MonoBehaviour
 
     [Header("Locales")]
     public Locale EN, FR, IT;
+    private Locale selectedLocale = null;
 
     private void Awake()
     {
@@ -26,21 +27,31 @@ public class LocalizedStringUser : MonoBehaviour
 
     private void Start()
     {
+        if (selectedLocale != null)
+        {
+            return;
+        }
         if (Application.systemLanguage == SystemLanguage.French)
         {
             Debug.Log("This system is in French. ");
-            LocalizationSettings.SelectedLocale = FR;
+            SetLanguage(FR);
         }
         else if (Application.systemLanguage == SystemLanguage.English)
         {
             Debug.Log("This system is in English. ");
-            LocalizationSettings.SelectedLocale = EN;
+            SetLanguage(EN);
         }
         else if (Application.systemLanguage == SystemLanguage.Italian)
         {
-            Debug.Log("This system is in English. ");
-            LocalizationSettings.SelectedLocale = IT;
+            Debug.Log("This system is in Italian. ");
+            SetLanguage(IT);
         }
+    }
+
+    public static void SetLanguage(Locale l)
+    {
+        LocalizationSettings.SelectedLocale = l;
+        Instance.selectedLocale = l;
     }
 
     public static string GetLocalizedStringWithPlayerName(string s)
@@ -63,8 +74,7 @@ public class LocalizedStringUser : MonoBehaviour
     internal static string GetRandomLocalizedQuote()
     {
         UnityEngine.Localization.Tables.StringTable table = Instance.QuotesTable.GetTable();
-        int index = UnityEngine.Random.Range(0, table.Count);
-        string s = table.SharedData.Entries[index].Key;
+        string s = table.SharedData.Entries[UnityEngine.Random.Range(0, table.Count)].Key;
         return GetLocalizedString(s, Instance.QuotesTable);
     }
 
@@ -93,5 +103,37 @@ public class LocalizedStringUser : MonoBehaviour
     public static string GetLocalizedQuote(string s)
     {
         return GetLocalizedString(s, Instance.QuotesTable);
+    }
+
+    public void LoadData(GameData data)
+    {
+        if (data.Language == "EN")
+        {
+            SetLanguage(EN);
+        }
+        if (data.Language == "FR")
+        {
+            SetLanguage(FR);
+        }
+        if (data.Language == "IT")
+        {
+            SetLanguage(IT);
+        }
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        if (selectedLocale == EN)
+        {
+            data.Language = "EN";
+        }
+        if (selectedLocale == FR)
+        {
+            data.Language = "FR";
+        }
+        if (selectedLocale == IT)
+        {
+            data.Language = "IT";
+        }
     }
 }

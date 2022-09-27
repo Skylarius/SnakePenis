@@ -99,6 +99,10 @@ MonoBehaviour:
     m_Key: NAME
     m_Metadata:
       m_Items: []
+  - m_Id: 2998857976508416
+    m_Key: NEW_PLAYER_PLACEHOLDER
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

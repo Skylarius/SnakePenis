@@ -1,11 +1,37 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 
 public class AudioSystem : MonoBehaviour
 {
     private AudioSource[] audioSources;
-    public AudioClip[] growSounds, deathSounds;
+    public LocalizedAudioClip[] localizedAudioClips;
+    private Locale currentLocale = null;
+    public List<AudioClip> _growSounds = null;
+    public AudioClip[] growSounds
+    {
+        get
+        {
+            if (LocalizationSettings.SelectedLocale != currentLocale)
+            {
+                if (_growSounds == null)
+                {
+                    _growSounds = new List<AudioClip>();
+                } else
+                {
+                    _growSounds.Clear();
+                }
+                for (int i=0; i< localizedAudioClips.Length; i++)
+                {
+                    _growSounds.Add(localizedAudioClips[i].LoadAsset());
+                }
+            }
+            return _growSounds.ToArray();
+        }
+    }
+    public AudioClip[] deathSounds;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,7 +40,7 @@ public class AudioSystem : MonoBehaviour
 
     void Play(AudioClip[] clipArray, bool setAsAudioSourceClip = false)
     {
-        if (clipArray.Length > 0 && audioSources.Length > 0)
+        if (clipArray != null && clipArray.Length > 0 && audioSources.Length > 0)
         {
             int clipIndex = Random.Range(0, clipArray.Length);
             AudioSource targetSource = null;
@@ -41,7 +67,7 @@ public class AudioSystem : MonoBehaviour
 
     void Stop(AudioClip[] clipArray, bool clearAudioSourceClip = false)
     {
-        if (clipArray.Length > 0 && audioSources.Length > 0)
+        if (clipArray != null && clipArray.Length > 0 && audioSources.Length > 0)
         {
             foreach (AudioSource audioSource in audioSources)
             {

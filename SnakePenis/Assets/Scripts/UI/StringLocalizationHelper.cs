@@ -8,6 +8,10 @@ public class StringLocalizationHelper : MonoBehaviour
     {
         get
         {
+            if (ScoreManager.CurrentScoreName == "")
+            {
+                return LocalizedStringUser.GetLocalizedUIString("NEW_PLAYER_PLACEHOLDER");
+            }
             return ScoreManager.CurrentScoreName;
         }
     }

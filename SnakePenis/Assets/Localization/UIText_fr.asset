@@ -108,6 +108,10 @@ MonoBehaviour:
     m_Localized: Nom
     m_Metadata:
       m_Items: []
+  - m_Id: 2998857976508416
+    m_Localized: Nouveau Joueur
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
