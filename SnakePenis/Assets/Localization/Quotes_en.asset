@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Quotes_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: e420ef5f4700b1a46bb52e507b753ffe, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 13122662400
+    m_Localized: Shake before use
+    m_Metadata:
+      m_Items: []
+  - m_Id: 194958323712
+    m_Localized: On the one hand, it feels pretty great
+    m_Metadata:
+      m_Items: []
+  - m_Id: 219092348928
+    m_Localized: The difference with a bonus check? Someone is always down to blow
+      your bonus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 251774365696
+    m_Localized: It's the lightest thing in the world, as even a thought can raise
+      it
+    m_Metadata:
+      m_Items: []
+  - m_Id: 268480278528
+    m_Localized: It is a sin to put it in, but it's a shame to pull it out
+    m_Metadata:
+      m_Items: []
+  - m_Id: 284758372352
+    m_Localized: "The best penis joke ever? I would tell you, but it\u2019s long"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 306568753152
+    m_Localized: I would tell a joke but I don't want to come off as cocky
+    m_Metadata:
+      m_Items: []
+  - m_Id: 322200924160
+    m_Localized: It gets hard for no reason, and it is much too short...talking about
+      life
+    m_Metadata:
+      m_Items: []
+  - m_Id: 338005061632
+    m_Localized: "Cover me, I\u2019m going in"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

@@ -14,6 +14,13 @@ public class ScoreManager : MonoBehaviour, IDataPersistence
 
     public static string ScoreBeforeBonuses = "";
 
+    public string Name
+    {
+        get { 
+            return CurrentScoreName;
+        }
+    }
+
     private void Start()
     {
         LocalScores = new List<ScoreWebInterface.ScoreElem>();
@@ -23,7 +30,7 @@ public class ScoreManager : MonoBehaviour, IDataPersistence
         // Fetch the global high score list from database
         if (scoreText)
         {
-            scoreText.text = "Caricamento punteggio...";
+            scoreText.text = LocalizedStringUser.GetLocalizedUIString("LOADING_SCORE");
         }
         int returnCode = -1;
         yield return StartCoroutine(ScoreWebInterface.GetScores(status => returnCode = status));
@@ -39,7 +46,7 @@ public class ScoreManager : MonoBehaviour, IDataPersistence
             print("Error in loading scores");
             if (scoreText)
             {
-                scoreText.text = "Errore caricamento punteggio";
+                scoreText.text = LocalizedStringUser.GetLocalizedUIString("ERROR_LOADING_SCORE");
             }
             yield return 2f;
         }
@@ -49,7 +56,7 @@ public class ScoreManager : MonoBehaviour, IDataPersistence
     {
         if (scoreText)
         {
-            scoreText.text = "Salvataggio nuovo punteggio...";
+            scoreText.text = LocalizedStringUser.GetLocalizedUIString("SAVING_NEW_SCORE");
         }
         int returnCode = -1;
         yield return StartCoroutine(ScoreWebInterface.PostScores(CurrentID, CurrentScoreName, int.Parse(CurrentScore), int.Parse(CurrentLength), status => returnCode = status));
@@ -58,7 +65,7 @@ public class ScoreManager : MonoBehaviour, IDataPersistence
             print("Success: score committed");
             if (scoreText)
             {
-                scoreText.text = "Punteggio Salvato";
+                scoreText.text = LocalizedStringUser.GetLocalizedUIString("SCORE_SAVED"); ;
             }
             yield return 1f;
         }
@@ -67,7 +74,7 @@ public class ScoreManager : MonoBehaviour, IDataPersistence
             print("Error in commiting scores");
             if (scoreText)
             {
-                scoreText.text = "Errore salvataggio punteggio";
+                scoreText.text = LocalizedStringUser.GetLocalizedUIString("ERROR_SAVING_SCORE");
             }
             yield return 2f;
         }
@@ -78,7 +85,7 @@ public class ScoreManager : MonoBehaviour, IDataPersistence
         // Fetch the global high score list from database
         if (infoText)
         {
-            infoText.text = "Aggiornamento nome...";
+            infoText.text = LocalizedStringUser.GetLocalizedUIString("UPDATING_NAME");
         }
         int returnCode = -1;
         yield return StartCoroutine(ScoreWebInterface.UpdateName(CurrentID, CurrentScoreName, status => returnCode = status));
@@ -87,7 +94,7 @@ public class ScoreManager : MonoBehaviour, IDataPersistence
             print("Success: name updated");
             if (infoText)
             {
-                infoText.text = "Nome Aggiornato!";
+                infoText.text = LocalizedStringUser.GetLocalizedUIString("NAME_UPDATED");
             }
             yield return 2f;
         }
@@ -96,7 +103,7 @@ public class ScoreManager : MonoBehaviour, IDataPersistence
             print("Errore aggiornamento nome");
             if (infoText)
             {
-                infoText.text = "Errore Aggiornamento nome";
+                infoText.text = LocalizedStringUser.GetLocalizedUIString("ERROR_UPDATING_NAME");
             }
             yield return 2f;
         }

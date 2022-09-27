@@ -11,7 +11,6 @@ public class GameOverProcedures : MonoBehaviour
     public Text PenisQuoteUI;
     public Text ScoreText;
     public Text BonusText;
-    public List<string> PenisQuotes;
     private ScoreManager scoreManager;
     private LevelProgressionManager levelProgressionManager;
     public InputField inputNameField;
@@ -38,18 +37,19 @@ public class GameOverProcedures : MonoBehaviour
         GameOverUI.SetActive(true);
 
         // Write Wisdom and Length
-        PenisQuoteUI.text = "Dice il saggio: \"<b>" + PenisQuotes[UnityEngine.Random.Range(0, PenisQuotes.Count)] + "</b>\"";
+        PenisQuoteUI.text = $"{LocalizedStringUser.GetLocalizedUIString("WISE_MAN_SAID")}: \"<b>" + 
+            LocalizedStringUser.GetRandomLocalizedQuote() + "</b>\"";
         yield return new WaitForSeconds(0.8f);
-        PenisQuoteUI.text += "\nMassima Erezione : <b>" + ScoreManager.CurrentLength + " cm</b>";
+        PenisQuoteUI.text += "\n" + LocalizedStringUser.GetLocalizedStringWithArray("MAX_LENGTH", ScoreManager.CurrentLength);
         yield return new WaitForSeconds(0.8f);
 
         // Add Old Score
-        BonusText.text += $"<color=black>BASE SCORE: {ScoreManager.ScoreBeforeBonuses}</color>\n";
+        BonusText.text += $"<color=black>{LocalizedStringUser.GetLocalizedUIString("BASE_SCORE")}: {ScoreManager.ScoreBeforeBonuses}</color>\n";
 
         // Add bonuses
         foreach (SettingsPanelManager.Bonus bonus in settingsPanelManager.Bonuses)
         {
-            if(bonus.TotalBonus > 0)
+            if(bonus.TotalBonus != 0)
             {
                 string colorBegin, colorEnd;
                 if (bonus.Percent < 0)
@@ -67,7 +67,8 @@ public class GameOverProcedures : MonoBehaviour
         }
 
         // Show score
-        PenisQuoteUI.text += "\nPunteggio : <b>" + ScoreManager.CurrentScore + "</b>";
+        //PenisQuoteUI.text += "\nPunteggio : <b>" + ScoreManager.CurrentScore + "</b>";
+        PenisQuoteUI.text += "\n" + LocalizedStringUser.GetLocalizedStringWithArray("SCORE", ScoreManager.CurrentScore);
 
         // Get Name
         bool isNewUser = false;

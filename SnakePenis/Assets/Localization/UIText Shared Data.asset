@@ -1,0 +1,112 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: UIText Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: UIText
+  m_TableCollectionNameGuidString: 550cbe4534893884bb6ea9c6671d312a
+  m_Entries:
+  - m_Id: 158394392272896
+    m_Key: HIGH_SCORES
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159022606737408
+    m_Key: INSERT_NAME
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159660325494784
+    m_Key: RESTART
+    m_Metadata:
+      m_Items: []
+  - m_Id: 238516780687360
+    m_Key: PROGRESS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 247290060890112
+    m_Key: MAX_LENGTH
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1171840793600000
+    m_Key: SCORE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2750020410142720
+    m_Key: BASE_SCORE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2751255729139712
+    m_Key: WISE_MAN_SAID
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2770892701298688
+    m_Key: SETTINGS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2779475027423232
+    m_Key: SAVING_NEW_SCORE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2780067938430976
+    m_Key: SCORE_SAVED
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2780218086125568
+    m_Key: ERROR_SAVING_SCORE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2780666817933312
+    m_Key: UPDATING_NAME
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2780694223515648
+    m_Key: NAME_UPDATED
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2780709826326528
+    m_Key: ERROR_UPDATING_NAME
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2781797375799296
+    m_Key: LOADING_SCORE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2781824936570880
+    m_Key: ERROR_LOADING_SCORE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2782243163205632
+    m_Key: LEVEL
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2783812940197888
+    m_Key: NEW_LEVEL
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2783949972303872
+    m_Key: NEW_UNLOCKABLE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2795825162612736
+    m_Key: NAME
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 8730839643121516545
+  references:
+    version: 2
+    RefIds:
+    - rid: 8730839643121516545
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1663571258774

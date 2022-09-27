@@ -1,0 +1,117 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: UIText_fr
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: fr
+  m_SharedData: {fileID: 11400000, guid: 550cbe4534893884bb6ea9c6671d312a, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 8730839643121516547
+  m_TableData:
+  - m_Id: 158394392272896
+    m_Localized: "Scores \xC9lev\xE9s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159022606737408
+    m_Localized: Enfile ton nom...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159660325494784
+    m_Localized: Nouveau jeu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 238516780687360
+    m_Localized: "Progr\xE9s de {helper.PlayerName}\t"
+    m_Metadata:
+      m_Items:
+      - rid: 8730839643121516547
+  - m_Id: 247290060890112
+    m_Localized: "\xC9rection Maximale : <b>{0} cm</b>"
+    m_Metadata:
+      m_Items:
+      - rid: 8730839643121516547
+  - m_Id: 1171840793600000
+    m_Localized: 'Score: <b>{0}</b>'
+    m_Metadata:
+      m_Items:
+      - rid: 8730839643121516547
+  - m_Id: 2750020410142720
+    m_Localized: Score initial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2751255729139712
+    m_Localized: Comme on dit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2770892701298688
+    m_Localized: "R\xE9glages"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2779475027423232
+    m_Localized: Sauvegarder de nouveau score...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2780067938430976
+    m_Localized: "Score sauvegard\xE9!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2780218086125568
+    m_Localized: Erreur de sauvegarde du score
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2780666817933312
+    m_Localized: "Mise \xE0 jour du nom..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2780694223515648
+    m_Localized: "Nome mise \xE0 jour!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2780709826326528
+    m_Localized: "Erreur de la mise \xE0 jour du nom"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2781797375799296
+    m_Localized: Chargement du score...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2781824936570880
+    m_Localized: Erreur chargement du score...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2782243163205632
+    m_Localized: Niveau
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2783812940197888
+    m_Localized: WOW, tu as atteint le niveau {0}!!!
+    m_Metadata:
+      m_Items:
+      - rid: 8730839643121516547
+  - m_Id: 2783949972303872
+    m_Localized: "C'est fou! Tu as d\xE9bloqu\xE9 {0}!"
+    m_Metadata:
+      m_Items:
+      - rid: 8730839643121516547
+  - m_Id: 2795825162612736
+    m_Localized: Nom
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 8730839643121516547
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 0060fca9970000000060bca77d0100000060fcd38804000000607c12fdd300000060fc03eed8000000603cb4e8e0000000603c72c829040000f06bf5dce3090000f02bddfce30900

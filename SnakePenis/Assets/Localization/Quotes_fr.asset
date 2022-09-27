@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Quotes_fr
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: fr
+  m_SharedData: {fileID: 11400000, guid: e420ef5f4700b1a46bb52e507b753ffe, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 13122662400
+    m_Localized: "Savoir ce qui constitue un p\xE9nis est une question qui reste
+      \xE0 d\xE9battre"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 194958323712
+    m_Localized: "L'inutile morceau de chair au bout du p\xE9nis s'appelle un homme."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 219092348928
+    m_Localized: "Le phallus en ce si\xE8cle devient doctrinaire"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 251774365696
+    m_Localized: "Le th\xE9\xE2tre est l\u2019\xE9rection du phallus universel"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 268480278528
+    m_Localized: La langue sert occasionnellement pour parler
+    m_Metadata:
+      m_Items: []
+  - m_Id: 284758372352
+    m_Localized: 'Il y a deux sexes : le beau et le bon'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 306568753152
+    m_Localized: "M\xE2le. Membre du sexe inf\xE9rieur, ou n\xE9gligeable. Le m\xE2le
+      de la race humaine est avant tout consid\xE9r\xE9 (par la femelle) comme un
+      producteur"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 322200924160
+    m_Localized: Agiter avant emploi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 338005061632
+    m_Localized: "Le phallus en ce si\xE8cle devient doctrinaire"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

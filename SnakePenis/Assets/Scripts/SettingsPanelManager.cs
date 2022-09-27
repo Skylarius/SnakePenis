@@ -65,6 +65,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         public bool enabled;
         public Unlockable Unlockable;
         public string Title;
+        public UnityEngine.Localization.LocalizedString TitleOnButton;
         public string Info;
         public int BonusPercent;
         public int BonusXPAmount;
@@ -85,6 +86,22 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
                 {
                     return b.GetComponentInChildren<Text>();
                 } else
+                {
+                    return null;
+                }
+            }
+        }
+
+        public Image ButtonImage
+        {
+            get
+            {
+                Button b = Button;
+                if (b != null)
+                {
+                    return b.GetComponentInChildren<Image>();
+                }
+                else
                 {
                     return null;
                 }
@@ -129,7 +146,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         public virtual void Switch()
         {
             SwitchConditioned(!this.enabled);
-            settingsPanelManager.infoText.text = this.Info;
+            settingsPanelManager.infoText.text = LocalizedStringUser.GetLocalizedBonusString(this.Info);
         }
 
         public void SetSettingsPanelManager(SettingsPanelManager settingsPanelManager)
@@ -248,7 +265,6 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
                 Portal2 = null;
             }
         }
-
         public TeleportCouple[] TeleportCouples;
         internal List<TeleportCouple> instancedCouples;
         public float SpawnRadius;
@@ -484,7 +500,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         if (dt1 > dt2)
         {
             bonus = new Bonus();
-            bonus.Name = DailyBonusTitle;
+            bonus.Name = LocalizedStringUser.GetLocalizedBonusString(DailyBonusTitle);
             bonus.XPAmount = DailyBonusXPAmount * LevelProgressionManager.CurrentLevel;
             yield return bonus;
             DailyBonusTimeStamp = System.DateTime.Today.ToString("dd-MM-yyyy");
@@ -492,7 +508,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         if (isSoundEnabled == false)
         {
             bonus = new Bonus();
-            bonus.Name = SoundBonusTitle;
+            bonus.Name = LocalizedStringUser.GetLocalizedBonusString(SoundBonusTitle);
             bonus.Percent = SoundBonusPercent;
             yield return bonus;
         }
@@ -502,7 +518,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             if (special.IsEnabled())
             {
                 bonus = new Bonus();
-                bonus.Name = special.Title;
+                bonus.Name = LocalizedStringUser.GetLocalizedBonusString(special.Title);
                 bonus.Percent = special.BonusPercent;
                 bonus.XPAmount = special.GetXPAmount();
                 yield return bonus;
@@ -604,7 +620,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             realSnakeBinder.UpdateBinder();
             SquareBallsSpecial.enabled = false;
         }
-        SquareBallsSpecial.ButtonText.text = (SquareBallsSpecial.enabled) ? "Disattiva" : "Attiva";
+        SetSpecialButtonOn(SquareBallsSpecial, SquareBallsSpecial.enabled);
     }
 
     void SwitchAfroStyle(bool condition)
@@ -630,7 +646,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             snakeRenderer.material = OriginalPink;
             AfroStyleSpecial.enabled = false;
         }
-        AfroStyleSpecial.ButtonText.text = (AfroStyleSpecial.enabled) ? "Disattiva" : "Attiva";
+        SetSpecialButtonOn(AfroStyleSpecial, AfroStyleSpecial.enabled);
     }
 
     void SwitchDickingJump(bool condition)
@@ -659,7 +675,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             }
             JumpingDickSpecial.enabled = false;
         }
-        JumpingDickSpecial.ButtonText.text = (JumpingDickSpecial.enabled) ? "Disattiva" : "Attiva";
+        SetSpecialButtonOn(JumpingDickSpecial, JumpingDickSpecial.enabled);
     }
 
     void SwitchRainbowStyle(bool condition)
@@ -687,7 +703,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             RainbowSpecial.snakeParticleSystem.GetComponent<Renderer>().material = RainbowSpecial.particleSystemOriginalMaterial;
             RainbowSpecial.enabled = false;
         }
-        RainbowSpecial.ButtonText.text = (RainbowSpecial.enabled) ? "Disattiva" : "Attiva";
+        SetSpecialButtonOn(RainbowSpecial, RainbowSpecial.enabled);
     }
 
     void SwitchMovingWalls(bool condition)
@@ -710,7 +726,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             }
             MovingWallsSpecial.enabled = false;
         }
-        MovingWallsSpecial.ButtonText.text = (MovingWallsSpecial.enabled) ? "Disattiva" : "Attiva";
+        SetSpecialButtonOn(MovingWallsSpecial, MovingWallsSpecial.enabled);
     }
 
     void SwitchFree360(bool condition)
@@ -743,7 +759,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             }
             Free360MovementSpecial.enabled = false;
         }
-        Free360MovementSpecial.ButtonText.text = (Free360MovementSpecial.enabled) ? "Disattiva" : "Attiva";
+        SetSpecialButtonOn(Free360MovementSpecial, Free360MovementSpecial.enabled);
     }
 
     void SwitchPillsBlower(bool condition)
@@ -761,7 +777,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             }
             PillsBlowerSpecial.enabled = false;
         }
-        PillsBlowerSpecial.ButtonText.text = (PillsBlowerSpecial.enabled) ? "Disattiva" : "Attiva";
+        SetSpecialButtonOn(PillsBlowerSpecial, PillsBlowerSpecial.enabled);
     }
 
     void SwitchTeleport(bool condition)
@@ -801,7 +817,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             TeleportSpecial.instancedCouples.Clear();
             TeleportSpecial.enabled = false;
         }
-        TeleportSpecial.ButtonText.text = (TeleportSpecial.enabled) ? "Disattiva" : "Attiva";
+        SetSpecialButtonOn(TeleportSpecial, TeleportSpecial.enabled);
     }
 
     private List<GameObject> GetAllWalls()
@@ -916,7 +932,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             }
             ACappellaSpecial.enabled = false;
         }
-        ACappellaSpecial.ButtonText.text = (ACappellaSpecial.enabled) ? "Disattiva" : "Attiva";
+        SetSpecialButtonOn(ACappellaSpecial, ACappellaSpecial.enabled);
     }
 
     void SwitchFirstPerson(bool condition)
@@ -989,7 +1005,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             }
             FirstPersonSpecial.enabled = false;
         }
-        FirstPersonSpecial.ButtonText.text = (FirstPersonSpecial.enabled) ? "Disattiva" : "Attiva";
+        SetSpecialButtonOn(FirstPersonSpecial, FirstPersonSpecial.enabled);
     }
 
     void SwitchLabyrinth(bool condition)
@@ -1029,15 +1045,15 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             {
                 LabyrinthSpecial.disableNextGame = false;
             }
-            if (FirstPersonSpecial.enabled)
-            {
-                UseCamera(CameraType.FirstPerson);
-            } else
-            {
-                UseCamera(CameraType.Main);
-            }
+            //if (FirstPersonSpecial.enabled)
+            //{
+            //    UseCamera(CameraType.FirstPerson);
+            //} else
+            //{
+            //    UseCamera(CameraType.Main);
+            //}
         }
-        LabyrinthSpecial.ButtonText.text = (LabyrinthSpecial.enabled && !LabyrinthSpecial.disableNextGame) ? "Disattiva" : "Attiva";
+        SetSpecialButtonOn(LabyrinthSpecial, LabyrinthSpecial.enabled && !LabyrinthSpecial.disableNextGame);
     }
 
     void UseLabyrinthCamera(bool condition)
@@ -1117,18 +1133,24 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         }
     }
 
+    void SetSpecialButtonOn(BaseSpecial special, bool condition)
+    {
+        special.ButtonText.text = condition ? "<b>ON</b>" : "OFF";
+        special.ButtonImage.color = condition ? Color.green : Color.red;
+    }
+
     void LoadSpecial(BaseSpecial special, bool condition)
     {
         if (condition == true)
         {
             special.SwitchConditioned(true);
-            special.ButtonText.text = "Disattiva";
+            SetSpecialButtonOn(special, true);
         }
         else
         {
             print($"NO {special.Title}");
             special.enabled = false;
-            special.ButtonText.text = "Attiva";
+            SetSpecialButtonOn(special, false);
         }
     }
 

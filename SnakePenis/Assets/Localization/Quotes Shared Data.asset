@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Quotes Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: Quotes
+  m_TableCollectionNameGuidString: e420ef5f4700b1a46bb52e507b753ffe
+  m_Entries:
+  - m_Id: 13122662400
+    m_Key: QUOTE_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 194958323712
+    m_Key: QUOTE_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 219092348928
+    m_Key: QUOTE_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 251774365696
+    m_Key: QUOTE_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 268480278528
+    m_Key: QUOTE_5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 284758372352
+    m_Key: QUOTE_6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 306568753152
+    m_Key: QUOTE_7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 322200924160
+    m_Key: QUOTE_8
+    m_Metadata:
+      m_Items: []
+  - m_Id: 338005061632
+    m_Key: QUOTE_9
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 8730839815050756098
+  references:
+    version: 2
+    RefIds:
+    - rid: 8730839815050756098
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1664227480131

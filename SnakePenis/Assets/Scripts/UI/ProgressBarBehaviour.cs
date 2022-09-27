@@ -27,8 +27,7 @@ public class ProgressBarBehaviour : MonoBehaviour
         float oldCompletion = LevelProgressionManager.OldCompletionPercent;
         float currentCompletion = LevelProgressionManager.CompletionPercent;
         ProgressBarSprite.GetComponent<RectTransform>().localPosition = UnityEngine.Vector3.right * GetBarPositionX(oldCompletion);
-        LevelXPTitleText.text = (ScoreManager.CurrentScoreName == "") ? "" : ("Progressi di " + ScoreManager.CurrentScoreName);
-        LevelXPText.text = "Livello : <b>" + oldLevel + "</b>";
+        LevelXPText.text = LocalizedStringUser.GetLocalizedUIString("LEVEL") + ": <b>" + oldLevel + "</b>";
         LevelXPText.text += "\nEXP : <b>" + LevelProgressionManager.OldLevelRelativeXP + " / " + LevelProgressionManager.GetLevelRelativeXP(oldLevel + 1) + "</b>";
         yield return new WaitForSeconds(3f);
 
@@ -59,7 +58,7 @@ public class ProgressBarBehaviour : MonoBehaviour
                     GetProgressBarTimeParabola(t)
                     );
                 XP = new BigInteger(Mathf.Lerp((int)fromXP, (int)toXP, GetProgressBarTimeParabola(t)));
-                LevelXPText.text = "Livello : <b>" + level + "</b>";
+                LevelXPText.text = LocalizedStringUser.GetLocalizedUIString("LEVEL") + ": <b>" + level + "</b>";
                 LevelXPText.text += "\nEXP : <b>" + XP + " / " + nextLevelXP + "</b>";
                 yield return new WaitForEndOfFrame();
             }
@@ -73,14 +72,14 @@ public class ProgressBarBehaviour : MonoBehaviour
 
     IEnumerator NewLevelAnimation(int level)
     {
-        NewLevelBubble.GetComponentInChildren<Text>().text = "CAZZO, hai raggiunto il livello " + level + "!!!";
+        NewLevelBubble.GetComponentInChildren<Text>().text = LocalizedStringUser.GetLocalizedStringWithArray("NEW_LEVEL", level.ToString());
         NewLevelBubble.SetActive(true);
         yield return new WaitForSeconds(2.5f);
         NewLevelBubble.SetActive(false);
         SettingsPanelManager.BaseSpecial special = settingsPanelManager.GetSpecialAtLevel(level);
         if (special != null)
         {
-            NewLevelBubble.GetComponentInChildren<Text>().text = "MIZZICA, HAI SBLOCCATO " + special.UnlockableText.text + "!!!";
+            NewLevelBubble.GetComponentInChildren<Text>().text = LocalizedStringUser.GetLocalizedStringWithArray("NEW_UNLOCKABLE", special.TitleOnButton.GetLocalizedString());
             NewLevelBubble.SetActive(true);
             yield return new WaitForSeconds(2.5f);
             NewLevelBubble.SetActive(false);

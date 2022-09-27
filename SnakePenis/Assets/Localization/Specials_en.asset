@@ -1,0 +1,167 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Specials_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 28e491b5b04a45e488bea89c979bca2c, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 10124812288
+    m_Localized: Morning glory
+    m_Metadata:
+      m_Items: []
+  - m_Id: 979814342656
+    m_Localized: Too quiet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1180436291584
+    m_Localized: Brass Clankers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1940473536512
+    m_Localized: Multicultural
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2588199903232
+    m_Localized: Jumping Out
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3723556052992
+    m_Localized: Multisexual
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3991454638080
+    m_Localized: Open Sesame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6113264951296
+    m_Localized: Free Willy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6647552172032
+    m_Localized: Suck it up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7199019261952
+    m_Localized: Space Time Exit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7238848372736
+    m_Localized: Space Time Entrance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9893062664192
+    m_Localized: A Cappella
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10074797662208
+    m_Localized: On Horseback
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10665892536320
+    m_Localized: Globetrotter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 50685915455488
+    m_Localized: Square Balls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 50850365726720
+    m_Localized: Afro Style
+    m_Metadata:
+      m_Items: []
+  - m_Id: 50928178454528
+    m_Localized: Jump
+    m_Metadata:
+      m_Items: []
+  - m_Id: 50959686066176
+    m_Localized: LGBTQ+ Style
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76520789663744
+    m_Localized: Moving Walls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76550984458240
+    m_Localized: All Around
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76576557129728
+    m_Localized: Pills Hoover
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76550984458241
+    m_Localized: Wormholes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76550984458242
+    m_Localized: A Cappella
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76550984458243
+    m_Localized: In Saddle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76550984458244
+    m_Localized: Migratory Bird
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1180436291587
+    m_Localized: 'Win the brawls with hard square (rolling) balls. '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1940473536517
+    m_Localized: Bigger, longer...but less racist.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2588199903233
+    m_Localized: Tap the gland to pull it out
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3723556052994
+    m_Localized: Acceptance, love and psychedelic attacks.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3991454638083
+    m_Localized: You'll be between a wall and a hard place
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6113264951297
+    m_Localized: Rotate at every degree and reach every place faster.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6647552172033
+    m_Localized: Suck distant pills...and lose some points.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7238848372737
+    m_Localized: What goes in...eventually goes out
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9893062664193
+    m_Localized: New soundtrack, perfect remedy for constipation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10074797662209
+    m_Localized: The ultimate immersive experience
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10665892536321
+    m_Localized: Too big for a small board
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

@@ -1,0 +1,168 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Specials_fr
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: fr
+  m_SharedData: {fileID: 11400000, guid: 28e491b5b04a45e488bea89c979bca2c, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 10124812288
+    m_Localized: Matinale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 979814342656
+    m_Localized: Trop silence
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1180436291584
+    m_Localized: "Dur \xE0 cuire"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1940473536512
+    m_Localized: Multiculturel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2588199903232
+    m_Localized: "Retrait Saut\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3723556052992
+    m_Localized: Multisexuel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3991454638080
+    m_Localized: "S\xE9same, ouvre-toi"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6113264951296
+    m_Localized: "H\xE9licopt\xE8re"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6647552172032
+    m_Localized: Suce
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7238848372736
+    m_Localized: Spatio-temp-oral
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7199019261952
+    m_Localized: Spatio-temp-anal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9893062664192
+    m_Localized: A Cappella
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10074797662208
+    m_Localized: "\xC0 dos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10665892536320
+    m_Localized: Globe-trotteur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 50685915455488
+    m_Localized: "Breloques Carr\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 50850365726720
+    m_Localized: Afro Style
+    m_Metadata:
+      m_Items: []
+  - m_Id: 50928178454528
+    m_Localized: Saut
+    m_Metadata:
+      m_Items: []
+  - m_Id: 50959686066176
+    m_Localized: LGBTQ+ Style
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76520789663744
+    m_Localized: Murs Mobiles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76550984458240
+    m_Localized: Tout Rond
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76576557129728
+    m_Localized: "Su\xE7eur de pilules"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76550984458241
+    m_Localized: Trous de ver
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76550984458242
+    m_Localized: A Cappella
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76550984458243
+    m_Localized: En Selle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76550984458244
+    m_Localized: Oiseau Migrateur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1180436291587
+    m_Localized: "Restez impressionn\xE9 par les cuilles carr\xE9e. Ces tournent
+      aussi."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1940473536517
+    m_Localized: Plus long, plus grand et pas raciste
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2588199903233
+    m_Localized: Appuyez le gland pour le retirer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3723556052994
+    m_Localized: "Amour et psych\xE9d\xE9liques pour tous les gens"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3991454638083
+    m_Localized: "Contre le mur, \xE7a est dur"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6113264951297
+    m_Localized: Fait une rotation pour touhcer tous les recoins rapidement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6647552172033
+    m_Localized: Suce pilules quu sont loin...mais tu vas perdre quelque point
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7238848372737
+    m_Localized: Ce qui entre va sortir.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9893062664193
+    m_Localized: "Nouvelle bande-son, parfaite si on est constip\xE9s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10074797662209
+    m_Localized: "L'exp\xE9rience immersive."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10665892536321
+    m_Localized: Trop grand pour ce monde.
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
