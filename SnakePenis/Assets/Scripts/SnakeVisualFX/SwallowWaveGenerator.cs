@@ -49,6 +49,7 @@ public class SwallowWaveGenerator : BaseSnakeComponent
             yield break;
         }
         isSwallowCoroutineRunning = true;
+        StartCoroutine(WaveGarbageCollectorCoroutine());
         GameObject SnakeBodyPart;
         Transform SnakeBoneTransform;
         while (true)
@@ -56,17 +57,21 @@ public class SwallowWaveGenerator : BaseSnakeComponent
             // Apply swallow scale to all snake except for Tail
             if (BodySizeWaveList.Count > 0)
             {
-                foreach (BodySizeWave bodySizeWave in BodySizeWaveList)
-                {
-                    SnakeBodyPart = snakeMovement.SnakeBody[bodySizeWave.BodyIndex];
-                    if (SnakeBodyPart == null)
+                lock (BodySizeWaveList)
+                { 
+                    foreach (BodySizeWave bodySizeWave in BodySizeWaveList)
                     {
-                        continue;
-                    }
-                    SnakeBoneTransform = snakeMovement.GetSnakeBoneTransform(SnakeBodyPart);
-                    if (SnakeBoneTransform)
-                    {
-                        SumWavesToTransform(bodySizeWave, SnakeBoneTransform);
+                        //SnakeBodyPart = snakeMovement.SnakeBody[bodySizeWave.BodyIndex];
+                        //if (SnakeBodyPart == null)
+                        //{
+                        //    continue;
+                        //}
+                        //SnakeBoneTransform = snakeMovement.GetSnakeBoneTransform(SnakeBodyPart);
+                        SnakeBoneTransform = snakeMovement.GetSnakeBoneTransformFromBodyIndex(bodySizeWave.BodyIndex);
+                        if (SnakeBoneTransform)
+                        {
+                            SumWavesToTransform(bodySizeWave, SnakeBoneTransform);
+                        }
                     }
                 }
             }
@@ -84,6 +89,7 @@ public class SwallowWaveGenerator : BaseSnakeComponent
             yield return new WaitForEndOfFrame();
         }
         isSwallowCoroutineRunning = false;
+        StopCoroutine(WaveGarbageCollectorCoroutine());
     }
 
     void SumWavesToTransform(BodySizeWave bodySizeWave, Transform SnakeBoneTransform)
@@ -140,6 +146,29 @@ public class SwallowWaveGenerator : BaseSnakeComponent
         snakeMovement.SnakeBody[index].GetComponent<Collider>().enabled = true;
     }
 
+    IEnumerator WaveGarbageCollectorCoroutine()
+    {
+        while (isSwallowCoroutineRunning)
+        {
+            if (BodySizeWaveList.Count > 0)
+            {
+                lock(BodySizeWaveList)
+                {
+                    int lastUsefulIndex = BodySizeWaveList.FindLastIndex(e => e.ContributingWaves.Exists(w => w > 0f));
+                    if (lastUsefulIndex == -1) //Every element is useless
+                    {
+                        BodySizeWaveList.Clear();
+                    } 
+                    else if (lastUsefulIndex != BodySizeWaveList.Count - 1) //If not every element is useless BUT if the useful one is not the last (in that case, do nothing)
+                    {
+                        BodySizeWaveList.RemoveRange(lastUsefulIndex + 1, BodySizeWaveList.Count - lastUsefulIndex - 1);
+                    }
+                }
+            }
+            yield return new WaitForSeconds(1f);
+        }
+    }
+
     /// <summary>
     /// Add new contributing wave and returns the handle of it.
     /// </summary>
@@ -161,9 +190,12 @@ public class SwallowWaveGenerator : BaseSnakeComponent
         }
     }
 
+
+    // Never Used
     public void RestartSwallowAnimationCoroutine()
     {
         StopCoroutine(SwallowAnimationCoroutine());
+        StopCoroutine(WaveGarbageCollectorCoroutine());
         isSwallowCoroutineRunning = false;
         StartCoroutine(SwallowAnimationCoroutine());
     }

@@ -14,7 +14,7 @@ public class PortalManager : MonoBehaviour
 
     [Header("Settings")]
     public float TailDistanceToDestroyCopiedSnake = 10f;
-    public float speedSnakeIntoPortal = 10f;
+    public float maxTimeSnakeBodyInPortal = 0.5f;
 
     [Header("Animation")]
     public float SnakeDistanceToTriggerAnimation = 15f;
@@ -140,21 +140,23 @@ public class PortalManager : MonoBehaviour
         snakeMovement.BlockInputForSnake(false);
 
         //Wait until IN snake is entirely in the portal
-        while (IsAllSnakeInPortal(newSnakeMovement.Tail) == false)
+        float timeSnakeInPortal = 0;
+        while (IsAllSnakeInPortal(newSnakeMovement.Tail) == false && timeSnakeInPortal < maxTimeSnakeBodyInPortal * snakeMovement.SnakeBody.Count)
         {
             newSnakeMovement.direction = Vector2.zero;
             newSnakeMovement.targetRealPosition = Vector2.right * PortalINPoint.transform.position.x + Vector2.up * PortalINPoint.transform.position.z;
             //Slightly help Tail get closer to PortalINPoint...
-            newSnakeMovement.Tail.transform.position = Vector3.Lerp(newSnakeMovement.Tail.transform.position,
-                PortalINPoint.transform.position,
-                0.001f);
+            //newSnakeMovement.Tail.transform.position = Vector3.Lerp(newSnakeMovement.Tail.transform.position,
+            //    PortalINPoint.transform.position,
+            //    0.001f);
+            timeSnakeInPortal += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
         //Set the tail visible again once ALL the snake copy is inside the portal
         snakeMovement.Tail.SetActive(true);
 
         //Destroy all newSnake (which was just a copy)
-        NewSnake.GetComponent<RealSnakeBinder>().ResetOldStructure();
+        //NewSnake.GetComponent<RealSnakeBinder>().ResetOldStructure();
         foreach (GameObject body in newSnakeMovement.SnakeBody)
         {
             Destroy(body);

@@ -595,7 +595,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             SquareBallsSpecial.newSquareBalls.transform.rotation = SquareBallsSpecial.OriginalBalls.transform.rotation;
             snakeMovement.SnakeBody[snakeMovement.SnakeBody.Count - 1] = SquareBallsSpecial.newSquareBalls;
             snakeMovement.Tail = SquareBallsSpecial.newSquareBalls;
-            realSnakeBinder.UpdateBinder();
+            realSnakeBinder.UpdateBinderV2();
             SquareBallsSpecial.OriginalBalls.SetActive(false);
             SquareBallsSpecial.enabled = true;
         } else if (condition == false && SquareBallsSpecial.enabled == true)
@@ -617,7 +617,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             {
                 OriginalBallsRenderers[i].material = initialBallsRenderers[i].material;
             }
-            realSnakeBinder.UpdateBinder();
+            realSnakeBinder.UpdateBinderV2();
             SquareBallsSpecial.enabled = false;
         }
         SetSpecialButtonOn(SquareBallsSpecial, SquareBallsSpecial.enabled);

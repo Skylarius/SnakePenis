@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,10 +14,10 @@ public class RealSnakeBinder : BaseSnakeComponent
         snakeMovement = GetComponent<SnakeMovement>();
         OldSnakeStructureList = new List<GameObject>();
         StoreOldStructure();
-        UpdateBinder();
+        UnparentAllBonesOfOldStructure();
     }
 
-    // Update is called once per frame
+    [Obsolete("Use UpdateBinderV2")]
     public void UpdateBinder()
     {
         Transform snakeChildrenBody = rootTail;
@@ -39,6 +40,62 @@ public class RealSnakeBinder : BaseSnakeComponent
             breakInfiniteLoop++;
             if (breakInfiniteLoop > 1000) break;
         }
+    }
+
+    void UnparentAllBonesOfOldStructure()
+    {
+        if (OldSnakeStructureList == null)
+        {
+            return;
+        }
+        for (int i=0; i<OldSnakeStructureList.Count; i++)
+        {
+            OldSnakeStructureList[i].transform.parent = SnakeMeshObj.transform;
+        }
+    }
+
+    public void UpdateBinderV2()
+    {
+        GameObject target;
+        for (int i=0; i<OldSnakeStructureList.Count; i++)
+        {
+            if (i < OldSnakeStructureList.Count - snakeMovement.SnakeBody.Count + 1)
+            {
+                target = snakeMovement.Tail;
+            } else
+            {
+                int snakeBodyIndex = OldSnakeStructureList.Count - i;
+                target = snakeMovement.SnakeBody[snakeBodyIndex];
+            }
+            OldSnakeStructureList[i].transform.position = target.transform.position;
+            OldSnakeStructureList[i].transform.rotation = target.transform.rotation * Quaternion.Euler(Vector3.right * 90);
+        }
+    }
+
+    public GameObject GetSnakeMeshBoneFromSnakeBodyIndex(int index)
+    {
+        if (OldSnakeStructureList.Count == 0)
+        {
+            return null;
+        }
+        if (index == snakeMovement.SnakeBody.Count - 1)
+        {
+            return snakeMovement.Tail;
+        }
+        else
+        {
+            int i = OldSnakeStructureList.Count - 1 - index;
+            if (i < OldSnakeStructureList.Count && i > 0)
+            {
+                return OldSnakeStructureList[OldSnakeStructureList.Count - 1 - index];
+            }
+            return null;
+        }
+    }
+
+    private void LateUpdate()
+    {
+        UpdateBinderV2();
     }
 
     void StoreOldStructure()
@@ -88,6 +145,15 @@ public class RealSnakeBinder : BaseSnakeComponent
         }
         OldSnakeStructureList.Clear();
         StoreOldStructure();
-        UpdateBinder();
+        UpdateBinderV2();
+    }
+
+    public void RecalculateMeshBounds()
+    {
+        SkinnedMeshRenderer skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+        if (skinnedMeshRenderer)
+        {
+            skinnedMeshRenderer.sharedMesh.RecalculateBounds();
+        }
     }
 }
