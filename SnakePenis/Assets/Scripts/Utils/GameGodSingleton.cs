@@ -25,11 +25,30 @@ public class GameGodSingleton : MonoBehaviour
     [SerializeField]
     private GameObject mainCameraObject;
 
+    [SerializeField]
+    private GameObject HintTemplate;
+
     public static SnakeMovement SnakeMovement
     {
         get
         {
             return Instance.snakeMovement;
+        }
+    }
+
+    public static NotificationSystem NotificationSystem
+    {
+        get
+        {
+            return Instance.GetComponent<NotificationSystem>();
+        }
+    }
+
+    public static HintTemplateController HintTemplateController
+    {
+        get
+        {
+            return Instance.HintTemplate.GetComponent<HintTemplateController>();
         }
     }
 

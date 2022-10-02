@@ -11,7 +11,7 @@ public class NotificationSystem : MonoBehaviour
 {
     private Queue<INotification> NotificationQueue;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         StartCoroutine(DequeueNotificationCoroutine());
     }
