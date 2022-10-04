@@ -3,14 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public struct BodySizeWave
+public class BodySizeWave
 {
     public int BodyIndex;
     public List<float> ContributingWaves;
+
+    public BodySizeWave()
+    {
+        this.BodyIndex = -1;
+        this.ContributingWaves = new List<float>();
+    }
     public BodySizeWave(int BodyIndex)
     {
         this.BodyIndex = BodyIndex;
         this.ContributingWaves = new List<float>();
+    }
+
+    public bool IsUseful()
+    {
+        return ContributingWaves.Exists(w => w > 0f);
     }
 }
 
@@ -19,6 +30,7 @@ public class SwallowWaveGenerator : BaseSnakeComponent
     // Start is called before the first frame update
 
     public List<BodySizeWave> BodySizeWaveList;
+    private PoolingSystem<BodySizeWave> BodySizeWavePoolingSystem;
     public BodySizeWave TailSizeWave;
     private bool isSwallowCoroutineRunning = false; 
 
@@ -35,6 +47,7 @@ public class SwallowWaveGenerator : BaseSnakeComponent
             BodySizeWaveList = new List<BodySizeWave>();
         }
         snakeMovement = GetComponent<SnakeMovement>();
+        BodySizeWavePoolingSystem = new PoolingSystem<BodySizeWave>();
         StartCoroutine(SwallowAnimationCoroutine());
     }
 
@@ -126,7 +139,8 @@ public class SwallowWaveGenerator : BaseSnakeComponent
             int bodySizeWaveIndex = BodySizeWaveList.FindIndex(e => e.BodyIndex == index);
             if (bodySizeWaveIndex < 0)
             {
-                bodySizeWave = new BodySizeWave(index);
+                bodySizeWave = BodySizeWavePoolingSystem.GetPooledObject();
+                bodySizeWave.BodyIndex = index;
                 BodySizeWaveList.Add(bodySizeWave);
             }
             else
@@ -154,15 +168,34 @@ public class SwallowWaveGenerator : BaseSnakeComponent
             {
                 lock(BodySizeWaveList)
                 {
-                    int lastUsefulIndex = BodySizeWaveList.FindLastIndex(e => e.ContributingWaves.Exists(w => w > 0f));
-                    if (lastUsefulIndex == -1) //Every element is useless
+                    int i = 0;
+                    while (i < BodySizeWaveList.Count)
                     {
-                        BodySizeWaveList.Clear();
-                    } 
-                    else if (lastUsefulIndex != BodySizeWaveList.Count - 1) //If not every element is useless BUT if the useful one is not the last (in that case, do nothing)
-                    {
-                        BodySizeWaveList.RemoveRange(lastUsefulIndex + 1, BodySizeWaveList.Count - lastUsefulIndex - 1);
+                        if (BodySizeWaveList[i].IsUseful())
+                        {
+                            i++;
+                        } else
+                        {
+                            BodySizeWavePoolingSystem.StorePooledObject(BodySizeWaveList[i]);
+                            BodySizeWaveList.RemoveAt(i);
+                        }
                     }
+
+                    //int lastUsefulIndex = BodySizeWaveList.FindLastIndex(e => e.ContributingWaves.Exists(w => w > 0f));
+                    //if (lastUsefulIndex == -1) //Every element is useless
+                    //{
+                    //    BodySizeWavePoolingSystem.StorePooledObjectList(BodySizeWaveList);
+                    //    BodySizeWaveList.Clear();
+                    //} 
+                    //else if (lastUsefulIndex != BodySizeWaveList.Count - 1) //If not every element is useless BUT if the useful one is not the last (in that case, do nothing)
+                    //{
+                    //    for (int i = lastUsefulIndex + 1; i < BodySizeWaveList.Count; i++)
+                    //    {
+                    //        BodySizeWavePoolingSystem.StorePooledObject(BodySizeWaveList[i]);
+                    //        BodySizeWaveList.RemoveAt(i);
+                    //    }
+                    //    //BodySizeWaveList.RemoveRange(lastUsefulIndex + 1, BodySizeWaveList.Count - lastUsefulIndex - 1);
+                    //}
                 }
             }
             yield return new WaitForSeconds(1f);
