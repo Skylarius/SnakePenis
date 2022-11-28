@@ -48,6 +48,7 @@ public class SwallowWaveGenerator : BaseSnakeComponent
         }
         snakeMovement = GetComponent<SnakeMovement>();
         BodySizeWavePoolingSystem = new PoolingSystem<BodySizeWave>();
+        BodySizeWavePoolingSystem.Name = "BodySizeWave";
         StartCoroutine(SwallowAnimationCoroutine());
     }
 
@@ -74,12 +75,7 @@ public class SwallowWaveGenerator : BaseSnakeComponent
                 { 
                     foreach (BodySizeWave bodySizeWave in BodySizeWaveList)
                     {
-                        //SnakeBodyPart = snakeMovement.SnakeBody[bodySizeWave.BodyIndex];
-                        //if (SnakeBodyPart == null)
-                        //{
-                        //    continue;
-                        //}
-                        //SnakeBoneTransform = snakeMovement.GetSnakeBoneTransform(SnakeBodyPart);
+
                         SnakeBoneTransform = snakeMovement.GetSnakeBoneTransformFromBodyIndex(bodySizeWave.BodyIndex);
                         if (SnakeBoneTransform)
                         {
@@ -139,7 +135,7 @@ public class SwallowWaveGenerator : BaseSnakeComponent
             int bodySizeWaveIndex = BodySizeWaveList.FindIndex(e => e.BodyIndex == index);
             if (bodySizeWaveIndex < 0)
             {
-                bodySizeWave = BodySizeWavePoolingSystem.GetPooledObject();
+                bodySizeWave = BodySizeWavePoolingSystem.GetObject();
                 bodySizeWave.BodyIndex = index;
                 BodySizeWaveList.Add(bodySizeWave);
             }
@@ -176,26 +172,10 @@ public class SwallowWaveGenerator : BaseSnakeComponent
                             i++;
                         } else
                         {
-                            BodySizeWavePoolingSystem.StorePooledObject(BodySizeWaveList[i]);
+                            BodySizeWavePoolingSystem.DisableObject(BodySizeWaveList[i]);
                             BodySizeWaveList.RemoveAt(i);
                         }
                     }
-
-                    //int lastUsefulIndex = BodySizeWaveList.FindLastIndex(e => e.ContributingWaves.Exists(w => w > 0f));
-                    //if (lastUsefulIndex == -1) //Every element is useless
-                    //{
-                    //    BodySizeWavePoolingSystem.StorePooledObjectList(BodySizeWaveList);
-                    //    BodySizeWaveList.Clear();
-                    //} 
-                    //else if (lastUsefulIndex != BodySizeWaveList.Count - 1) //If not every element is useless BUT if the useful one is not the last (in that case, do nothing)
-                    //{
-                    //    for (int i = lastUsefulIndex + 1; i < BodySizeWaveList.Count; i++)
-                    //    {
-                    //        BodySizeWavePoolingSystem.StorePooledObject(BodySizeWaveList[i]);
-                    //        BodySizeWaveList.RemoveAt(i);
-                    //    }
-                    //    //BodySizeWaveList.RemoveRange(lastUsefulIndex + 1, BodySizeWaveList.Count - lastUsefulIndex - 1);
-                    //}
                 }
             }
             yield return new WaitForSeconds(1f);

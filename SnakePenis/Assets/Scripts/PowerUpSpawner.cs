@@ -91,17 +91,31 @@ public class PowerUpsArea
     public SpawnArea spawnArea;
     public List<GameObject> PowerUps;
 
-    public void SpawnPowerUp(GameObject powerUpTemplate)
+    public void SpawnPowerUp(GameObject powerUpTemplate, PoolingSystem<GameObject> poolingSystem = null)
     {
         Vector2 spawnPoint = spawnArea.GetRandomPointInConvexArea();
         if (PowerUps == null)
         {
             PowerUps = new List<GameObject>();
         }
-        GameObject powerUp = Object.Instantiate(powerUpTemplate);
+        GameObject powerUp;
+        if (poolingSystem != null)
+        {
+            powerUp = poolingSystem.GetObject();
+            ResetReusedPickup(powerUp);
+        } else
+        {
+            powerUp = Object.Instantiate(powerUpTemplate);
+        }
         powerUp.SetActive(true);
         powerUp.transform.position = Position + new Vector3(spawnPoint.x, 0f, spawnPoint.y);
         PowerUps.Add(powerUp);
+    }
+
+    private void ResetReusedPickup(GameObject powerUp)
+    {
+        powerUp.transform.localScale = Vector3.one;
+        powerUp.GetComponent<Collider>().enabled = true;
     }
 }
 
@@ -109,13 +123,16 @@ public class PowerUpSpawner : MonoBehaviour
 {
     public List<PowerUpsArea> PowerUpsAreas;
     public GameObject powerUpTemplate;
+    private PoolingSystem<GameObject> PowerUpPoolingSystem;
     public float spawnFrequency = 0.5f;
     public int MaxPowerUpAmout;
 
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(SpawnPowerUpCoroutine());   
+        PowerUpPoolingSystem = new PoolingSystem<GameObject>(powerUpTemplate);
+        PowerUpPoolingSystem.Name = "PowerUpPoolingSystem";
+        StartCoroutine(SpawnPowerUpCoroutine());
     }
 
     public void IncreaseSpawnFrequency(float delta)
@@ -147,12 +164,23 @@ public class PowerUpSpawner : MonoBehaviour
                 {
                     if (PowerUpsAreas[i].PowerUps.Count < MaxPowerUpAmout)
                     {
-                        PowerUpsAreas[i].SpawnPowerUp(powerUpTemplate);
+                        PowerUpsAreas[i].SpawnPowerUp(powerUpTemplate, PowerUpPoolingSystem);
                     }
                     yield return new WaitForEndOfFrame();
                 }
             }
             yield return new WaitForSeconds(1 / spawnFrequency);
+        }
+    }
+
+    public void DestroyPowerUp(GameObject powerUp)
+    {
+        if (PowerUpPoolingSystem != null)
+        {
+            PowerUpPoolingSystem.DisableObject(powerUp);
+        } else
+        {
+            Destroy(powerUp);
         }
     }
 

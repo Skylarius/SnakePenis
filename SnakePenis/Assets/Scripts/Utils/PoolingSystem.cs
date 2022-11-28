@@ -8,7 +8,7 @@ public class PoolingSystem<T> where T: class, new()
     private T Template;
 
     private int reusedObj = 0, newObj = 0;
-
+    public string Name = "Pool";
 
     public PoolingSystem()
     {
@@ -30,22 +30,30 @@ public class PoolingSystem<T> where T: class, new()
         return new T();
     }
 
-    public T GetPooledObject()
+    public T GetObject()
     {
-        if (PooledObjects.Count > 0)
+        T pooledObject;
+        if (PooledObjects == null)
         {
-            T pooledObject = PooledObjects[0];
-            PooledObjects.RemoveAt(0);
-            Debug.Log("Reused Objects: " + ++reusedObj);
-            return pooledObject;
+            ++newObj;
+            PooledObjects = new List<T>();
+            pooledObject = CreateNewPooledObject();
+        }
+        else if (PooledObjects.Count == 0)
+        {
+            ++newObj;
+            pooledObject = CreateNewPooledObject();
         } else
         {
-            Debug.Log("New Objects: " + ++newObj);
-            return CreateNewPooledObject();
+            pooledObject = PooledObjects[0];
+            PooledObjects.RemoveAt(0);
+            ++reusedObj;
         }
+        Debug.Log("'" + Name + "': " + newObj + " new, " + reusedObj + " reused Objects.");
+        return pooledObject;
     }
 
-    public void StorePooledObject(T pooledObject)
+    public void DisableObject(T pooledObject)
     {
         if (typeof(T) == typeof(GameObject))
         {

@@ -178,7 +178,7 @@ public class SnakeMovement : MonoBehaviour
                 yield return new WaitForEndOfFrame();
             }
         }
-        Destroy(pickup);
+        GameGodSingleton.PowerUpSpawner.DestroyPowerUp(pickup); // TO DO: Replace with the pooling delete system
     }
 
     IEnumerator AnimateSnakeBodyPart(Transform boneTransform)
