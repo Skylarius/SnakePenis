@@ -115,6 +115,50 @@ public class InputHandler : BaseSnakeComponent
         }
     }
 
+    void StandardAndroidMovementSwipe(ref Vector2 direction)
+    {
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            switch (touch.phase)
+            {
+                case TouchPhase.Began:
+                    AndroidInitialTouchPosition = touch.position;
+                    AndroidInitialSwipeTime = Time.time;
+                    isTurning90Deg = false;
+                    break;
+                case TouchPhase.Ended:
+                    if (Time.time - AndroidInitialSwipeTime > maxAndroidSwipeDeltaTime || isTurning90Deg)
+                    {
+                        return;
+                    }
+                    float touchDirectionX = touch.position.x - AndroidInitialTouchPosition.x;
+                    float touchDirectionY = touch.position.y - AndroidInitialTouchPosition.y;
+                    if (IsMoreThanMinimumSwipe(touchDirectionX) == false && IsMoreThanMinimumSwipe(touchDirectionY) == false)
+                    {
+                        return;
+                    }
+                    if (touchDirectionX * touchDirectionX > touchDirectionY * touchDirectionY)
+                    {
+                        touchDirectionY = 0;
+                        touchDirectionX = (touchDirectionX > 0) ? 1 : -1;
+                    } else
+                    {
+                        touchDirectionX = 0;
+                        touchDirectionY = (touchDirectionY > 0) ? 1 : -1;
+                    }
+                    direction = GetStandardDirection(ref touchDirectionX, ref touchDirectionY, direction);
+                    isTurning90Deg = false;
+                    break;
+            }
+        }
+    }
+
+    bool IsMoreThanMinimumSwipe(float value)
+    {
+        return value > minAndroidMovementSwipeThreshold || value < -minAndroidMovementSwipeThreshold;
+    }
+
     void Windows360DegreeMovement(ref Vector2 direction)
     {
         float x = Input.GetAxis("Mouse X");

@@ -11,6 +11,7 @@ public class PortalManager : MonoBehaviour
     private GameObject SnakeHead;
     public GameObject SnakeMesh;
     public static int PortalUsage;
+    public bool enabled = true;
 
     [Header("Settings")]
     public float TailDistanceToDestroyCopiedSnake = 10f;
@@ -74,15 +75,36 @@ public class PortalManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == SnakeHead && isPortalCoroutineRunning == false && SnakeMovement.isGameOver == false)
+        if (enabled && other.gameObject == SnakeHead && isPortalCoroutineRunning == false && SnakeMovement.isGameOver == false)
         {
             StartCoroutine(PortalCoroutine());
         }
     }
 
+    void SetPortalEnabled(bool condition)
+    {
+        foreach (PortalManager portalManager in GetComponents<PortalManager>())
+        {
+            portalManager.enabled = condition;
+        }
+    }
+
+    public void EnablePortal()
+    {
+        SetPortalEnabled(true);
+    }
+
+    public void DisablePortal()
+    {
+        SetPortalEnabled(false);
+    }
+
+
+
     IEnumerator PortalCoroutine()
     {
         isPortalCoroutineRunning = true;
+        DisablePortal();
         Vector2 oldDirection = snakeMovement.direction;
         SnakeHead.GetComponent<Collider>().enabled = false;
         yield return new WaitForSeconds(0.2f);
@@ -134,10 +156,10 @@ public class PortalManager : MonoBehaviour
         SnakeHead.transform.position = PortalOUTPoint.transform.position;
         snakeMovement.targetRealPosition = Vector2.right * PortalOUTPoint.transform.position.x + Vector2.up * PortalOUTPoint.transform.position.z;
         snakeMovement.direction = (Vector2.right * PortalOUTPoint.transform.forward.x + Vector2.up * PortalOUTPoint.transform.forward.z);
-        snakeMovement.BlockInputForSnake(true);
-        yield return new WaitForSeconds(0.1f);
+        //snakeMovement.BlockInputForSnake(true);
+        //yield return new WaitForSeconds(0.1f);
         SnakeHead.GetComponent<Collider>().enabled = true;
-        snakeMovement.BlockInputForSnake(false);
+        //snakeMovement.BlockInputForSnake(false);
 
         //Wait until IN snake is entirely in the portal
         float timeSnakeInPortal = 0;
@@ -169,6 +191,7 @@ public class PortalManager : MonoBehaviour
         }
         isPortalCoroutineRunning = false;
         PortalUsage++;
+        EnablePortal();
     }
 
     private void SetupNewSnake(GameObject newSnake)

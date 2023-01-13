@@ -9,6 +9,8 @@ public interface INotification
 
 public class NotificationSystem : MonoBehaviour
 {
+    public GameObject HintTemplate;
+    public GameObject SubtitleHintTemplate;
     private Queue<INotification> NotificationQueue;
     // Start is called before the first frame update
     void Awake()

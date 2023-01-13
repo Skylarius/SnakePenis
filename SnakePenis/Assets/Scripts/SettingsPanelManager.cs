@@ -391,9 +391,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
 
         SetupButtonsAction();
 
-        new VisualHint("Ciao! Sono stocazzo");
-        new VisualHint("Benvenuto su SnakePenis! Tranquillo, questa notifica cambierá, perché ora fa cacare");
-        new VisualHint("Sto solo testando come funziona. Conta fino a 3...");
+        new SubtitleHint("Benvenuto su SnakePenis! Tranquillo, questa notifica cambierá, perché ora fa cacare");
     }
 
     void SetupSpecialsDelegates()

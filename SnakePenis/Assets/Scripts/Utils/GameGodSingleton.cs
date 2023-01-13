@@ -48,7 +48,15 @@ public class GameGodSingleton : MonoBehaviour
     {
         get
         {
-            return Instance.HintTemplate.GetComponent<HintTemplateController>();
+            return Instance.GetComponent<NotificationSystem>().HintTemplate.GetComponent<HintTemplateController>();
+        }
+    }
+
+    public static HintTemplateController SubtitleHintTemplateController
+    {
+        get
+        {
+            return Instance.GetComponent<NotificationSystem>().SubtitleHintTemplate.GetComponent<HintTemplateController>();
         }
     }
 

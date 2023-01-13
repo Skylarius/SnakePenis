@@ -124,13 +124,11 @@ public class SnakeMovement : MonoBehaviour
     {
         if (SnakeBody.Count < 200)
         {
-            //realSnakeBinder.ResetOldStructure();
             GameObject newBodySegment = Instantiate(SnakeBody[SnakeBody.Count - 2]);
             newBodySegment.name = "newBody_" + (SnakeBody.Count - 1).ToString();
             SnakeBody.Insert(SnakeBody.Count - 1, newBodySegment);
             SnakeBodyTargetPositions.Insert(SnakeBodyTargetPositions.Count - 1, newBodySegment.transform.position);
-            realSnakeBinder.RecalculateMeshBounds();
-            //realSnakeBinder.UpdateBinder();
+            //realSnakeBinder.RecalculateMeshBounds();
         }
         if (SnakeBody.Count%10==0)
         {

@@ -4,31 +4,34 @@ using UnityEngine;
 
 public class VisualHint : INotification
 {
-    string hintText;
-    bool NonBlocking;
-    VisualHint()
+    public string hintText;
+    public bool NonBlocking;
+    public float Duration;
+    protected HintTemplateController hintTemplateController;
+    public VisualHint()
     {
         hintText = "";
         NonBlocking = false;
+        hintTemplateController = GameGodSingleton.HintTemplateController;
+        Duration = 3f;
     }
 
-    public VisualHint(string s) : base()
+    public VisualHint(string s) : this()
     {
         hintText = s;
         GameGodSingleton.NotificationSystem.Enqueue(this);
     }
     public IEnumerator ExecuteCoroutine()
     {
-        HintTemplateController hintTemplateController = GameGodSingleton.HintTemplateController;
-        Time.timeScale = 0f;
         hintTemplateController.WriteHint(this.hintText);
-        GameGodSingleton.HintTemplateController.gameObject.SetActive(true);
+        hintTemplateController.gameObject.SetActive(true);
         if (NonBlocking == false)
         {
-            yield return new WaitForSecondsRealtime(3f);
+            Time.timeScale = 0f;
         }
-        GameGodSingleton.HintTemplateController.gameObject.SetActive(false);
+        yield return new WaitForSecondsRealtime(Duration);
         Time.timeScale = 1f;
+        hintTemplateController.gameObject.SetActive(false);
     }
 
 
