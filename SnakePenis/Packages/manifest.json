@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.unity.collab-proxy": "1.17.2",
+    "com.unity.collab-proxy": "1.17.6",
     "com.unity.device-simulator": "https://github.com/needle-mirror/com.unity.device-simulator.git",
     "com.unity.feature.development": "1.0.1",
     "com.unity.ide.rider": "3.0.15",

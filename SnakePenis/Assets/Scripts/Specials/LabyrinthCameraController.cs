@@ -19,7 +19,7 @@ public class LabyrinthCameraController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (blocked) return;
+        if (blocked || SnakeMovement.isGameOver) return;
         Vector3 cameraTargetPosition = new Vector3(target.position.x, cameraHeight, target.position.z);
         transform.position = Vector3.Slerp(
             transform.position,

@@ -234,14 +234,17 @@ public class SnakeMovement : MonoBehaviour
             yield break;
         }
         isGameOver = true;
+        GetComponent<BoxCollider>().isTrigger = false;
         for (int i=0; i<SnakeBody.Count; i++)
         {
             Rigidbody rb = SnakeBody[i].GetComponent<Rigidbody>();
             rb.isKinematic = false;
-            rb.AddForce(Vector3.right * Random.Range(10, 20) + Vector3.up * 20 + Vector3.forward * Random.Range(-10, 10));
+            Vector3 dropForce = Vector3.right * Random.Range(10, 20) + Vector3.up * 20 + Vector3.forward * Random.Range(-10, 10);
+            dropForce *= SnakeBody.Count * 0.2f;
+            rb.AddForce(dropForce);
         }
         print("GAMEOVER");
-        //Time.timeScale = 0;
+
         if (audioSystem.enabled)
         {
             audioSystem.PlayDeathSounds();
