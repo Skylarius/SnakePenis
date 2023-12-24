@@ -1,14 +1,104 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public abstract class SnakeCommand
+{
+    private float Timestamp { get; }
+    protected static float LastCommandTimestamp;
+    public SnakeCommand()
+    {
+        Timestamp = Time.time;
+        LastCommandTimestamp = Time.time;
+    }
+
+    public static float GetLastCommandTimestamp()
+    {
+        return LastCommandTimestamp;
+    }
+
+    public bool IsCoincident(SnakeCommand snakeCommand) 
+    {
+        return Mathf.Abs(snakeCommand.Timestamp - Timestamp) < 2*Time.deltaTime;
+    }
+
+    public bool IsCoincidentWithLastCommandTimestamp()
+    {
+        return Mathf.Abs(Timestamp - LastCommandTimestamp) < Time.deltaTime;
+    }
+
+    public virtual void execute()
+    {
+        Debug.Log("Executing command: " + GetType());
+    }
+}
+
+public abstract class SnakeAction : SnakeCommand
+{
+    protected SnakeMovement SnakeMovement { get; }
+    public SnakeAction(SnakeMovement snakeMovement) : base() 
+    {
+        SnakeMovement = snakeMovement;
+    }
+}
+
+public class DirectionAction : SnakeAction
+{
+    private Vector2 Direction { get; }
+    
+    public DirectionAction(SnakeMovement snakeMovement, Vector2 direction) : base(snakeMovement)
+    {
+        Direction = direction;
+    }
+
+    public override void execute()
+    {
+        base.execute();
+        SnakeMovement.direction = Direction;
+    }
+}
+
+public class JumpAction : SnakeAction
+{
+    public delegate void JumpFunction();
+    public JumpFunction JumpFunc;
+
+    public JumpAction(SnakeMovement snakeMovement, JumpFunction jumpFunction) : base(snakeMovement)
+    {
+        JumpFunc = jumpFunction;
+    }
+
+    public override void execute() 
+    {
+        base.execute();
+        JumpFunc(); 
+    }
+}
+
+public class UICommand : SnakeCommand
+{
+    public delegate void UICommandFunction();
+    public UICommandFunction CommandFunc;
+
+    public UICommand(UICommandFunction command) : base()
+    { 
+        CommandFunc = command; 
+    }
+
+    public override void execute()
+    {
+        base.execute();
+        CommandFunc();
+    }
+}
+
 public class InputHandler : BaseSnakeComponent
 {
-
-    public delegate void MovementType(ref Vector2 direction);
+    public delegate void MovementType();
     public MovementType move = null;
 
-    public delegate bool Action();
+    public delegate void Action();
     public List<Action> actions = null;
 
     [Header("Jump settings")]
@@ -37,6 +127,40 @@ public class InputHandler : BaseSnakeComponent
     public float minAndroidMovementSwipeThreshold = 10f;
     private bool isTurning90Deg = false;
 
+    public Queue<SnakeAction> SnakeActions;
+    public Queue<SnakeCommand> SnakeCommands;
+
+    /// <summary>
+    /// Request to set the SnakeDirection to specified direction
+    /// </summary>
+    /// <param name="direction"></param>
+    public void RequestDirectionAction(Vector2 direction)
+    {
+        DirectionAction action = new DirectionAction(snakeMovement, direction);
+        SnakeActions.Enqueue(action);
+    }
+
+    /// <summary>
+    /// Request to Jump
+    /// </summary>
+    public void RequestJumpAction()
+    {
+        JumpAction action = new JumpAction(snakeMovement, Jump);
+        SnakeActions.Enqueue(action);
+    }
+
+    /// <summary>
+    /// Request a UI command (pause, exit, ...)
+    /// </summary>
+    /// <param name="commandFunction"></param>
+    public void RequestUICommand(UICommand.UICommandFunction commandFunction)
+    {
+        UICommand uiCommand = new UICommand(commandFunction);
+        SnakeCommands.Enqueue(uiCommand);
+    }
+
+
+
     private void Start()
     {
         if (move == null)
@@ -49,22 +173,92 @@ public class InputHandler : BaseSnakeComponent
         }
         snakeMovement = GetComponent<SnakeMovement>();
         JumpsAmount = 0;
+        SnakeCommands = new Queue<SnakeCommand>();
+        SnakeActions = new Queue<SnakeAction>();
     }
 
-    Vector3 GetStandardDirection(ref float x, ref float z, Vector2 direction)
+    private void Update()
     {
-        if (Mathf.Abs(direction.x) < 0.01f)
+        GetInputActions();
+    }
+
+    void GetInputActions()
+    {
+        // Handle inputs (movement and additional actions)
+        foreach (Action action in actions)
         {
-            direction.x = 0;
+            action();
         }
-        if (Mathf.Abs(direction.y) < 0.01f)
+        move();
+    }
+
+    private void LateUpdate()
+    {
+        ProcessActionsQueue();
+    }
+
+    void ProcessActionsQueue()
+    {
+        float lastCommandTimestamp = SnakeCommand.GetLastCommandTimestamp();
+        if (lastCommandTimestamp + 2*Time.deltaTime > Time.time)
         {
-            direction.y = 0;
+            return;
         }
-        if (x == 0f && z == 0f || direction.x * x < 0 || direction.y * z < 0)
+        //Process queue of commands
+        SnakeCommand command = null;
+        SnakeAction action = null;
+        if (SnakeCommands.Count > 0)
         {
-            return direction; // false return, to not update direction
+            command = SnakeCommands.Dequeue();
         }
+        if (SnakeActions.Count > 0)
+        {
+            action = SnakeActions.Dequeue();
+        }
+        if (action != null && command != null && (action.IsCoincident(command) || action.IsCoincidentWithLastCommandTimestamp()))
+        {
+            //Discard action
+            Debug.Log("Discarded action " + action.ToString() + " for comnnand " + command.ToString());
+            command.execute();
+            return;
+        }
+        if (command != null)
+        {
+            command.execute();
+        }
+        if (action != null && !SnakeMovement.isPause)
+        {
+            snakeMovement.actionQueue.Enqueue(action);
+        }
+    }
+
+    /// <summary>
+    /// GetStandardDirection
+    /// </summary>
+    /// <param name="x">horizontal</param>
+    /// <param name="z">vertical</param>
+    /// <returns>Return zero if no input has been given</returns>
+    Vector2 GetStandardDirection(float x, float z)
+    {
+        if (Mathf.Abs(x) < 0.01f)
+        {
+            x = 0;
+        }
+        if (Mathf.Abs(z) < 0.01f)
+        {
+            z = 0;
+        }
+
+        if (x == 0f && z == 0f)
+        {
+            return Vector2.zero;
+        }
+
+        if ((int)snakeMovement.direction.x * x < 0 || (int)snakeMovement.direction.y * z < 0) 
+        {
+            return Vector2.zero; // false return, to not update direction
+        }
+
         if (x != 0 && z != 0) //Avoid multiple input
         {
             z = 0f;
@@ -80,17 +274,20 @@ public class InputHandler : BaseSnakeComponent
         return Vector2.right * x + Vector2.up * z;
     }
 
-    void StandardWindowsMovement(ref Vector2 direction)
+    void StandardWindowsMovement()
     {
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
-        direction = GetStandardDirection(ref x, ref z, direction);
+        Vector2 newDirection = GetStandardDirection(x, z);
+        if (newDirection.x == 0 && newDirection.y == 0)
+        {
+            return;
+        }
+        RequestDirectionAction(newDirection);
     }
 
-    void StandardAndroidMovement(ref Vector2 direction)
+    void StandardAndroidMovement()
     {
-        float x = 0f;
-        float z = 0f;
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
@@ -99,23 +296,28 @@ public class InputHandler : BaseSnakeComponent
                 case TouchPhase.Began:
                     //TODO: Check if it's in the AVOID ZONE (pause, exit)...
                     Vector3 tapPoint = ConvertTouchToPositionInWorld(touch);
-                    x = tapPoint.x - transform.position.x;
-                    z = tapPoint.z - transform.position.z;
-                    if (direction.y != 0)
+                    float x = tapPoint.x - transform.position.x;
+                    float z = tapPoint.z - transform.position.z;
+                    if (snakeMovement.direction.y != 0)
                     {
                         z = 0f;
                     }
-                    if (direction.x != 0)
+                    if (snakeMovement.direction.x != 0)
                     {
                         x = 0f;
                     }
-                    direction = GetStandardDirection(ref x, ref z, direction);
+                    Vector2 newDirection = GetStandardDirection(x, z);
+                    if (newDirection.x == 0 && newDirection.y == 0)
+                    {
+                        return;
+                    }
+                    RequestDirectionAction(newDirection);
                     break;
             }
         }
     }
 
-    void StandardAndroidMovementSwipe(ref Vector2 direction)
+    void StandardAndroidMovementSwipe()
     {
         if (Input.touchCount > 0)
         {
@@ -147,7 +349,12 @@ public class InputHandler : BaseSnakeComponent
                         touchDirectionX = 0;
                         touchDirectionY = (touchDirectionY > 0) ? 1 : -1;
                     }
-                    direction = GetStandardDirection(ref touchDirectionX, ref touchDirectionY, direction);
+                    Vector2 newDirection = GetStandardDirection(touchDirectionX, touchDirectionY);
+                    if (newDirection.x == 0 && newDirection.y == 0)
+                    {
+                        return;
+                    }
+                    RequestDirectionAction(newDirection);
                     isTurning90Deg = false;
                     break;
             }
@@ -159,14 +366,21 @@ public class InputHandler : BaseSnakeComponent
         return value > minAndroidMovementSwipeThreshold || value < -minAndroidMovementSwipeThreshold;
     }
 
-    void Windows360DegreeMovement(ref Vector2 direction)
+    void Windows360DegreeMovement()
     {
         float x = Input.GetAxis("Mouse X");
-        Vector3 rotatedVector3 = Quaternion.AngleAxis(x*windowsRotation360Speed*Time.deltaTime, Vector3.up) * (Vector3.right * direction.x + Vector3.forward * direction.y);
-        direction = Vector2.right * rotatedVector3.x + Vector2.up * rotatedVector3.z;
+        Vector3 rotatedVector3 = 
+            Quaternion.AngleAxis(x*windowsRotation360Speed*Time.deltaTime, Vector3.up) * 
+            (Vector3.right * snakeMovement.direction.x + Vector3.forward * snakeMovement.direction.y);
+        Vector2 newDirection = Vector2.right * rotatedVector3.x + Vector2.up * rotatedVector3.z;
+        if (newDirection == snakeMovement.direction)
+        {
+            return;
+        }
+        RequestDirectionAction(newDirection);
     }
 
-    void Android360DegreeMovement(ref Vector2 direction)
+    void Android360DegreeMovement()
     {
         float x = 0f;
         float z = 0f;
@@ -182,20 +396,22 @@ public class InputHandler : BaseSnakeComponent
                     z = tapPoint.z - transform.position.z;
                     Vector2 dir = Vector2.right * x + Vector2.up * z;
                     dir.Normalize();
-                    direction = dir;
+                    if (dir == snakeMovement.direction)
+                    {
+                        return;
+                    }
+                    RequestDirectionAction(dir);
                     break;
             }
         }
     }
-    private void WindowsFirstPersonMovement(ref Vector2 direction)
+    private void WindowsFirstPersonMovement()
     {
-        Windows360DegreeMovement(ref direction);
+        Windows360DegreeMovement();
     }
 
-    void AndroidFirstPersonMovement(ref Vector2 direction)
+    void AndroidFirstPersonMovement()
     {
-        float x = 0f;
-        float z = 0f;
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
@@ -208,13 +424,17 @@ public class InputHandler : BaseSnakeComponent
                     //z = tapDirection.z - transform.position.z;
                     Vector2 dir = Vector2.right * tapDirection.x + Vector2.up * tapDirection.z;
                     dir.Normalize();
-                    direction = dir;
+                    if(dir == snakeMovement.direction)
+                    {
+                        return;
+                    }
+                    RequestDirectionAction(dir);
                     break;
             }
         }
     }
 
-    void AndroidFirstPersonMovementSwipe(ref Vector2 direction)
+    void AndroidFirstPersonMovementSwipe()
     {
         if (Input.touchCount > 0)
         {
@@ -223,20 +443,25 @@ public class InputHandler : BaseSnakeComponent
             {
                 case TouchPhase.Began:
                     AndroidInitialTouchPosition = touch.position;
-                    AndroidInitialDirection = direction;
+                    AndroidInitialDirection = snakeMovement.direction;
                     break;
                 case TouchPhase.Moved:
                 case TouchPhase.Stationary:
                     float touchDirectionX = touch.position.x - AndroidInitialTouchPosition.x;
 
                     Vector3 rotatedVector3 = Quaternion.AngleAxis(touchDirectionX * AndroidRotationFirstPersonSpeed * Time.deltaTime, Vector3.up) * (Vector3.right * AndroidInitialDirection.x + Vector3.forward * AndroidInitialDirection.y);
-                    direction = Vector2.right * rotatedVector3.x + Vector2.up * rotatedVector3.z;
+                    Vector2 newDirection = Vector2.right * rotatedVector3.x + Vector2.up * rotatedVector3.z;
+                    if (newDirection == snakeMovement.direction)
+                    {
+                        return;
+                    }
+                    RequestDirectionAction(newDirection);
                     break;
             }
         }
     }
 
-    void AndroidFirstPerson90RotationMovementSwipe(ref Vector2 direction)
+    void AndroidFirstPerson90RotationMovementSwipe()
     {
         if (Input.touchCount > 0)
         {
@@ -265,8 +490,15 @@ public class InputHandler : BaseSnakeComponent
                         {
                             touchDirectionX = -90f;
                         }
-                        Vector3 rotatedVector3 = Quaternion.AngleAxis(touchDirectionX, Vector3.up) * (Vector3.right * direction.x + Vector3.forward * direction.y);
-                        direction = Vector2.right * rotatedVector3.x + Vector2.up * rotatedVector3.z;
+                        Vector3 rotatedVector3 = 
+                            Quaternion.AngleAxis(touchDirectionX, Vector3.up) * 
+                            (Vector3.right * snakeMovement.direction.x + Vector3.forward * snakeMovement.direction.y);
+                        Vector2 newDirection = Vector2.right * rotatedVector3.x + Vector2.up * rotatedVector3.z;
+                        if (newDirection == snakeMovement.direction)
+                        {
+                            return;
+                        }
+                        RequestDirectionAction(newDirection);
                         isTurning90Deg = true;
                     }
                     break;
@@ -277,7 +509,7 @@ public class InputHandler : BaseSnakeComponent
         }
     }
 
-    void WindowsFirstPerson90RotationMovement(ref Vector2 direction)
+    void WindowsFirstPerson90RotationMovement()
     {
         float x = Input.GetAxis("Horizontal");
         if (x > 0 && !isTurning90Deg)
@@ -297,21 +529,30 @@ public class InputHandler : BaseSnakeComponent
         {
             x = 0f;
         }
-        Vector3 rotatedVector3 = Quaternion.AngleAxis(x, Vector3.up) * (Vector3.right * direction.x + Vector3.forward * direction.y);
-        direction = Vector2.right * rotatedVector3.x + Vector2.up * rotatedVector3.z;
-    }
-
-    bool StandardWindowsJump()
-    {
-        if (Input.GetButtonDown("Jump") && !isJumping)
+        Vector3 rotatedVector3 = 
+            Quaternion.AngleAxis(x, Vector3.up) * 
+            (Vector3.right * snakeMovement.direction.x + Vector3.forward * snakeMovement.direction.y);
+        Vector2 newDirection = Vector2.right * rotatedVector3.x + Vector2.up * rotatedVector3.z;
+        if (newDirection == snakeMovement.direction)
         {
-            StartCoroutine(JumpCoroutine());
-            return true;
+            return;
         }
-        return false;
+        RequestDirectionAction(newDirection);
     }
 
-    bool StandardAndroidJump()
+    void StandardWindowsJump()
+    {
+        if (isJumping)
+        {
+            return;
+        }
+        if (Input.GetButtonDown("Jump"))
+        {
+            RequestJumpAction();
+        }
+    }
+
+    void StandardAndroidJump()
     {
         if (Input.touchCount > 0)
         {
@@ -321,30 +562,29 @@ public class InputHandler : BaseSnakeComponent
                 case TouchPhase.Began:
                     //TODO: Check if it's in the AVOID ZONE (pause, exit)...
                     Vector3 tapPoint = ConvertTouchToPositionInWorld(touch);
-                    if (!isJumping)
+                    if (isJumping)
                     {
-                        if (Vector2.SqrMagnitude(Vector2.right * (tapPoint.x - transform.position.x) + Vector2.up * (tapPoint.z - transform.position.z)) < SqrJumpTapRange)
-                        {
-                            StartCoroutine(JumpCoroutine());
-                            return true;
-                        }
+                        return;
+                    }
+                    if (Vector2.SqrMagnitude(Vector2.right * (tapPoint.x - transform.position.x) + Vector2.up * (tapPoint.z - transform.position.z)) < SqrJumpTapRange)
+                    {
+                        RequestJumpAction();
                     }
                     break;
             }
         }
-        return false;
     }
 
-    bool FirstPersonWindowsJump()
+    void FirstPersonWindowsJump()
     {
-        return StandardWindowsJump();
+        StandardWindowsJump();
     }
 
-    bool FirstPersonAndroidJumpSwipe()
+    void FirstPersonAndroidJumpSwipe()
     {
         if (isJumping)
         {
-            return false;
+            return;
         }
         if (Input.touchCount > 0)
         {
@@ -359,18 +599,21 @@ public class InputHandler : BaseSnakeComponent
                 case TouchPhase.Stationary:
                     if (Time.time - AndroidInitialJumpTime > maxAndroidSwipeJumpDeltaTime)
                     {
-                        return false;
+                        return;
                     }
                     float touchDirectionY = touch.position.y - AndroidInitialTouchPosition.y;
                     if (touchDirectionY > minAndroidSwipeJumpThreshold)
                     {
-                        StartCoroutine(JumpCoroutine());
-                        return true;
+                        RequestJumpAction();
                     }
                     break;
             }
         }
-        return false;
+    }
+
+    void Jump()
+    {
+        StartCoroutine(JumpCoroutine());
     }
 
     IEnumerator JumpCoroutine()
@@ -468,6 +711,6 @@ public class InputHandler : BaseSnakeComponent
     public void SetStandardMovementType()
     {
         move = (PlatformUtils.platform == RuntimePlatform.Android) ?
-                StandardAndroidMovement : StandardWindowsMovement;
+                StandardAndroidMovementSwipe : StandardWindowsMovement;
     }
 }

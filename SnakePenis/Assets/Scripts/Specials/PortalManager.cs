@@ -11,7 +11,7 @@ public class PortalManager : MonoBehaviour
     private GameObject SnakeHead;
     public GameObject SnakeMesh;
     public static int PortalUsage;
-    public bool enabled = true;
+    public bool Enabled = true;
 
     [Header("Settings")]
     public float TailDistanceToDestroyCopiedSnake = 10f;
@@ -75,7 +75,7 @@ public class PortalManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (enabled && other.gameObject == SnakeHead && isPortalCoroutineRunning == false && SnakeMovement.isGameOver == false)
+        if (Enabled && other.gameObject == SnakeHead && isPortalCoroutineRunning == false && SnakeMovement.isGameOver == false)
         {
             StartCoroutine(PortalCoroutine());
         }
@@ -85,7 +85,7 @@ public class PortalManager : MonoBehaviour
     {
         foreach (PortalManager portalManager in GetComponents<PortalManager>())
         {
-            portalManager.enabled = condition;
+            portalManager.Enabled = condition;
         }
     }
 
@@ -144,7 +144,7 @@ public class PortalManager : MonoBehaviour
         //If PORTAL OUT has a PortalManager Component, disable it and re-enable it at the end
         if (portalOUTManager)
         {
-            portalOUTManager.enabled = false;
+            portalOUTManager.Enabled = false;
         }
 
         // Teleport all SNAKE to PORTAL OUT
@@ -187,7 +187,7 @@ public class PortalManager : MonoBehaviour
         Destroy(NewSnake);
         if (portalOUTManager)
         {
-            portalOUTManager.enabled = true;
+            portalOUTManager.Enabled = true;
         }
         isPortalCoroutineRunning = false;
         PortalUsage++;

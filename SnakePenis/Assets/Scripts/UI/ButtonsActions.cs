@@ -8,38 +8,72 @@ public class ButtonsActions : MonoBehaviour
 {
     public Sprite playImage;
     public Sprite pauseImage;
+    [SerializeField]
+    private Image PauseButtonImage;
     public GameObject SettingsMenuObj;
     public GameObject DebugModePanel;
     public GameObject LanguagePanel;
-    public void ExitButtonFunction()
+
+    void RequestCommand(UICommand.UICommandFunction bcf)
+    {
+        InputHandler inputHandler = GameGodSingleton.SnakeMovement.GetInputHandler();
+        if (inputHandler != null )
+        {
+            inputHandler.RequestUICommand(bcf);
+        }
+    }
+
+    void ExitFunction()
     {
         Application.Quit();
     }
 
-    public void PauseButtonFunction(Image image)
+    public void ExitButtonFunction()
+    {
+        RequestCommand(ExitFunction);
+    }
+
+    void PauseFunction()
     {
         if (SnakeMovement.isGameOver)
         {
             return;
         }
-        Time.timeScale = (Time.timeScale == 0) ? 1 : 0;
-        if (playImage != null && pauseImage != null && image != null)
+        bool isPause = (Time.timeScale == 0);
+        Time.timeScale = isPause ? 1 : 0;
+        if (playImage != null && pauseImage != null && PauseButtonImage != null)
         {
-            image.sprite = (Time.timeScale == 0) ? playImage : pauseImage;
+            PauseButtonImage.sprite = !isPause ? playImage : pauseImage;
         }
         if (SettingsMenuObj != null)
         {
-            SettingsMenuObj.SetActive(Time.timeScale == 0 ? true : false);
+            SettingsMenuObj.SetActive(!isPause);
         }
+
     }
 
-    public void ReplayButtonFunction()
+    public void PauseButtonFunction()
+    {
+        RequestCommand(PauseFunction);
+    }
+
+    void ReplayFunction()
     {
         print("Scene reloaded");
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    public void ReplayButtonFunction()
+    {
+        RequestCommand(ReplayFunction);
+    }
+
     public void DebugModeButtonFunction()
+    {
+        RequestCommand(DebugModeFunction);
+    }
+
+    void DebugModeFunction()
     {
         if (SnakeMovement.isGameOver)
         {
@@ -63,6 +97,11 @@ public class ButtonsActions : MonoBehaviour
     private int hiddenButtonCounter = 0;
     public void DebugModeHiddenButtonFunction()
     {
+        RequestCommand(DebugModeHiddenFunction);
+    }
+
+    void DebugModeHiddenFunction()
+    {
         if (SnakeMovement.isGameOver)
         {
             return;
@@ -71,7 +110,8 @@ public class ButtonsActions : MonoBehaviour
         {
             hiddenButtonCounter = 0;
             DebugModeButtonFunction();
-        } else
+        }
+        else
         {
             hiddenButtonCounter++;
         }

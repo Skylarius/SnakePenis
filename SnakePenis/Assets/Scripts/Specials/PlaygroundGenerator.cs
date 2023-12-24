@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 
 public enum TileOrientation
 {
@@ -25,6 +26,24 @@ public struct TilePosition
     public static bool operator == (TilePosition left, TilePosition right)
     {
         return left.x == right.x && left.z == right.z;
+    }
+
+    public override bool Equals(object o)
+    {
+        if (o == null)
+        {
+            return false;
+        }
+        TilePosition t = (TilePosition)o;
+        return x == t.x && z == t.z;
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            return (x * 397) ^ (z + 1);
+        }
     }
 
     public static bool operator !=(TilePosition left, TilePosition right)

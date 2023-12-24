@@ -35,8 +35,13 @@ public class SnakeMovement : MonoBehaviour
     public float levelTime = 0f;
     public static bool isGameOver = false;
 
+    [Header("Pause")]
+    public static bool isPause = false;
+
     [Header("Animation")]
     public float TimeForPickUpToReachTheTail = 10f;
+
+    public Queue<SnakeAction> actionQueue;
 
     // Start is called before the first frame update
     void Start()
@@ -54,6 +59,12 @@ public class SnakeMovement : MonoBehaviour
         swallowWaveGenerator = GetComponent<SwallowWaveGenerator>();
         inputHandler = GetComponent<InputHandler>();
         levelTime = 0f;
+        actionQueue = new Queue<SnakeAction>();
+    }
+
+    public InputHandler GetInputHandler()
+    {
+        return inputHandler;
     }
 
     // Update is called once per frame
@@ -71,21 +82,21 @@ public class SnakeMovement : MonoBehaviour
             targetRealPosition.y + direction.y * realSpeed * Time.deltaTime
             );
 
-        // Handle inputs (movement and additional actions)
-        // If additional action is executed in this round DON'T execute movement
-        bool actionExecuted = false;
-        if (inputHandler.enabled && !Block)
+        //Process queue of actions
+        if (actionQueue.Count == 0)
         {
-            foreach (InputHandler.Action action in inputHandler.actions)
-            {
-                actionExecuted = action();
-            }
-            if (!actionExecuted)
-            {
-                inputHandler.move(ref direction);
-            }
+            return;
         }
-
+        //if (isPause)
+        //{
+        //    actionQueue.Clear();
+        //    return;
+        //}
+        SnakeAction action = actionQueue.Dequeue();
+        if (!Block) 
+        {
+            action.execute();
+        }
     }
 
     private void FixedUpdate()

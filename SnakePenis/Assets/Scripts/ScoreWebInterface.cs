@@ -61,7 +61,7 @@ public static class ScoreWebInterface
         public string length;
         public string score;
 
-        public string ToString()
+        public override string ToString()
         {
             return ID + ") " + name + ": " + length + " cm - " + score;
         }

@@ -1,13 +1,12 @@
+//#define DEBUG_POOL
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class PoolingSystem<T> where T: class, new()
 {
     private List<T> PooledObjects;
     private T Template;
 
-    private int reusedObj = 0, newObj = 0;
     public string Name = "Pool";
 
     public PoolingSystem()
@@ -35,21 +34,29 @@ public class PoolingSystem<T> where T: class, new()
         T pooledObject;
         if (PooledObjects == null)
         {
+#if DEBUG_POOL
             ++newObj;
+#endif
             PooledObjects = new List<T>();
             pooledObject = CreateNewPooledObject();
         }
         else if (PooledObjects.Count == 0)
         {
+#if DEBUG_POOL
             ++newObj;
+#endif
             pooledObject = CreateNewPooledObject();
         } else
         {
             pooledObject = PooledObjects[0];
             PooledObjects.RemoveAt(0);
+#if DEBUG_POOL
             ++reusedObj;
+#endif
         }
+#if DEBUG_POOL
         Debug.Log("'" + Name + "': " + newObj + " new, " + reusedObj + " reused Objects.");
+#endif
         return pooledObject;
     }
 
@@ -73,4 +80,7 @@ public class PoolingSystem<T> where T: class, new()
         }
         PooledObjects.AddRange(listOfObjects);
     }
+#if DEBUG_POOL
+    private int reusedObj = 0, newObj = 0;
+#endif
 }
