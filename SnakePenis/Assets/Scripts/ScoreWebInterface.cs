@@ -9,9 +9,9 @@ using System.Text;
 public static class ScoreWebInterface
 {
     private const string secretKey = "Laola"; // Edit this value and make sure it's the same as the one stored on the server
-    public const string addScoreURL = /* "http://snakepenis.com/addscore.php?" <- not working*/ "https://snakepenishighscore.000webhostapp.com/addscore.php?"; //be sure to add a ? to your url
-    public const string highscoreURL =/* "http://snakepenis.com/display.php" <- not working*/ "https://snakepenishighscore.000webhostapp.com/display.php";
-    public const string changeNameURL = /* "http://snakepenis.com/changename.php?" <- not working*/ "https://snakepenishighscore.000webhostapp.com/changename.php?"; //be sure to add a ? to your url
+    public const string addScoreURL = /* "http://snakepenis.com/addscore.php?" <- not working*/ "https://snakepenis.000webhostapp.com/addscore.php?"; //be sure to add a ? to your url
+    public const string highscoreURL =/* "http://snakepenis.com/display.php" <- not working*/ "https://snakepenis.000webhostapp.com/display.php";
+    public const string changeNameURL = /* "http://snakepenis.com/changename.php?" <- not working*/ "https://snakepenis.000webhostapp.com/changename.php?"; //be sure to add a ? to your url
 
     private static List<ScoreElem> scores;
     public static List<ScoreElem> Scores
