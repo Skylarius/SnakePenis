@@ -7,10 +7,13 @@ public abstract class SnakeCommand
 {
     private float Timestamp { get; }
     protected static float LastCommandTimestamp;
+    protected static float LastExecutedCommandTimestamp;
+    private bool hasExecutedSuccesfully;
     public SnakeCommand()
     {
         Timestamp = Time.time;
         LastCommandTimestamp = Time.time;
+        hasExecutedSuccesfully = false;
     }
 
     public static float GetLastCommandTimestamp()
@@ -18,18 +21,29 @@ public abstract class SnakeCommand
         return LastCommandTimestamp;
     }
 
+    public static float GetLastExecutedCommandTimestamp()
+    {
+        return LastExecutedCommandTimestamp;
+    }
+
     public bool IsCoincident(SnakeCommand snakeCommand) 
     {
         return Mathf.Abs(snakeCommand.Timestamp - Timestamp) < 2*Time.deltaTime;
     }
 
-    public bool IsCoincidentWithLastCommandTimestamp()
+    public bool IsCoincidentWithLastCommand()
     {
         return Mathf.Abs(Timestamp - LastCommandTimestamp) < Time.deltaTime;
     }
 
+    public bool IsCoincidentWithLastExecutedCommand() 
+    {
+        return Mathf.Abs(Timestamp - LastExecutedCommandTimestamp) < Time.deltaTime;
+    }
+
     public virtual void execute()
     {
+        LastExecutedCommandTimestamp = Time.time;
         Debug.Log("Executing command: " + GetType());
     }
 }
@@ -200,10 +214,11 @@ public class InputHandler : BaseSnakeComponent
     void ProcessActionsQueue()
     {
         float lastCommandTimestamp = SnakeCommand.GetLastCommandTimestamp();
-        if (lastCommandTimestamp + 2*Time.deltaTime > Time.time)
-        {
-            return;
-        }
+        //TODO: Non fare solo lastTimestamp, ma last APPROVED timestamp, altrimenti non capisce tra i comandi scartati e quelli eseguiti
+        //if (lastCommandTimestamp + 2*Time.deltaTime > Time.time) 
+        //{
+        //    return;
+        //}
         //Process queue of commands
         SnakeCommand command = null;
         SnakeAction action = null;
@@ -215,7 +230,7 @@ public class InputHandler : BaseSnakeComponent
         {
             action = SnakeActions.Dequeue();
         }
-        if (action != null && command != null && (action.IsCoincident(command) || action.IsCoincidentWithLastCommandTimestamp()))
+        if (action != null && command != null && (action.IsCoincident(command) || action.IsCoincidentWithLastCommand()))
         {
             //Discard action
             Debug.Log("Discarded action " + action.ToString() + " for comnnand " + command.ToString());
