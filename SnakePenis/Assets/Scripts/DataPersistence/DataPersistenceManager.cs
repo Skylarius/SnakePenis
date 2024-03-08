@@ -26,6 +26,7 @@ public class DataPersistenceManager : MonoBehaviour
     private GameData GameData;
     private List<IDataPersistence> dataPersistenceObjects;
     private FileDataHandler dataHandler;
+    private bool IsSavingGame = false;
     public void NewGame()
     {
         this.GameData = new GameData();
@@ -60,14 +61,27 @@ public class DataPersistenceManager : MonoBehaviour
 
     public void SaveGame()
     {
+        StartCoroutine(SaveGameCoroutine());
+    }
+
+    IEnumerator SaveGameCoroutine()
+    {
+        if (IsSavingGame)
+        {
+            yield break;
+        }
+        IsSavingGame = true;
         // pass the data to other  so they can update it
         foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects)
         {
             dataPersistenceObj.SaveData(ref GameData);
+            new SmallVisualHint("Saving Game, do not turn off...", 0.5f);
+            yield return new WaitForSeconds(0.5f);
         }
-
         // save that data to a file with the data handler
         dataHandler.Save(GameData);
+        new SmallVisualHint("Game Saved!");
+        IsSavingGame = false;
     }
 
     private void Start()

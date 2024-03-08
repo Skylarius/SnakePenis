@@ -60,6 +60,14 @@ public class GameGodSingleton : MonoBehaviour
         }
     }
 
+    public static HintTemplateController SmallVisualHintTemplateController
+    {
+        get
+        {
+            return Instance.GetComponent<NotificationSystem>().SmallVisualHintTemplate.GetComponent<HintTemplateController>();
+        }
+    }
+
     public static InputHandler InputHandler
     {
         get
