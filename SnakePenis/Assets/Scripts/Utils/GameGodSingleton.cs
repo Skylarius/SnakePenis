@@ -68,6 +68,14 @@ public class GameGodSingleton : MonoBehaviour
         }
     }
 
+    public static HintTemplateController SaveGameHintTemplateController
+    {
+        get
+        {
+            return Instance.GetComponent<NotificationSystem>().SaveGameHintTemplate.GetComponent<HintTemplateController>();
+        }
+    }
+
     public static InputHandler InputHandler
     {
         get
@@ -123,4 +131,5 @@ public class GameGodSingleton : MonoBehaviour
             return Instance.GetComponent<TableClothHandler>();
         }
     }
+
 }

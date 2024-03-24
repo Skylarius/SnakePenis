@@ -12,7 +12,10 @@ public class NotificationSystem : MonoBehaviour
     public GameObject HintTemplate;
     public GameObject SubtitleHintTemplate;
     public GameObject SmallVisualHintTemplate;
+    public GameObject SaveGameHintTemplate;
     private Queue<INotification> NotificationQueue;
+
+
     // Start is called before the first frame update
     void Awake()
     {

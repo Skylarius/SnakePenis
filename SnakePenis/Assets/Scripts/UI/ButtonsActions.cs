@@ -25,6 +25,11 @@ public class ButtonsActions : MonoBehaviour
 
     void ExitFunction()
     {
+        if (DataPersistenceManager.IsGameSaving()) 
+        {
+            Debug.Log("Waiting for saving...");
+            return; 
+        }
         Application.Quit();
     }
 
@@ -59,6 +64,11 @@ public class ButtonsActions : MonoBehaviour
 
     void ReplayFunction()
     {
+        if (DataPersistenceManager.IsGameSaving()) 
+        {
+            Debug.Log("Waiting for saving...");
+            return;
+        }
         print("Scene reloaded");
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
