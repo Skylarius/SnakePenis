@@ -127,11 +127,18 @@ public class PowerUpSpawner : MonoBehaviour
     public float spawnFrequency = 0.5f;
     public int MaxPowerUpAmout;
 
+    void OnPowerUpTaken(GameObject powerUp)
+    {
+        IncreaseSpawnFrequency(0.01f);
+        DecreasePowerUpAmount(powerUp);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         PowerUpPoolingSystem = new PoolingSystem<GameObject>(powerUpTemplate);
         PowerUpPoolingSystem.Name = "PowerUpPoolingSystem";
+        GameGodSingleton.SnakeMovement.OnPowerUpTakenEvent += OnPowerUpTaken;
         StartCoroutine(SpawnPowerUpCoroutine());
     }
 

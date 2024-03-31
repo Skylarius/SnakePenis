@@ -1,12 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class VisualHint : INotification
 {
     public string hintText;
+
     public bool NonBlocking;
+
     public float Duration;
+
+    [SerializeField]
     protected HintTemplateController hintTemplateController;
     public VisualHint()
     {
@@ -19,6 +25,11 @@ public class VisualHint : INotification
     public VisualHint(string s) : this()
     {
         hintText = s;
+        Notify();
+    }
+
+    public void Notify()
+    {
         GameGodSingleton.NotificationSystem.Enqueue(this);
     }
     public IEnumerator ExecuteCoroutine()

@@ -13864,6 +13864,7 @@ GameObject:
   - component: {fileID: 1808667368}
   - component: {fileID: 1808667369}
   - component: {fileID: 1808667371}
+  - component: {fileID: 1808667372}
   m_Layer: 0
   m_Name: GameGod
   m_TagString: Untagged
@@ -14478,6 +14479,31 @@ MonoBehaviour:
   SubtitleHintTemplate: {fileID: 1880881024}
   SmallVisualHintTemplate: {fileID: 431912068}
   SaveGameHintTemplate: {fileID: 1017475544}
+  TimeQueueCheck: 0.5
+--- !u!114 &1808667372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1808667357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 888dcb60dcd57b04caa65399fd1a78ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TutorialHints:
+  - {fileID: 11400000, guid: 5b3e47d3b2fb45a48b85ade49a75d962, type: 2}
+  - {fileID: 11400000, guid: cdb2ce00246993748982a7d876afe736, type: 2}
+  - {fileID: 11400000, guid: be784106eac768f4d9969e4f2dfd8ff9, type: 2}
+  - {fileID: 11400000, guid: 096f54db450967d42a57eed4e95f8fc2, type: 2}
+  - {fileID: 11400000, guid: a315c535f33bf8948b8536d9d61caaa9, type: 2}
+  - {fileID: 11400000, guid: b245131e1b950a6478a0665365120c03, type: 2}
+  - {fileID: 11400000, guid: 745c30944cd9e7f418e344920b598960, type: 2}
+  - {fileID: 11400000, guid: f800472ed0e137945b425d03d5b321c5, type: 2}
+  UseSaveTutorialData: 1
+  DoDisable: 0
+  CurrentHintRunning: {fileID: 0}
 --- !u!1 &1817953571
 GameObject:
   m_ObjectHideFlags: 0

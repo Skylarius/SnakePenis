@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,13 +14,22 @@ public class NotificationSystem : MonoBehaviour
     public GameObject SubtitleHintTemplate;
     public GameObject SmallVisualHintTemplate;
     public GameObject SaveGameHintTemplate;
+    public float TimeQueueCheck = 3f;
     private Queue<INotification> NotificationQueue;
+    private WaitForSeconds waitForSeconds;
+
+    public event Action<INotification> OnNotificationExecuted = delegate { };
 
 
     // Start is called before the first frame update
     void Awake()
     {
         StartCoroutine(DequeueNotificationCoroutine());
+    }
+
+    private void Start()
+    {
+        waitForSeconds = new WaitForSeconds(TimeQueueCheck);
     }
 
     IEnumerator DequeueNotificationCoroutine()
@@ -31,9 +41,11 @@ public class NotificationSystem : MonoBehaviour
             {
                 INotification n = NotificationQueue.Dequeue();
                 yield return StartCoroutine(n.ExecuteCoroutine());
+                OnNotificationExecuted.Invoke(n);
+
             } else
             {
-                yield return new WaitForSeconds(0.5f);
+                yield return waitForSeconds;
             }
         }
     }

@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0016846cea40e144a84b7c9ebb1315ac, type: 3}
+  m_Name: TutorialData 2
+  m_EditorClassIdentifier: 
+  UID: d44e5a40196c6b346803171cdec9805b
+  Text:
+    m_TableReference:
+      m_TableCollectionName: GUID:914219d03f0be4e43966320099494118
+    m_TableEntryReference:
+      m_KeyId: 1368471977984
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  type: 1
+  ActivateOnEvent: 4
+  DeactivateOnEvent: 3
+  DeactivateAfter: 3
+  IsTimeBasedDeactivation: 0
+  Duration: 3
+  SlowMotion: 1
+  hintTemplateController: {fileID: 0}
+  DisableSavingAfterThisTutorialCompletes: 1
+  references:
+    version: 2
+    RefIds: []

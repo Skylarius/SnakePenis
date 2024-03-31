@@ -37,6 +37,10 @@ MonoBehaviour:
     m_Address: Assets/Localization/SoundEffects Shared Data.asset
     m_ReadOnly: 1
     m_SerializedLabels: []
+  - m_GUID: 914219d03f0be4e43966320099494118
+    m_Address: Assets/Localization/Tutorial Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: d2eab36990f17b4429ffccca6c722885, type: 2}
   m_SchemaSet:

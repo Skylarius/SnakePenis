@@ -33,6 +33,9 @@ public class GameData
     public bool FirstPerson;
     public bool Labyrinth;
 
+    //Tutorial
+    public List<string> CompletedTutorials;
+
     //Language
     public string Language;
 
@@ -72,6 +75,9 @@ public class GameData
 
         //Language
         Language = "";
+
+        //Tutorial
+        CompletedTutorials = new List<string>();
 
         Stats = new StatsData();
     }

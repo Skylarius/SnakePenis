@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Security.Cryptography;
 using System.Text;
+using UnityEngine.Networking;
 
 public static class ScoreWebInterface
 {
@@ -29,12 +30,12 @@ public static class ScoreWebInterface
         byte[] hashedBytes = MD5.Create().ComputeHash(asciiBytes);
         string hash = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
 
-        string post_url = addScoreURL + "id=" + id + "&name=" + WWW.EscapeURL(name) + "&score=" + score + "&length=" + length + "&hash=" + hash;
+        string post_url = addScoreURL + "id=" + id + "&name=" + UnityWebRequest.EscapeURL(name) + "&score=" + score + "&length=" + length + "&hash=" + hash;
 
         // Post the URL to the site and create a download object to get the result.
         Debug.Log("Submitting score");
-        WWW hs_post = new WWW(post_url);
-        yield return hs_post; // Wait until the download is done
+        UnityWebRequest hs_post = UnityWebRequest.Get(post_url);
+        yield return hs_post.SendWebRequest(); // Wait until the download is done
         Debug.Log("Score submitted");
 
         if (hs_post.error != null)
@@ -73,8 +74,8 @@ public static class ScoreWebInterface
         scores = new List<ScoreElem>();
         scores.Add(new ScoreElem(".", "Loading", "Scores", "..."));
 
-        WWW hs_get = new WWW(highscoreURL);
-        yield return hs_get;
+        UnityWebRequest hs_get = UnityWebRequest.Get(highscoreURL);
+        yield return hs_get.SendWebRequest();
 
         if (hs_get.error != null)
         {
@@ -87,7 +88,7 @@ public static class ScoreWebInterface
         {
             // split the results into an array
             Regex regex = new Regex(@"[\t\n]");
-            string[] rawScores = regex.Split(hs_get.text);
+            string[] rawScores = regex.Split(hs_get.downloadHandler.text);
 
             // Restructure the string array into an array of KeyValuePairs
             scores.Clear();
@@ -111,12 +112,12 @@ public static class ScoreWebInterface
         byte[] hashedBytes = MD5.Create().ComputeHash(asciiBytes);
         string hash = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
 
-        string post_url = changeNameURL + "id=" + id + "&name=" + WWW.EscapeURL(name) + "&hash=" + hash;
+        string post_url = changeNameURL + "id=" + id + "&name=" + UnityWebRequest.EscapeURL(name) + "&hash=" + hash;
 
         // Post the URL to the site and create a download object to get the result.
         Debug.Log("Submitting Name");
-        WWW hs_post = new WWW(post_url);
-        yield return hs_post; // Wait until the download is done
+        UnityWebRequest hs_post = UnityWebRequest.Get(post_url);
+        yield return hs_post.SendWebRequest(); // Wait until the download is done
         Debug.Log("Name Submitted");
 
         if (hs_post.error != null)

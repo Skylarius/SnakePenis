@@ -8,12 +8,10 @@ public abstract class SnakeCommand
     private float Timestamp { get; }
     protected static float LastCommandTimestamp;
     protected static float LastExecutedCommandTimestamp;
-    private bool hasExecutedSuccesfully;
     public SnakeCommand()
     {
         Timestamp = Time.time;
         LastCommandTimestamp = Time.time;
-        hasExecutedSuccesfully = false;
     }
 
     public static float GetLastCommandTimestamp()
@@ -294,7 +292,11 @@ public class InputHandler : BaseSnakeComponent
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
         Vector2 newDirection = GetStandardDirection(x, z);
-        if (newDirection.x == 0 && newDirection.y == 0)
+        if (newDirection.x == 0 && newDirection.y == 0 )
+        {
+            return;
+        }
+        if (newDirection == snakeMovement.direction)
         {
             return;
         }

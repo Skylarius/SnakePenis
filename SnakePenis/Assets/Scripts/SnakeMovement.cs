@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -43,6 +44,10 @@ public class SnakeMovement : MonoBehaviour
 
     public Queue<SnakeAction> actionQueue;
 
+    public event Action<GameObject> OnPowerUpTakenEvent;
+    public event Action OnDeathEvent;
+    public event Action<SnakeAction> OnSnakeActionEvent;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -60,6 +65,16 @@ public class SnakeMovement : MonoBehaviour
         inputHandler = GetComponent<InputHandler>();
         levelTime = 0f;
         actionQueue = new Queue<SnakeAction>();
+
+        SetUpEvents();
+    }
+
+    void SetUpEvents() 
+    {
+
+        OnPowerUpTakenEvent += OnPowerUpTaken;
+        OnDeathEvent += OnDeath;
+        OnSnakeActionEvent += OnSnakeAction;
     }
 
     public InputHandler GetInputHandler()
@@ -95,8 +110,13 @@ public class SnakeMovement : MonoBehaviour
         SnakeAction action = actionQueue.Dequeue();
         if (!Block) 
         {
-            action.execute();
+            OnSnakeActionEvent.Invoke(action);
         }
+    }
+
+    void OnSnakeAction(SnakeAction action)
+    {
+        action.execute();
     }
 
     private void FixedUpdate()
@@ -159,15 +179,23 @@ public class SnakeMovement : MonoBehaviour
         if (isGameOver) return;
         if (other.gameObject.CompareTag("PowerUp"))
         {
-            GameGodSingleton.PowerUpSpawner.IncreaseSpawnFrequency(0.01f);
-            GameGodSingleton.PowerUpSpawner.DecreasePowerUpAmount(other.gameObject);
-            Grow();
-            StartCoroutine(PickupAnimationCoroutine(other.gameObject));
+            OnPowerUpTakenEvent.Invoke(other.gameObject);
         }
         if (other.gameObject.CompareTag("Body") || other.gameObject.CompareTag("Wall"))
         {
-            StartCoroutine(DeathCoroutine());
+            OnDeathEvent.Invoke();
         }
+    }
+
+    void OnPowerUpTaken(GameObject powerUp) 
+    {
+        Grow();
+        StartCoroutine(PickupAnimationCoroutine(powerUp));
+    }
+
+    void OnDeath() 
+    {
+        StartCoroutine(DeathCoroutine());
     }
 
     private IEnumerator PickupAnimationCoroutine(GameObject pickup)
@@ -250,7 +278,7 @@ public class SnakeMovement : MonoBehaviour
         {
             Rigidbody rb = SnakeBody[i].GetComponent<Rigidbody>();
             rb.isKinematic = false;
-            Vector3 dropForce = Vector3.right * Random.Range(10, 20) + Vector3.up * 20 + Vector3.forward * Random.Range(-10, 10);
+            Vector3 dropForce = Vector3.right * UnityEngine.Random.Range(10, 20) + Vector3.up * 20 + Vector3.forward * UnityEngine.Random.Range(-10, 10);
             dropForce *= SnakeBody.Count * 0.2f;
             rb.AddForce(dropForce);
         }
