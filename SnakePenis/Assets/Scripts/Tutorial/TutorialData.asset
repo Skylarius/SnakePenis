@@ -29,10 +29,16 @@ MonoBehaviour:
   IsTimeBasedDeactivation: 0
   Duration: 3
   Freeze: 1
+  PointTo: 0
+  ObjectToPoint: {fileID: 0}
+  ObjectToPointTag: 
   SlowMotion: 0
   RepeatTimes: 0
+  TemplateType: 1
+  CustomHintTemplate: {fileID: 831273040554540992, guid: 795947edec7c7174491316df2ce4e932, type: 3}
   hintTemplateController: {fileID: 0}
   DisableSavingAfterThisTutorialCompletes: 1
+  DoNotHideTutorialIfDie: 0
   references:
     version: 2
     RefIds: []

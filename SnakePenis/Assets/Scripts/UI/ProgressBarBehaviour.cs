@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Numerics;
 
-public class ProgressBarBehaviour : MonoBehaviour
+public class ProgressBarBehaviour : BaseUIComponent
 {
     // Start is called before the first frame update
     public GameObject ProgressBarSprite;

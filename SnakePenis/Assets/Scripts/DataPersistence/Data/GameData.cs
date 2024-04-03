@@ -3,6 +3,15 @@ using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
 
+[System.Serializable]
+public class SpecialData
+{
+    public bool Active;
+    public bool UsedOnce;
+    public SpecialData() { Active = false; UsedOnce = false; }
+    public SpecialData(bool active, bool usedOnce) { Active = active; UsedOnce = usedOnce; }
+
+}
 
 [System.Serializable]
 public class GameData
@@ -21,17 +30,17 @@ public class GameData
     public string DailyBonusTimeStamp;
 
     // Specials
-    public bool RoundedBalls;
-    public bool AfroStyle;
-    public bool DickingJump;
-    public bool RainbowStyle;
-    public bool MovingWalls;
-    public bool Free360Movement;
-    public bool PillsBlower;
-    public bool Teleport;
-    public bool ACappella;
-    public bool FirstPerson;
-    public bool Labyrinth;
+    public SpecialData RoundedBalls;
+    public SpecialData AfroStyle;
+    public SpecialData DickingJump;
+    public SpecialData RainbowStyle;
+    public SpecialData MovingWalls;
+    public SpecialData Free360Movement;
+    public SpecialData PillsBlower;
+    public SpecialData Teleport;
+    public SpecialData ACappella;
+    public SpecialData FirstPerson;
+    public SpecialData Labyrinth;
 
     //Tutorial
     public List<string> CompletedTutorials;
@@ -62,16 +71,16 @@ public class GameData
         TouchSensitivity = 0f;
 
         //Unlockables settings
-        RoundedBalls = false;
-        AfroStyle = false;
-        DickingJump = false;
-        RainbowStyle = false;
-        MovingWalls = false;
-        Free360Movement = false;
-        PillsBlower = false;
-        Teleport = false;
-        ACappella = false;
-        Labyrinth = false;
+        RoundedBalls = new SpecialData();
+        AfroStyle = new SpecialData();
+        DickingJump = new SpecialData();
+        RainbowStyle = new SpecialData();
+        MovingWalls = new SpecialData();
+        Free360Movement = new SpecialData();
+        PillsBlower = new SpecialData();
+        Teleport = new SpecialData();
+        ACappella = new SpecialData();
+        Labyrinth = new SpecialData();
 
         //Language
         Language = "";

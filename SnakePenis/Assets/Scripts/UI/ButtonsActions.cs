@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class ButtonsActions : MonoBehaviour
+public class ButtonsActions : BaseUIComponent
 {
     public Sprite playImage;
     public Sprite pauseImage;

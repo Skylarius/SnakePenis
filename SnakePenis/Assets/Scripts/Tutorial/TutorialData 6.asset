@@ -29,10 +29,15 @@ MonoBehaviour:
   IsTimeBasedDeactivation: 0
   Duration: 3
   Freeze: 0
+  PointTo: 2
+  ObjectToPoint: {fileID: 0}
+  ObjectToPointTag: PowerUp
   SlowMotion: 0
   RepeatTimes: 9
+  TemplateType: 2
   hintTemplateController: {fileID: 0}
   DisableSavingAfterThisTutorialCompletes: 1
+  DoNotHideTutorialIfDie: 0
   references:
     version: 2
     RefIds: []

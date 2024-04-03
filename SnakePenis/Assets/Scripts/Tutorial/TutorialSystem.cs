@@ -17,6 +17,10 @@ public class TutorialSystem : MonoBehaviour, IDataPersistence
 
     public TutorialHintScriptableObject CurrentHintRunning;
 
+    [SerializeField]
+    CircleHighlighter CircleHighlighter;
+
+
 
     private void Start()
     {
@@ -30,9 +34,36 @@ public class TutorialSystem : MonoBehaviour, IDataPersistence
         //Init all hints
         foreach (TutorialHintScriptableObject hint in TutorialHints) 
         {
-            if (hint.hintTemplateController == null)
+            switch(hint.TemplateType)
             {
-                hint.hintTemplateController = GameGodSingleton.SubtitleHintTemplateController;
+                case TemplateType.HintTemplate:
+                    hint.hintTemplateController = GameGodSingleton.HintTemplateController;
+                    break;
+                case TemplateType.SubtitleHintTemplate:
+                    hint.hintTemplateController = GameGodSingleton.SubtitleHintTemplateController;
+                    break;
+                case TemplateType.SmallVisualHintTemplate:
+                    hint.hintTemplateController = GameGodSingleton.SmallVisualHintTemplateController;
+                    break;
+                case TemplateType.SaveGameHintTemplate:
+                    hint.hintTemplateController = GameGodSingleton.SaveGameHintTemplateController;
+                    break;
+                case TemplateType.CustomTemplate:
+                    if (GameObject.Find(hint.CustomHintTemplate.gameObject.name) == null)
+                    {
+                        GameObject customHintTemplate = Instantiate(hint.CustomHintTemplate, GameObject.FindObjectOfType<Canvas>().transform);
+                        HintTemplateController templateController = customHintTemplate.GetComponent<HintTemplateController>();
+                        if (templateController == null)
+                        {
+                            Debug.LogError("The template named '" + customHintTemplate.name + "' doesn't have a hint template controller");
+                            break;
+                        }
+                        hint.hintTemplateController = templateController;
+                    }
+                    break;
+                default:
+                    break;
+
             }
             if (UseSaveTutorialData)
             {
@@ -51,7 +82,7 @@ public class TutorialSystem : MonoBehaviour, IDataPersistence
     void DeathComplementaryCallback()
     {
         HideTutorialScreen();
-        if (!CurrentHintRunning.DoNotHideTutorialIfDie) 
+        if (CurrentHintRunning && !CurrentHintRunning.DoNotHideTutorialIfDie) 
         {
             DoDisable = true;
         }
@@ -102,6 +133,7 @@ public class TutorialSystem : MonoBehaviour, IDataPersistence
                 break;
             }
         }
+        SetupCircleHighlighter(CurrentHintRunning);
     }
 
     void OnEventTriggeredTutorial<T>(SnakeEvents snakeEvent, T payload)
@@ -145,6 +177,7 @@ public class TutorialSystem : MonoBehaviour, IDataPersistence
                 {
                     StartCoroutine(hint.SlowMotionUntilComplete());
                 }
+                SetupCircleHighlighter(hint);
                 break;
             }
             if (hint.DeactivateOnEvent == snakeEvent)
@@ -153,6 +186,28 @@ public class TutorialSystem : MonoBehaviour, IDataPersistence
                 UpdateTutorialHintsNotifications();
                 break;
             }
+        }
+    }
+
+    void SetupCircleHighlighter(TutorialHintScriptableObject hint) //La mano
+    {
+        if (hint == null || hint.PointTo == PointToEnum.None)
+        {
+            CircleHighlighter.Deactivate();
+            return;
+        }
+        CircleHighlighter.gameObject.SetActive(true);
+        switch (hint.PointTo)
+        {
+            case PointToEnum.Object:
+                CircleHighlighter.SetTarget(hint.ObjectToPoint.transform);
+                break;
+            case PointToEnum.Tag:
+                CircleHighlighter.SetTagOfGenericTarget(hint.ObjectToPointTag);
+                break;
+            case PointToEnum.None:
+                CircleHighlighter.Deactivate();
+                break;
         }
     }
 

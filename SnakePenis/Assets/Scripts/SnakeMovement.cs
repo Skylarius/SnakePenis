@@ -202,6 +202,7 @@ public class SnakeMovement : MonoBehaviour
     {
         pickup.GetComponent<Collider>().enabled = false;
         pickup.GetComponentInChildren<Animator>().enabled = false;
+        pickup.GetComponent<BaseObjectComponent>().SetActiveInGame(false);
         float t;
         for (int i = 1; i < SnakeBody.Count; i++)
         {

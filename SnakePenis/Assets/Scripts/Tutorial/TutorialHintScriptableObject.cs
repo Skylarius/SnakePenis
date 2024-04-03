@@ -13,6 +13,23 @@ public enum TutorialType
     EventTriggered
 }
 
+public enum TemplateType
+{
+    None,
+    HintTemplate,
+    SubtitleHintTemplate,
+    SmallVisualHintTemplate,
+    SaveGameHintTemplate,
+    CustomTemplate
+}
+
+public enum PointToEnum
+{
+    None,
+    Object,
+    Tag
+};
+
 [CreateAssetMenu(fileName = "TutorialData", menuName = "ScriptableObjects/TutorialHint", order = 1)]
 public class TutorialHintScriptableObject : ScriptableObject, INotification
 {
@@ -22,6 +39,7 @@ public class TutorialHintScriptableObject : ScriptableObject, INotification
     [Space]
     [SerializeField]
     public TutorialType type;
+
     
     [Header("Event Triggered Settings")]
     public SnakeEvents ActivateOnEvent;
@@ -35,13 +53,22 @@ public class TutorialHintScriptableObject : ScriptableObject, INotification
     [SerializeField]
     public bool Freeze = false;
 
-    [Space]
+    [Header("Highlight Object")]
+    public PointToEnum PointTo;
+    public GameObject ObjectToPoint = null;
+    public string ObjectToPointTag = "";
+
+    [Header("Misc Settings")]
     [SerializeField]
     public bool SlowMotion = false;
     [SerializeField]
     public int RepeatTimes = 0;
     private int _repetitions = 0;
     [SerializeField]
+    public TemplateType TemplateType = TemplateType.SubtitleHintTemplate;
+    [SerializeField]
+    public GameObject CustomHintTemplate;
+    [HideInInspector]
     public HintTemplateController hintTemplateController;
     [Space]
     // Used so if the game is loaded after this tutorial (intermediate) this tutorial will go again, and so the next ones, 
@@ -164,6 +191,11 @@ public class TutorialHintScriptableObject : ScriptableObject, INotification
                 EditorUtility.SetDirty(self);
             }
 
+            if (self.TemplateType != TemplateType.CustomTemplate)
+            {
+                excludedProperties.Add("CustomHintTemplate");
+            }
+
             if (self.type == TutorialType.TimeTriggered)
             {
                 excludedProperties.Add("ActivateOnEvent");
@@ -184,6 +216,14 @@ public class TutorialHintScriptableObject : ScriptableObject, INotification
                 {
                     excludedProperties.Add("DeactivateAfter");
                 }
+            }
+            if (self.PointTo != PointToEnum.Object)
+            {
+                excludedProperties.Add("ObjectToPoint");
+            }
+            if (self.PointTo != PointToEnum.Tag)
+            {
+                excludedProperties.Add("ObjectToPointTag");
             }
             DrawPropertiesExcluding(serializedObject, excludedProperties.ToArray());
             serializedObject.ApplyModifiedProperties();

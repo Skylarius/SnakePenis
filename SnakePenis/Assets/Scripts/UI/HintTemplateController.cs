@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HintTemplateController : MonoBehaviour
+public class HintTemplateController : BaseUIComponent
 {
     [SerializeField]
     private Text HintText;

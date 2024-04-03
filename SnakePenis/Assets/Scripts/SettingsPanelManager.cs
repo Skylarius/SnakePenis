@@ -64,6 +64,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     public class BaseSpecial
     {
         public bool enabled;
+        public bool usedOnce;
         public Unlockable Unlockable;
         public string Title;
         public UnityEngine.Localization.LocalizedString TitleOnButton;
@@ -75,6 +76,14 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             get
             {
                 return this.Unlockable.Menu.GetComponentInChildren<Button>();
+            }
+        }
+
+        public GameObject NewSymbol
+        {
+            get
+            {
+                return this.Unlockable.Menu.GetComponentInChildren<New>().gameObject;
             }
         }
 
@@ -128,6 +137,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         public BaseSpecial()
         {
             enabled = false;
+            usedOnce = false;
             Title = "";
             Info = "";
             BonusPercent = 0;
@@ -148,6 +158,8 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         {
             SwitchConditioned(!this.enabled);
             settingsPanelManager.infoText.text = LocalizedStringUser.GetLocalizedBonusString(this.Info);
+            this.usedOnce = true;
+            NewSymbol.SetActive(false);
         }
 
         public void SetSettingsPanelManager(SettingsPanelManager settingsPanelManager)
@@ -1137,25 +1149,33 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         }
     }
 
+    void SetSpecialButtonOn(BaseSpecial special, SpecialData specialData)
+    {
+        special.ButtonText.text = specialData.Active ? "<b>ON</b>" : "OFF";
+        special.ButtonImage.color = specialData.Active ? Color.green : Color.red;
+        special.NewSymbol.SetActive(specialData.UsedOnce ? false : true);
+    }
+
     void SetSpecialButtonOn(BaseSpecial special, bool condition)
     {
         special.ButtonText.text = condition ? "<b>ON</b>" : "OFF";
         special.ButtonImage.color = condition ? Color.green : Color.red;
     }
 
-    void LoadSpecial(BaseSpecial special, bool condition)
+    void LoadSpecial(BaseSpecial special, SpecialData specialData)
     {
-        if (condition == true)
+        if (specialData.Active == true)
         {
             special.SwitchConditioned(true);
-            SetSpecialButtonOn(special, true);
+            SetSpecialButtonOn(special, specialData);
         }
         else
         {
             print($"NO {special.Title}");
             special.enabled = false;
-            SetSpecialButtonOn(special, false);
+            SetSpecialButtonOn(special, specialData);
         }
+        special.usedOnce = specialData.UsedOnce;
     }
 
     public void LoadData(GameData data)
@@ -1189,9 +1209,9 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         }
         SetupSpecialsDelegates();
 
-        if (data.AfroStyle == true && data.RainbowStyle == true)
+        if (data.AfroStyle.Active == true && data.RainbowStyle.Active == true)
         {
-            data.RainbowStyle = false;
+            data.RainbowStyle.Active = false;
         }
         LoadSpecial(SquareBallsSpecial, data.RoundedBalls);
         LoadSpecial(AfroStyleSpecial, data.AfroStyle);
@@ -1220,16 +1240,16 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         data.Sound = isSoundEnabled;
         data.FieldOfView = currentFieldOfView;
         data.TouchSensitivity = currentTouchSensitivity;
-        data.RoundedBalls = SquareBallsSpecial.enabled;
-        data.AfroStyle = AfroStyleSpecial.enabled;
-        data.DickingJump = JumpingDickSpecial.enabled;
-        data.RainbowStyle = RainbowSpecial.enabled;
-        data.MovingWalls = MovingWallsSpecial.enabled;
-        data.Free360Movement = Free360MovementSpecial.enabled;
-        data.PillsBlower = PillsBlowerSpecial.enabled;
-        data.Teleport = TeleportSpecial.enabled;
-        data.ACappella = ACappellaSpecial.enabled;
-        data.FirstPerson = FirstPersonSpecial.enabled;
-        data.Labyrinth = LabyrinthSpecial.enabled && !LabyrinthSpecial.disableNextGame;
+        data.RoundedBalls = new SpecialData(SquareBallsSpecial.enabled, SquareBallsSpecial.usedOnce);
+        data.AfroStyle = new SpecialData(AfroStyleSpecial.enabled, AfroStyleSpecial.usedOnce);
+        data.DickingJump = new SpecialData(JumpingDickSpecial.enabled, JumpingDickSpecial.usedOnce);
+        data.RainbowStyle = new SpecialData(RainbowSpecial.enabled, RainbowSpecial.usedOnce);
+        data.MovingWalls = new SpecialData(MovingWallsSpecial.enabled, MovingWallsSpecial.usedOnce);
+        data.Free360Movement = new SpecialData(Free360MovementSpecial.enabled, Free360MovementSpecial.usedOnce);
+        data.PillsBlower = new SpecialData(PillsBlowerSpecial.enabled, PillsBlowerSpecial.usedOnce);
+        data.Teleport = new SpecialData(TeleportSpecial.enabled, TeleportSpecial.usedOnce);
+        data.ACappella = new SpecialData(ACappellaSpecial.enabled, ACappellaSpecial.usedOnce);
+        data.FirstPerson = new SpecialData(FirstPersonSpecial.enabled, FirstPersonSpecial.usedOnce);
+        data.Labyrinth = new SpecialData(LabyrinthSpecial.enabled && !LabyrinthSpecial.disableNextGame, LabyrinthSpecial.usedOnce);
     }
 }

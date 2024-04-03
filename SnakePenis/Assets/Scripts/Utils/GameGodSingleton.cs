@@ -15,6 +15,14 @@ public class GameGodSingleton : MonoBehaviour
         Instance = this;
     }
 
+    private void Start()
+    {
+        if (Camera.current == null)
+        {
+            Camera.SetupCurrent(Camera.main);
+        }
+    }
+
 
     [SerializeField]
     private SnakeMovement snakeMovement;
