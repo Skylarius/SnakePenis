@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using UnityEngine;
 using static UnityEngine.EventSystems.EventTrigger;
@@ -228,6 +229,8 @@ public class TutorialSystem : MonoBehaviour, IDataPersistence
         {
             CompletedTutorials.Add(uid);
         }
+
+        CompletedTutorials = CompletedTutorials.Distinct().ToList();
     }
 
     public void SaveData(ref GameData data)
@@ -236,7 +239,7 @@ public class TutorialSystem : MonoBehaviour, IDataPersistence
         {
             return;
         }
-        CompletedTutorials.Clear();
+        //CompletedTutorials.Clear();
         List<string> unsavedCompletedTutorials = new List<string>();
         foreach (TutorialHintScriptableObject hint in TutorialHints)
         {
@@ -256,7 +259,8 @@ public class TutorialSystem : MonoBehaviour, IDataPersistence
                 }
             }
         }
-        data.CompletedTutorials = CompletedTutorials;
+        // Add to data.CompletedTutorials only once
+        data.CompletedTutorials = CompletedTutorials.Distinct().ToList();
 
     }
 }

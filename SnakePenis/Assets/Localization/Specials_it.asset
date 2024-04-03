@@ -162,6 +162,10 @@ MonoBehaviour:
     m_Localized: Troppo grosso per un solo mondo
     m_Metadata:
       m_Items: []
+  - m_Id: 202586403224764416
+    m_Localized: Indiana Dong
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

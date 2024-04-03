@@ -159,6 +159,10 @@ MonoBehaviour:
     m_Key: LABYRINTH_DESC
     m_Metadata:
       m_Items: []
+  - m_Id: 202586403224764416
+    m_Key: MOVING_WALLS_SUPER_BONUS
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

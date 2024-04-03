@@ -57,6 +57,10 @@ public class GameOverProcedures : MonoBehaviour
                     // it's a MALUS
                     colorBegin = "<color=red>";
                     colorEnd = "</color>";
+                } else if (bonus.isSuperBonus)
+                {
+                    colorBegin = "<color=green>";
+                    colorEnd = "</color>";
                 } else
                 {
                     colorBegin = colorEnd = "";

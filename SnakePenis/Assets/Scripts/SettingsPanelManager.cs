@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 using static Codice.CM.Common.CmCallContext;
 
@@ -22,12 +24,21 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
     }
 
     [System.Serializable]
+    public struct SuperBonus
+    {
+        public LocalizedString Title;
+        public int Percent;
+        public int XPAmount;
+    }
+
+    [System.Serializable]
     public struct Bonus
     {
         public string Name;
         public int Percent;
         public int XPAmount;
         public int TotalBonus;
+        public bool isSuperBonus;
     }
     [Header("Daily Bonus")]
     public string DailyBonusTimeStamp;
@@ -71,6 +82,14 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         public string Info;
         public int BonusPercent;
         public int BonusXPAmount;
+
+        // SUPER BONUS INFO :: you must also define the GetSuperBonus method
+        public bool HasSuperBonus;
+        [ConditionalHide("HasSuperBonus", true)]
+        public SuperBonus SuperBonus;
+        public virtual int GetSuperBonus() { return 0; }
+
+
         public Button Button
         {
             get
@@ -83,7 +102,8 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         {
             get
             {
-                return this.Unlockable.Menu.GetComponentInChildren<New>().gameObject;
+                New n = this.Unlockable.Menu.GetComponentInChildren<New>();
+                return (n != null) ? n.gameObject: null;
             }
         }
 
@@ -142,6 +162,8 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             Info = "";
             BonusPercent = 0;
             BonusXPAmount = 0;
+            HasSuperBonus = false;
+
         }
 
         public virtual int GetXPAmount()
@@ -159,7 +181,11 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
             SwitchConditioned(!this.enabled);
             settingsPanelManager.infoText.text = LocalizedStringUser.GetLocalizedBonusString(this.Info);
             this.usedOnce = true;
-            NewSymbol.SetActive(false);
+            GameObject newSymbol = NewSymbol;
+            if (newSymbol)
+            {
+                NewSymbol.SetActive(false);
+            }
         }
 
         public void SetSettingsPanelManager(SettingsPanelManager settingsPanelManager)
@@ -233,6 +259,21 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         public GameObject MovingWall1;
         public GameObject MovingWall2;
         internal GameObject newMovingWall1 = null, newMovingWall2 = null;
+
+        public override int GetSuperBonus()
+        {
+            if (settingsPanelManager.JumpingDickSpecial.IsEnabled() || settingsPanelManager.PillsBlowerSpecial.IsEnabled())
+            {
+                return 0;
+            }
+            if (ScoreManager.ScoreBeforeBonuses == "")
+            {
+                return 0;
+            }
+            int scoreBeforeBonus = int.Parse(ScoreManager.ScoreBeforeBonuses);
+            scoreBeforeBonus /= 10;
+            return scoreBeforeBonus * scoreBeforeBonus;
+        }
     }
 
     [System.Serializable]
@@ -523,6 +564,7 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         if (isSoundEnabled == false)
         {
             bonus = new Bonus();
+            bonus.isSuperBonus = true;
             bonus.Name = LocalizedStringUser.GetLocalizedBonusString(SoundBonusTitle);
             bonus.Percent = SoundBonusPercent;
             yield return bonus;
@@ -532,10 +574,25 @@ public class SettingsPanelManager : MonoBehaviour, IDataPersistence
         {
             if (special.IsEnabled())
             {
+                // Make Bonus
                 bonus = new Bonus();
                 bonus.Name = LocalizedStringUser.GetLocalizedBonusString(special.Title);
                 bonus.Percent = special.BonusPercent;
                 bonus.XPAmount = special.GetXPAmount();
+                yield return bonus;
+                if (!special.HasSuperBonus || special.SuperBonus.Title.IsEmpty)
+                {
+                    continue;
+                }
+                // Make Super Bonus
+                bonus = new Bonus();
+                bonus.isSuperBonus = true;
+                bonus.Name = special.SuperBonus.Title.GetLocalizedString();
+                bonus.XPAmount = special.GetSuperBonus();
+                if (bonus.XPAmount == 0)
+                {
+                    continue;
+                }
                 yield return bonus;
             }
         }

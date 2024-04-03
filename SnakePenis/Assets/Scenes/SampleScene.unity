@@ -15400,6 +15400,19 @@ MonoBehaviour:
     Info: SQUARE_BALLS_DESC
     BonusPercent: 3
     BonusXPAmount: 0
+    HasSuperBonus: 0
+    SuperBonus:
+      Title:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+      Percent: 0
+      XPAmount: 0
     SquareBallsPrefab: {fileID: 1070659513439915691, guid: de7e1543c51da0242a4e2175d9e85ae0, type: 3}
     OriginalBalls: {fileID: 1777297881}
   AfroStyleSpecial:
@@ -15421,6 +15434,19 @@ MonoBehaviour:
     Info: AFRO_STYLE_DESC
     BonusPercent: 7
     BonusXPAmount: 0
+    HasSuperBonus: 0
+    SuperBonus:
+      Title:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+      Percent: 0
+      XPAmount: 0
     Brown: {fileID: 2100000, guid: e28486f7edab90b4282b0e7b57a83ffe, type: 2}
     DarkBrown: {fileID: 2100000, guid: 46793bdcccf2a684e80c4bc87c438c86, type: 2}
   JumpingDickSpecial:
@@ -15442,6 +15468,19 @@ MonoBehaviour:
     Info: JUMP_DESC
     BonusPercent: 9
     BonusXPAmount: 100
+    HasSuperBonus: 0
+    SuperBonus:
+      Title:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+      Percent: 0
+      XPAmount: 0
   RainbowSpecial:
     enabled: 0
     usedOnce: 0
@@ -15461,9 +15500,22 @@ MonoBehaviour:
     Info: RAINBOW_STYLE_DESC
     BonusPercent: 12
     BonusXPAmount: 0
+    HasSuperBonus: 0
+    SuperBonus:
+      Title:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+      Percent: 0
+      XPAmount: 0
     RainbowMaterial: {fileID: 2100000, guid: f756bea2726ee664db5614846ee8455f, type: 2}
     snakeParticleSystem: {fileID: 1875910564}
-    particleSystemOriginalMaterial: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 3}
+    particleSystemOriginalMaterial: {fileID: 2100000, guid: 837a1e14056adeb42aa7496f94547b1f, type: 2}
   MovingWallsSpecial:
     enabled: 0
     usedOnce: 0
@@ -15481,8 +15533,21 @@ MonoBehaviour:
       m_WaitForCompletion: 0
       m_LocalVariables: []
     Info: MOVING_WALLS_DESC
-    BonusPercent: 15
+    BonusPercent: 10
     BonusXPAmount: 0
+    HasSuperBonus: 1
+    SuperBonus:
+      Title:
+        m_TableReference:
+          m_TableCollectionName: GUID:28e491b5b04a45e488bea89c979bca2c
+        m_TableEntryReference:
+          m_KeyId: 202586403224764416
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+      Percent: 0
+      XPAmount: 0
     MovingWall1: {fileID: 9017356347894402995, guid: 08c496bea469b5f48bf33d992a33a8aa, type: 3}
     MovingWall2: {fileID: 6479081782933927446, guid: 5a8bea9b78b7c6c4c8118866850c50eb, type: 3}
   Free360MovementSpecial:
@@ -15504,6 +15569,19 @@ MonoBehaviour:
     Info: FREE_360_DESC
     BonusPercent: 20
     BonusXPAmount: 0
+    HasSuperBonus: 0
+    SuperBonus:
+      Title:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+      Percent: 0
+      XPAmount: 0
   PillsBlowerSpecial:
     enabled: 0
     usedOnce: 0
@@ -15523,6 +15601,19 @@ MonoBehaviour:
     Info: Attira pillole lontane. Ma perdi qualche punto...
     BonusPercent: -3
     BonusXPAmount: 0
+    HasSuperBonus: 0
+    SuperBonus:
+      Title:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+      Percent: 0
+      XPAmount: 0
     PillsAttractor: {fileID: 480026631406828486, guid: 29e9b9fcfa36dd84f86ad3d631993b66, type: 3}
   TeleportSpecial:
     enabled: 0
@@ -15543,6 +15634,19 @@ MonoBehaviour:
     Info: TELEPORT_DESC
     BonusPercent: 30
     BonusXPAmount: 20000
+    HasSuperBonus: 0
+    SuperBonus:
+      Title:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+      Percent: 0
+      XPAmount: 0
     TeleportCouples:
     - Portal1: {fileID: 1508705762199246618, guid: d254b08ca9cd8354cac4667cdb55c398, type: 3}
       Portal2: {fileID: 3062786401133438778, guid: dee8e03fa14bd7e44a1ae891479d27d5, type: 3}
@@ -15572,6 +15676,19 @@ MonoBehaviour:
     Info: A_CAPPELLA_DESC
     BonusPercent: 50
     BonusXPAmount: 0
+    HasSuperBonus: 0
+    SuperBonus:
+      Title:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+      Percent: 0
+      XPAmount: 0
     ACappellaSoundtrack: {fileID: 8300000, guid: 9400170294968db45b0c6b70ed79dabf, type: 3}
   FirstPersonSpecial:
     enabled: 0
@@ -15592,6 +15709,19 @@ MonoBehaviour:
     Info: FIRST_PERSON_DESC
     BonusPercent: 70
     BonusXPAmount: 1000
+    HasSuperBonus: 0
+    SuperBonus:
+      Title:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+      Percent: 0
+      XPAmount: 0
     FirstPersonCamera: {fileID: 9067908179796557501, guid: 1199c39fdef70eb4c9a01507bb84faf7, type: 3}
     CameraHeight: 4
   LabyrinthSpecial:
@@ -15613,6 +15743,19 @@ MonoBehaviour:
     Info: LABYRINTH_DESC
     BonusPercent: 90
     BonusXPAmount: 2000
+    HasSuperBonus: 0
+    SuperBonus:
+      Title:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+      Percent: 0
+      XPAmount: 0
     LabyrinthCamera: {fileID: 5263697744861226951, guid: 342fed1d7486be44f9916f23415ff40e, type: 3}
     disableNextGame: 0
   references:
